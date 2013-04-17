@@ -59,6 +59,6 @@ ENDIF (${CMAKE_BUILD_TYPE} MATCHES "Debug")
 find_library(LIBAISOY1 NAMES aisoy1 PATH /usr/lib /usr/local/lib )
 
 add_subdirectory(ab)
-#add_subdirectory(dia)
+add_subdirectory(plugins)
 add_subdirectory(server)
 add_subdirectory(test)

@@ -28,6 +28,7 @@ extern "C"{
 #include <ab/log.h>
 #include <ab/factory.h>
 #include <ab/events/start.h>
+#include <ab/pluginloader.h>
 #include <signal.h>
 #include <iostream>
 #include <unistd.h>
@@ -119,6 +120,9 @@ int main(void){
   url.add("^static", new Onion::StaticHandler(static_dir));
   url.add("^data", new Onion::StaticHandler(data_dir));
   
+	
+	PluginLoader::loadPath(".");
+	
 //  onion_handler *w=onion_handler_webdav("data/files",NULL);
 //  onion_url_add_handler(url.c_ptr(), "^webdav/", w);
 	    
