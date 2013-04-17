@@ -77,6 +77,14 @@ a.main_button, .main_buttons a{
 	padding-top: 0.5em;
 }
 
+#header img{
+	float: right;
+	height: 40;
+	padding: 0 0 0 1em;
+	margin: 0; 
+	margin-top: 5px;
+}
+
 a.main_button, .main_buttons a.selected{
 	background: #cccccc;
 	border: 1px solid black;
@@ -88,10 +96,9 @@ margin-top: 1em;
 }
 
 div.button_right{
-  position: absolute;
-  right: 2em;
-  padding: 0;
-  margin: 0;
+	display: inline-block;
+	float: right;
+  margin: 3px;
   text-align: center;
   border-left: 1px solid #888888;
   overflow: hidden;
@@ -99,9 +106,9 @@ div.button_right{
 }
 
 div.button_left{
-  position: absolute;
-  left: 13em;
+	display: inline-block;
   padding: 0;
+  padding-left: 1em;
   margin: 0;
   line-height: 2.5em;
   height: 32;
