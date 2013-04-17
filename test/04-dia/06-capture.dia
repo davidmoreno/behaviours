@@ -1,0 +1,9 @@
+<ab>
+ <action id="imagecapture_6" type="imagecapture" x="297" y="113">
+ </action>
+ <event id="timeout_7" type="timeout" x="100" y="162">
+ <param name="timeout">1</param>
+ </event>
+ <connection id="c_3" from="timeout_7" to="imagecapture_6">
+ </connection>
+</ab>

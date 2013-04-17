@@ -1,0 +1,84 @@
+###### LIBRARY ######
+
+log("Loading libraries")
+
+#NodeExists: To know if the last created node of type 'type' exists
+javascript {
+	var f=window.frames[0]
+
+		commands.NodeCreatedExists = function(type){
+		if(type.match("radio_manager") == "radio_manager" && f.main.behaviour.state["radio_manager"])
+			return
+		var node_name = ""
+		for (var i in f.main.behaviour.state) {
+			if(f.main.behaviour.state[i].type.match(type)==type) 
+				node_name = i;
+
+		}
+		if (f.main.behaviour.state[node_name].type.match(type) == type)
+			return
+		throw( { may_appear_later : true, text : 'Node: ' + type + ' not found' } )
+	}
+}
+
+#GetLastNodeId: To get the id name (e.g. '[id=wait]') of the last created node of type 'type'
+javascript {
+	var f=window.frames[0]
+	commands.GetLastNodeId = function(type) {
+	  var node_name = ""
+	  vars.others = "nodes:"
+		for (var i in f.main.behaviour.state) {
+			vars.others=vars.others+i
+			if(f.main.behaviour.state[i].type.match(type)==type) 
+				node_name = i;
+
+		}
+		vars.last_node_id = "[id=" + node_name + "]"
+		vars.last_node = node_name
+		return
+	}
+}
+
+DeleteNode = function(node_name) {
+	concat("node", "[id=" ,node_name, "]")
+	click("${node}")
+	nextConfirm(true)
+	click("link=Delete node")
+	waitConfirm()
+}
+
+#DeleteLastNode: deletes the last node created of type 'node_target'
+DeleteLastNode = function(node_target) {
+	GetLastNodeId(node_target)
+	DeleteNode("${last_node}")
+}
+
+#CheckConnections: Checks if there are any existing connection
+javascript {
+	var f=window.frames[0]
+	commands.CheckConnections = function() {
+		if (f.main.behaviour.connections)
+			for (var i in f.main.behaviour.connections)
+				throw( { may_appear_later : true, text : 'There are more than 0 connections' } )
+		return
+	}
+}
+
+#ClickOnBackground: Just click on background to get back to the main 'Desktop'
+ClickOnBackground = function() {
+	click('[id=gray]')
+}
+
+#CreateNewProject: clicks on 'Nuevo' and writes some metadata about the project
+CreateNewProject = function() {
+	ClickOnBackground()
+	nextConfirm(true)
+	click("link=New")
+	waitConfirm()
+	nextConfirm(true)
+	type('#metaname',"test_app")
+	type('#metadesc',"this is a test app")
+	ClickOnBackground()
+}
+
+

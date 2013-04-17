@@ -1,0 +1,20 @@
+###### SETUP ######
+
+log("Setup test")
+
+#creates a new project and write properties
+CreateNewProject()
+
+#modify properties
+click('[lid=properties]')
+type('#metaname',"properties setup")
+type('#metadesc',"setting properties")
+ClickOnBackground()
+
+#check properties
+click('[lid=properties]')
+checkText('Properties')
+checkAttr('#metaname','value',"properties setup")
+checkAttr('#metadesc','value',"setting properties")
+ClickOnBackground()
+

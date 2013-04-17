@@ -1,0 +1,17 @@
+##### SUITE #####
+
+#load all tests
+log("Starting the tests")
+
+load("./ctest/lib.ctest")
+
+load("./ctest/01-setup/setup.ctest")
+
+load("./ctest/02-modules/headers.ctest")
+load("./ctest/02-modules/tools.ctest")
+
+load("./ctest/03-diagrams/diagrams.ctest")
+
+load("./ctest/04-bugs/bugs.ctest")
+
+

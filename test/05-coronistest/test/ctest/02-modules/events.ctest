@@ -1,0 +1,113 @@
+###### EVENTS ######
+
+CreateNewProject()
+
+#alarm
+click('[node-type=alarm]')
+checkText('Configuration of alarm')
+type('#0',"2")
+type('#1',"2")
+type('#2',"2")
+type('#3',"2")
+type('#4',"2")
+click("a#close")
+
+#GetLastNodeId("alarm")
+#log("${last_node_id}")
+
+#concat("node_id","[id=","${last_node_id}","]")
+#DeleteLastNode("${node_id}")
+
+DeleteLastNode("alarm")
+
+#click
+concat("node_id","click")
+click('[node-type=click]')
+click("a#close")
+NodeCreatedExists("${node_id}")
+DeleteLastNode("${node_id}")
+
+#listen
+concat("node_id","listen")
+click('[node-type=listen]')
+checkText('Configuration of listen')
+type('#0',"--")
+checkAttr('#0','value','--')
+click('[lid=accept]')
+click("a#close")
+NodeCreatedExists("listen")
+DeleteLastNode("listen")
+
+#start
+concat("node_id","start")
+click('[node-type=start]')
+NodeCreatedExists("${node_id}")
+DeleteLastNode("${node_id}")
+
+#LUA 
+concat("node_id","lua_event")
+click('[node-type=lua_event]')
+checkText('Configuration of lua_event')
+click("a#close")
+NodeCreatedExists("${node_id}")
+DeleteLastNode("${node_id}")
+
+#Light
+concat("node_id","light")
+click('[node-type=light]')
+checkText('Configuration of light')
+click("a#close")
+NodeCreatedExists("${node_id}")
+DeleteLastNode("${node_id}")
+
+# radio manager
+concat("node_id","radio_manager")
+click('[node-type=radio_manager]')
+checkText('Configuration of radio_manager')
+type('#0',"2")
+checkAttr('#0','value','2')
+type('#1',"10")
+checkAttr('#1','value','10')
+type('#2',"1")
+checkAttr('#2','value','1')
+click("a#close")
+#NodeCreatedExists("${node_id}")
+#DeleteLastNode("${node_id}")
+DeleteNode("${node_id}")
+
+#radio receive
+#nextConfirm(true)
+#click('[node-type=radio_receive]')
+#waitConfirm()
+#click("a#close")
+
+#concat("node_id","radio_receive")
+#click('[node-type=radio_receive]')
+#type('#0',"test msg")
+#click("a#close")
+# check msg *************************
+
+#checkText('Configuration of radio_receive')
+# checkAttr('#0','value','--')
+#click("a#close")
+#NodeCreatedExists("radio_receive")
+#NodeCreatedExists("${node_id}")
+#DeleteLastNode("${node_id}")
+
+
+#touch
+concat("node_id","touch")
+click('[node-type=touch]')
+checkText('Configuration of touch')
+click("a#close")
+NodeCreatedExists("${node_id}")
+DeleteLastNode("${node_id}")
+
+#timer
+concat("node_id","timeout")
+click('[node-type=timeout]')
+checkText('Configuration of timeout')
+click("a#close")
+#setAttr('[id=0', 'value', 5)
+NodeCreatedExists("${node_id}")
+DeleteLastNode("${node_id}")

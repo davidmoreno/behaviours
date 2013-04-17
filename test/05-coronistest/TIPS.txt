@@ -1,0 +1,33 @@
+Tips for tests that should pass but do not
+==========================================
+
+Some tips about extrange things that happend sometimes and are not the fault of the coronis tester, as they are
+real 'errors', but not easy to discover, on the tested source.
+
+
+Unexpected alerts
+-----------------
+
+Many AJAX request fail with an alert if htere is a failure. But loading a page that has ajax content and do not
+let it gather it before going to the next page is also an error condition.
+
+
+Firefox requesting send again data when clicking a link after a POST
+--------------------------------------------------------------------
+
+It is because you are getting next data with a location.href.reload() or something similar. It really reloads and
+firefox advises it when its javascript triggered (vs human triggered). Better a location.assign(location.href).
+
+Apearing prompt on test like:
+
+	click('link=Edit')
+	nextConfirm(true)
+	click('[value=Remove Entity]')
+	waitConfirm()
+	errorOnNext()
+	checkText('userB')
+
+The fix is just dont do the nextConfirm until the edit page is loaded:
+
+	click('link=Edit',true)
+

@@ -1,0 +1,171 @@
+<html>
+<header>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title lid="title">Aisoy1 DIA</title>
+<style>
+@import "static/css/style.css";
+</style>
+	<link rel="stylesheet" href="static/css/codemirror.css">
+	<link rel="stylesheet" href="static/css/lesser-dark.css">
+	<link rel="icon" type="image/png" href="static/img/favicon.png">
+</header>
+<body>
+
+  <div id=loading class="hidden"><img src="static/img/loading.gif"></div>
+  <div id="overwindow" class="hidden">
+    <div id="gray" onclick="main.closeDialog()">
+    </div>
+    <div id="dialog">
+      <h1 id="title">Dialog</h1>
+      <div id="content">No content yet.</div>
+      <div id="buttons" class="buttons">
+	<span id="custom_buttons"></span>
+	<a href="#" onclick="main.closeDialog()" id="close" lid="accept">Aceptar</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="help" class="right_panel">
+    <div id="buttons">
+      <div>
+        <a href="javascript:main.backHelp()" lid="before">Anterior</a>|<a href="javascript:main.loadHelp('index')" lid="index">Índice</a>|<a href="javascript:main.hideHelp()"  lid="close">Cerrar</a>
+      </div>
+    </div>
+    <div>
+      <iframe id="ihelp"></iframe>
+    </div>
+  </div>
+
+  <div id="console" class="right_panel">
+    <div id="buttons">
+      <div>
+        <a href="javascript:main.hideConsole()" lid="close">Cerrar</a>
+        <a href="javascript:main.reloadConsole()" lid="clean">Limpiar</a>
+      </div>
+    </div>
+    <div>
+      <iframe id="iconsole" src="../stderr"></iframe>
+    </div>
+  </div>
+
+  <div id="webdav" class="right_panel">
+    <div id="buttons">
+      <div>
+        <a href="javascript:main.hideFiles()" lid="close">Cerrar</a>
+      </div>
+    </div>
+    <div> Not yet! 
+<!--      <iframe id="iwebdav" src="../webdav"></iframe>-->
+    </div>
+  </div>
+  
+  <div id="lua_console" class="right_panel">
+    <div id="buttons">
+      <div>
+        <a href="javascript:main.hideLUAConsole()" lid="close">Cerrar</a>
+      </div>
+    </div>
+    <div id="lua_console_scroll">
+      <pre lid="lua_explanation">-- Escriba sus expresiones LUA y se iran ejecutando 
+-- según las escriba en el entorno actual.
+      </pre>
+      <form onsubmit="main.executeLUA(); return false;">
+        <input type="text">
+      </form>
+    </div>
+  </div>
+
+  <iframe id="hiddenDownloader" style="display: none;"></iframe>
+  
+  <div id="header">
+  
+    <a href="http://www.coralbits.com" target="coralbits"><img src="static/img/logo.png" height=40 style="position: absolute; left: 1em; padding: 0; margin: 0; top: 5;"></a>
+   
+    <div class="button_left main_buttons">
+      <a href="#" id="newb" onclick="main.newBehaviour()" lid="new">Nuevo</a>
+      <a href="#" id="metadatab" onclick="main.behaviour.setMetaData()" lid="properties">Propiedades</a>
+      <a href="#" id="saveb" onclick="main.save()" lid="save">Guardar</a>
+      <a href="#" id="loadb" onclick="$('#upload').click()" lid="load">Cargar</a><form action="../upload/" method="post" enctype="multipart/form-data" id="upload_xml" target="hiddenDownloader" novalidate><input type="file" name="upload" id="upload" onchange="main.load()"></form>
+       
+      
+    </div>
+    
+
+    <div class="button_right main_buttons">
+      <a id="startstop" class="top_button play" href="#" onclick="main.startStop()"><img src="static/img/play.png" title="Play"></a>
+    </div>
+  </div>
+  
+  <div id="svgscroll">
+     <div id="svgcanvas" lid="loading">Loading...</div>
+  </div>
+  
+  <div id="tools">
+  
+    <div id="selector">
+    
+      <div id="classes" class="main_buttons">
+	<ul>
+	  <li><a href="#" onclick="main.canvas.changeTool('actions')" id="actionsb" lid="actionsb">Acciones</a></li>
+	  <li><a href="#" onclick="main.canvas.changeTool('events')" id="eventsb" lid="eventsb">Eventos</a></li>
+	  <!--<li><a href="#" onclick="main.canvas.changeTool('flow')" id="flowb">Control</a></li>-->
+	</ul>
+      </div>
+  
+      <div id="mainhelp" class="main_buttons">
+	<ul>
+	  <li style="margin-top: 5px; margin-right:1em">
+	    <div id="viewtools"><img src="static/img/view_reset.png" id="view_reset" onclick="main.canvas.resetViewpoint()">
+	      <img src="static/img/view_all.png" id="view_all" onclick="main.canvas.viewAll()">
+	    </div></li>
+	  <li><a href="#" id="helpb" class="help" onclick="main.loadHelp('index')" lid="help">Ayuda</a></li>
+	  <li><a href="#" id="luab" class="lua_console" onclick="main.showLUAConsole()" lid="Lua">Lua</a></li>
+<!--	  <li><a href="#" class="console" onclick="main.showConsole()" lid="errors">Errores</a></li>
+	  <li style="padding:0px; margin-top: 5px;"><a href="#" onclick="main.showFiles()" id="files" lid="files"><img src="static/img/folder_simple.png" width=25></a></li>-->
+	</ul>
+      </div>
+      
+      <!--<span id="stderr"></span>-->  
+    
+    </div>
+      
+    <div id="extension">
+    
+      <div id="scroll_right" onclick="main.canvas.toolsScrollR()"><img src="static/img/scroll_right.png"></div>
+      <div id="scroll_left" onclick="main.canvas.toolsScrollL()"><img src="static/img/scroll_left.png"></div>
+ 
+      <div id="events">
+	<ul id="eventlist" class="toolbuttons">
+	</ul>
+      </div>
+	
+      <div id="actions">
+	<ul id="actionlist" class="toolbuttons">
+	</ul>
+      </div>
+      
+      <!--<div id="flow"> 
+	<ul id="misc" class="toolbuttons ">
+	  <li><a href="#" onclick="main.behaviour.addNode('condmerge')" title="Indicar que hay un punto de separación o unión de cadenas. En las ramas que salen del nodo se indican las condiciones que deben cumplirse para ir por dicha rama"><div class="buttoncover"><img src="static/img/condmerge.png"><br><span lid="cross">Cruce</span></div></a></li>
+	</ul>
+      </div>-->
+	
+    </div>
+    
+  </div>
+
+  <!--<pre id="xml"></pre>-->
+
+  <script src="static/js/jquery-1.7.2.min.js"></script>
+  <script src="static/js/jquery.svg.min.js"></script>
+  <script src="static/js/jquery-ui.min.js"></script>
+  <script src="static/js/extra/jquery.form.min.js"></script>
+  <script src="static/js/lang/lang.js"></script>
+  <script src="static/js/connections.js"></script>
+  <script src="static/js/node.js"></script>
+  <script src="static/js/node_factory.js"></script>
+  <script src="static/js/behaviour.js"></script>
+  <script src="static/js/canvas.js"></script>
+  <script src="static/js/main.js"></script>
+</body>
+</html>

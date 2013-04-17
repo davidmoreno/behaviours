@@ -1,0 +1,21 @@
+###### HEADERS ######
+
+log("Headers")
+
+checkElement('#header')
+
+click('[lid=new]')
+
+click('[lid=properties]')
+checkText('Properties')
+type('#metaname',"--")
+checkAttr('#metaname','value','--')
+type('#metadesc',"--")
+checkAttr('#metadesc','value','--')
+click('[id=overwindow]')
+click('[id=gray]')
+
+click('[lid=save]')
+click('[id=gray]')
+
+

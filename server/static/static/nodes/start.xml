@@ -1,0 +1,11 @@
+<node-description id="start">
+	<name lang="en">Start</name>
+	<name lang="es">Inicio</name>
+	<description lang="en">Event activated when the behaviour starts</description>
+	<description lang="es">Evento activado al comenzar el comportamiento.</description>
+	
+	<type>event</type>
+	<icon>start</icon>
+	
+	<js>modules/start.js</js>
+</node-description>

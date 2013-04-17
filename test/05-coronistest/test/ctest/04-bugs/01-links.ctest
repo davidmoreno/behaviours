@@ -1,0 +1,24 @@
+log("Bugs: 01-links")
+
+CreateNewProject()
+
+# node init 
+click('[node-type=start]')
+
+#node wait
+click('[node-type=wait]')
+click("a#close")
+
+#link init->wait
+GetLastNodeId("start")
+click("${last_node_id}")
+click("link=Connect/Disconnect node")
+GetLastNodeId("wait")
+click("${last_node_id}")
+
+#delete nodes
+DeleteLastNode("start")
+DeleteLastNode("wait")
+
+CheckConnections()
+

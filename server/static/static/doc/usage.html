@@ -1,0 +1,30 @@
+<h1>Ussage of Behaviours</h1>
+
+With behaviours user can create new complex behaviours.<p>
+
+This beheviours are based on <b>events</h> and <b>actions</b>, creating chains that join them. It exists as well the 
+posibility of completing behaviours with <a href="lua.html">LUA</a> programing language code.
+
+<h2>Events</h2>
+
+Events are spontaneus changes that appear on the system, for example some sensor detected something, or just time passes. 
+<p>
+The simplest event is the timeout, that just triggers every X seconds. Another easy event is the start event, that is
+triggered when the behaviour starts.
+
+
+<h2>Actions</h2>
+
+Actions are the response to the evetns. They can mean sending some web petition, an email, show something on the screen... Other more
+complex actions may need LUA code.
+
+<h2>Strings</h2>
+
+Events and actiosn are joined by strings. Once an event happens, the actions that is joined by an string is performed. To this action more
+actions can follow, creating a complex behaviour based on a simple event.<p>
+
+At strings there may be bifurcations, where several actions follow an event or another action. In such case user can set a guard, to 
+force one path depending on simple conditions, or if several guards succeds, one is randomly selected. If there are no more actions 
+following this path, the behaviour is completed, and the system waits for new events.
+
+Path can also join to a simple event, so that the execution flow joins.

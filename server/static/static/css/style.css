@@ -1,0 +1,576 @@
+@import "ui-lightness/jquery-ui-1.8.16.custom.css";
+body{
+  font-family: sans;
+  background: grey;
+	margin:0px;
+	padding: 0px;
+	color: #555555;
+	overflow: hidden;
+}
+svg{
+	cursor: default;
+	background: url("../img/wallpaper.jpg");
+}
+pre{
+	color: black;
+  white-space: pre-wrap;
+}
+a.button, .buttons a{
+	text-decoration: none;
+	color: #444444;
+	border: 1px solid #888888;
+	background: #F1F1F1;
+	border-radius: 3px;
+	margin: 5px;
+	padding: 0.1em 1em 0.1em 1em;
+	box-shadow: 0 2px 2px rgba(0,0,0,0.5);
+	line-height: 2em;
+  cursor: pointer;
+}
+
+a.toolbutton, .toolbuttons a{
+  text-decoration: none;
+  color: #444444;
+  background: none;
+
+}
+
+a.button:hover, .buttons a:hover{
+	background: #aaaaaa;
+}
+
+a.main_button.play:hover{
+
+}
+
+a.stop{
+
+}
+a.stop:hover{
+
+}
+
+a.loading:hover{
+  cursor: wait;
+}
+
+a.main_button:hover, .main_buttons a:hover{
+	color: #aaa;
+	cursor: pointer;
+	text-shadow: 1px 1px 1px white;
+}
+
+a.main_button, .main_buttons a{
+  text-decoration: none;
+  color: #333;
+  text-shadow: 0 1px 0 #AAA;
+  background: none;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top:15px;
+  padding-bottom:10px;
+  cursor: pointer;
+	height: 50px;
+}
+
+#header .button_left{
+	padding-top: 0.5em;
+}
+
+a.main_button, .main_buttons a.selected{
+	background: #cccccc;
+	border: 1px solid black;
+}
+
+li.main_button, .main_buttons li{
+margin-top: 1em;
+  
+}
+
+div.button_right{
+  position: absolute;
+  right: 2em;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  border-left: 1px solid #888888;
+  overflow: hidden;
+  
+}
+
+div.button_left{
+  position: absolute;
+  left: 13em;
+  padding: 0;
+  margin: 0;
+  line-height: 2.5em;
+  height: 32;
+  overflow: hidden;
+}
+
+.toolbuttons li{
+	text-decoration: none;
+	color: #444444;
+	border: 1px solid #888888;
+	background: #B3B3B3;
+	border-radius: 10px;
+	margin-left: 5px;
+	margin-right:5px;
+	margin-top: 5px;
+	margin-bottom: 15px;
+	width: 80px;
+	height: 100px;
+	box-shadow: 0 3px 3px rgba(0,0,0,0.5);
+	line-height: 2em;
+  
+}
+
+.toolbuttons li:hover{
+  background: #CCCCCC;
+  cursor: pointer;
+  
+}
+
+
+
+.toolbuttons ul{
+  padding: 0;
+  margin:0;
+  
+}
+
+.toolbuttons ul{
+  padding: 0;
+  margin:0;
+  
+}
+
+div#viewtools img{
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+div#viewtools img:hover{
+  background: #777;
+  cursor: pointer;
+}
+
+.buttoncover {
+
+  padding-top: 30px;
+}
+
+
+
+
+#header{
+	background: white;
+  padding-left: 1em;
+	padding: 0;
+	border: 0;
+	margin: 0;
+	height: 50px;
+	box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+	border: none;
+	z-index: 2;
+}
+
+
+#header #stderr{
+	float: right;
+	text-shadow: none;
+	font-size: 10px;
+}
+
+div#tools{
+  	background: #CCCCCC;
+	text-shadow: 0 1px 0 #EEE;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	border: none;
+	box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+	z-index: 1;
+	overflow: hidden;
+	height: 30px; 
+	
+}
+
+div#tools li{
+	float: left;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+
+
+
+div#tools ul{
+	list-style-type: none;
+	text-align: center;
+	height: 30px;
+	padding: 0;
+	margin: 0;
+}
+
+
+div#tools #selector{
+	background: white;
+	text-shadow: 0 1px 0 #EEE;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	z-index: 6;
+	height: 30px; 
+	overflow: hidden;
+	line-height: 0;
+	box-shadow: 0;
+}
+
+div#tools #selector #mainhelp{
+  float: right;
+  position: absolute;
+  right: 0em;
+  padding: 0;
+  margin: 0;
+  height: 30px;
+  z-index: 3;
+}
+
+div#tools #selector #viewtools{
+  float: left;
+}
+
+div#tools #selector #classes{
+  float: left;
+  left: 0em;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  z-index: 4;
+}
+
+
+div#tools #extension{
+  display: none;
+  padding: 0;
+  margin: 0;
+  height: 120px;
+
+}
+
+div#tools #extension #scroll_left{
+  border: 1px solid #888888;
+  background: #B3B3B3;
+  border-radius: 10px;
+  padding-top: 35px;
+  margin-top: 5px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+  width: 20px;
+  height: 65px;
+  box-shadow: 0 3px 3px rgba(0,0,0,0.5);
+	
+  float:left;
+  z-index: 5;
+  cursor: pointer;
+}
+
+div#tools #extension #scroll_right{
+  border: 1px solid #888888;
+  background: #B3B3B3;
+  border-radius: 10px;
+  padding-top: 35px;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  width: 20px;
+  height: 65px;
+  box-shadow: 0 3px 3px rgba(0,0,0,0.5);
+  line-height: 2em;
+	
+  float: right;
+  z-index: 5;
+  cursor: pointer;
+}
+
+div#tools #extension #scroll_right:hover{
+background: #CCCCCC;
+  cursor: pointer;
+}
+
+div#tools #extension #scroll_left:hover{
+background: #CCCCCC;
+  cursor: pointer;
+}
+
+div#tools #actions{
+  display: none;
+  overflow: hidden;
+  height: 120px;
+}
+
+div#tools #events{
+  display: none;
+  overflow: hidden;
+  height: 120px;   
+}
+
+div#tools #flow{
+  display: none;
+  overflow: hidden;
+  height: 120px;   
+}
+
+div#svgscroll{
+  overflow: hidden;
+  border: 1px solid black;
+  background: white;
+	z-index: -5;
+}
+
+div#svgcanvas{
+ height: 100%;
+ width: 100%;
+}
+
+
+.hidden{
+	display: none;
+}
+#gray{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: black;
+	opacity: 0.5;
+}
+#loading{
+	position: absolute;
+	top: 30%;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: transparent;
+	text-align:center;
+	opacity: 0.5;
+}
+#dialog h1{
+	color: #555;
+	text-shadow: 0 2px 0 #EEE;
+	text-align: center;
+}
+#dialog{
+	background: white;
+	position: absolute;
+	top: 10%;
+	right: 30%;
+	width: 40%;
+	border: 1px solid #888888;
+	border-radius: 5px;
+	box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+}
+#dialog #buttons{
+	padding: 1em;
+	clear: left;
+	clear: right;
+	text-align: right;
+}
+#dialog #content{
+	background: white;
+	border: 1px solid #888888;
+	border-left: 0px;
+	border-right: 0px;
+}
+#dialog .doc{
+	margin: 1em;
+	font-size: 0.8em;
+}
+
+#dialog h1 .name{
+	font-size: 0.3em;
+}
+
+#messagebox{
+	position: fixed; 
+	top: 35px; 
+	left: 40%;
+	box-shadow: 0px 2px 10px rgba(0,0,0,0.5);
+	background: #F1F1F1;
+  background: -webkit-linear-gradient(top, #F1F1F1, #B8B8B8);
+  background: -moz-linear-gradient(top, #F1F1F1, #B8B8B8);
+	border-radius: 0 0 4px 4px;
+	width: 20%;
+	text-align: center;
+	z-index: 0;
+}
+
+#dialog #inputdiv{
+  padding: 0.1em;
+  margin: 0.2em;
+  margin-right: 1em;
+}
+
+
+#dialog #inputdiv input{
+  width: 100%;
+}
+
+.cheatsheet{
+  vertical-align: top;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  
+  background: white;
+}
+
+#dialog div#content > table{
+  width: 100%;
+}
+
+.cheatsheet ul{
+  padding: 0.5em;
+  overflow: auto;
+  margin: 0;
+  height: 20em;
+}
+
+.cheatsheet li{
+  list-style: none;
+}
+
+.cheatsheet li .type{
+  font-size: 0.5em;
+  color: #aaa;
+}
+
+.cheatsheet h3{
+  margin: 0;
+}
+
+td.cheatsheet{
+  width: 10em;
+}
+
+textarea#code{
+  width: 100%;
+  height: 100%;
+}
+
+.right_panel{
+  z-index: 10;
+  position: fixed;
+  bottom: 148px;
+  right: 0;
+  width: 30em;
+  background: white;
+  display: none;
+}
+
+.right_panel #buttons{
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+.right_panel #buttons > div{
+  display: inline;
+  top: 0;
+  right: 0;
+  border: 0;
+}
+
+.right_panel #buttons > div{
+  border-radius: 0 0 0 3px;
+  background: white;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.5);
+  border-radius: 0 0 2px 2px;
+}
+.right_panel #buttons > div a{
+  text-decoration: none;
+  color: #444444;
+  text-shadow: 0 1px 0 #EEE;
+  height: 100%;
+  padding: 0 0.5em 0 0.5em;
+}
+
+.right_panel #buttons > div a:hover{
+  color: #aaa;
+	text-shadow: 1px 1px 1px white;
+}
+
+.right_panel #buttons a{
+  margin: 0;
+}
+
+.right_panel iframe{
+  overflow: auto;
+  clear: both;
+  border: 0;
+  width: 100%;
+  height: 85%;
+}
+
+#lua_console input{
+  background: rgba(255,255,255,0.5);
+  border: 1px solid #888;
+  border-radius: 3px;
+  width: 100%;
+}
+
+#lua_console_pre{
+  overflow: auto;
+}
+
+#lua_console pre{
+  overflow: auto;
+  height: 85%;
+}
+
+
+#connecting{
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  width: 40%;
+  
+  background: #F1F1F1;
+  background: -webkit-linear-gradient(top, #F1F1F1, #B8B8B8);
+  background: -moz-linear-gradient(top, #F1F1F1, #B8B8B8);
+  position: absolute;
+  border: 1px solid #888888;
+  border-radius: 5px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+  text-align: center;
+} 
+
+#connecting img{
+  margin: 1em;
+}
+
+#dialog .CodeMirror{
+	height: 30em;
+}
+
+#dialog .CodeMirror-fullscreen {
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	margin: 0;
+	padding: 0;
+	border: 0px solid #BBBBBB;
+	opacity: 0.95;
+}
+
+#dialog .CodeMirror-scroll{
+	height:100%;
+}
+
+#dialog .CodeMirror pre{
+	color: white;
+}

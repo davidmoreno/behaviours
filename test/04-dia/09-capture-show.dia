@@ -1,0 +1,27 @@
+<ab>
+ <event id="start_12" type="start" x="629" y="15">
+ </event>
+ <action id="imagecapture_13" type="imagecapture" x="588" y="153">
+ </action>
+ <action id="lua_action_14" type="lua_action" x="580" y="386">
+ <param name="exec">cv=require("luacv")
+print (dir())
+print(imagecapture)
+print(imagecapture_13)
+print(imagecapture.as_ipl)
+print(imagecapture_13.as_ipl)
+local sz=cv.GetSize(imagecapture.as_ipl)
+print(sz)
+print("Width: "..sz.width..", Height: "..sz.height)
+</param>
+ </action>
+ <action id="imageshow_15" type="imageshow" x="590" y="509">
+ <param name="lua_variable">imagecapture.as_ipl</param>
+ </action>
+ <connection id="c_1" from="start_12" to="imagecapture_13">
+ </connection>
+ <connection id="c_2" from="imagecapture_13" to="lua_action_14">
+ </connection>
+ <connection id="c_3" from="lua_action_14" to="imageshow_15">
+ </connection>
+</ab>

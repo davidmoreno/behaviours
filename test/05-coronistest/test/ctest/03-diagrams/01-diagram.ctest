@@ -1,0 +1,59 @@
+###### DIAGRAMS ######
+
+log("Start Diagram1 test")
+
+CreateNewProject()
+
+#nextConfirm(true)
+#click("link=New")
+#waitConfirm(true)
+#checkText('Properties')
+#type('#metaname',"test_app")
+#type('#metadesc',"this is a test app")
+#ClickOnBackground()
+
+# node init 
+click('[node-type=start]')
+
+# node say
+click('[node-type=say]')
+type('#0',"this is a test")
+click("a#close")
+
+#link init->say
+GetLastNodeId("start")
+click("${last_node_id}")
+click("link=Connect/Disconnect node")
+GetLastNodeId("say")
+click("${last_node_id}")
+
+#node mouth
+click('[node-type=mouth]')
+click("a#close")
+
+#link say->mouth
+GetLastNodeId("say")
+click("${last_node_id}")
+click("link=Connect/Disconnect node")
+GetLastNodeId("mouth")
+click("${last_node_id}")
+
+ClickOnBackground()
+ClickOnBackground()
+ClickOnBackground()
+ClickOnBackground()
+ClickOnBackground()
+ClickOnBackground()
+
+
+#start
+#click('[id=startstop]')
+
+
+
+
+
+
+
+
+

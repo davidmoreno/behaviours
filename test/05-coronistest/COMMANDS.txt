@@ -1,0 +1,166 @@
+Introduction
+============
+
+Whenever the work *element* apears it means a locator. The locators can be jQuery 
+expresions and the following keywords:
+
+* link=TEXT   -- The link with that text
+* option=TEXT -- The option with that text
+
+Also there is support for varibale expansions on every text, using ${variable_name}. For example:
+
+concat("hello","world")
+type("input","hello ${hello}")
+
+These are the commands available for ctest:
+
+check(element)
+--------------
+
+Checks a checkbox. See uncheck()
+
+checkAttr(element, attribute, value)
+------------------------------------
+
+If value is given checks its equal to attribute value. If not it checks the attribute exists.
+
+In any case it returns into 'lasttext' the value of the attribute.
+
+
+checkElement(element)
+---------------------
+
+Checks that the given element exists. As a side effect it copies the text of such element
+to the 'lasttext' variable.
+
+checkText(text,element)
+-----------------------
+
+Checks that the given text exists. If element is provided it checks only in that element.
+
+click(element [,waitLoad])
+--------------------------
+
+Clicks on an element so as if the user had clicked with the mouse. Usefull to follow 
+links, press buttons, activate javascript onlick (or event driven) signals...
+
+Optional waitload inserts a wait load after clicking. Useful on some scenarios where next
+actions can be applied both on old page and new, so waiting is highly recomended.
+
+concat(varname, txt1, txt2, txt3, txt4)
+---------------------------------------
+
+Concats the txts, and sets the variable varname with such value.
+
+
+drag(element, dx, dy) || drag(element, dest_element)
+----------------------------------------------------
+
+drags and drops an element to a delta place, if dx and dy is provided, or over another 
+dest_element, if no 3rd argument is passed.
+
+
+eval(javascriptcode)
+--------------------
+
+Evals some javascript code. It also has the long form ofseverl lines:
+
+javascript{
+ ...
+}
+
+load(testfile)
+--------------
+
+Loads another test file, relative to current, and executes it.
+
+log(txt)
+--------
+
+Logs something on the ctest console.
+
+errorOnNext()
+-------------
+
+An error is expected on next command. If it succeeds then it fails, and if 
+it fails it succeed. Usefull for example to check if some text is not present.
+
+nextAlert()
+-----------
+
+Prepares the system to receive just one alert soon. This is necesary for when there 
+is an alert and then it loads a page. In such case there is the race condition 
+that the page is loaded before or after the "waitAlert()" is there. If it loads
+after, then no problem. If it loads before then the ctest fails as there was an
+unexepected alert, unless you are expecting it. 
+
+nextConfirm(bool)
+----------------
+
+Returns the given value to the next confirmation that appears. Remember that
+it must be matched with a waitConfirm() to avoid the error of not aknowledging it.
+
+nextPrompt(bool)
+----------------
+
+Returns the given value to the next prompt that appears. Remember that
+it must be matched with a waitPrompt() to avoid the error of not aknowledging it.
+
+mark(element)
+-------------
+
+Just changes the background to yellow. Usefull when debugging to look for elements, and also to
+check which one was specifically addressed.
+
+open(url)
+---------
+
+Opens the given url. It implies the waitLoad().
+
+select(element, option)
+-----------------------
+
+Selects an option at the given select element.
+
+set(variable, element, atribute)
+--------------------------------
+
+Sets to the internal variable *variable* the content of the attribute of the given element.
+If no attribute is passed, it is copied the text.
+
+setAttr(element, attribute, value)
+------------------------------------
+
+Sets the value at the attribute of the given element.
+
+regexp(variable, original, regexp)
+----------------------------------
+
+Performs a regexp regular expression search on an original text, and stores the first group found
+at variable.
+
+uncheck(element)
+----------------
+
+Unchecks a checkbox. See check().
+
+waitAlert(regexp)
+-----------------
+
+Waits for an alert to appear, if regexp is provided, it checks it complies to it.
+
+waitConfirm(regexp)
+-----------------
+
+Waits for a confirmation to appear, if regexp is provided, it checks it complies to it.
+
+waitLoad()
+----------
+
+Waits until a new page is loaded
+
+waitPrompt(regexp)
+-----------------
+
+Waits for an prompt to appear, if regexp is provided, it checks it complies to it.
+

@@ -1,0 +1,82 @@
+<h1>LUA</h1>
+
+<a href="http://www.lua.org/" target="lua">LUA</a> is a small programming language used specially to make small programs or 
+complete programs in a easy way. It allows people without knowledge to create and improve thir favourite programs.<p>
+
+In Behaviours, LUA is used to create new events and actions, as a scripting language, allowing create complex behaviours will
+very few code lines.<p>
+
+LUA is though as an extra help to the Behaviours facilities, and so it just complement them.<p>
+
+All Behaviour's elements can be accessed by LUA; if there is an RGB action, it can be modified from LUA, as well as activated.
+This activation or notification, is, as always, a path start, so once the action is triggered, the path will continue execution, 
+following guard rules, other script execution an so on.
+
+There are several default global LUA objects:
+
+<ul>
+ <li><a href="#dir">dir</a></li>
+ <li><code>tostring</code> Converts variable to a string.</li>
+ <li><a href="bot.html">bot</a></li>
+ <li><a href="manager.html">manager</a></li>
+</ul>
+
+Also plugin creators for Behaviours can add their own LUA global objects.<p>
+
+Behaviours' execution environment allows the use of all standar LUA elements, including access to files. <p>
+
+<h2>LUA Console</h2>
+
+There is a LUA console on the UI to execute small code snippets, to allow interactive programming. Its the best way to test
+actions and code.<p>
+
+At this console there is access to all the LUA environment, as if it were a LUA node on the graph, but interactive.<p>
+
+Console do a <code>print</code> automatically of everything that is executed.
+
+<h3 id="dir">dir()</h3>
+
+<code>dir()</code> is a function took from python. Wihtout parameters it allows to see all global elements. Actually it only shows the 
+kwown elements, by name, with the parameters, as a string. In a future it may change to follow python model.
+
+<h2>Node access</h2>
+
+From LUA user can access to all nodes in the graph just referencing the node name. In the LUA code window there is a list of all known nodes.
+Also nodes can be referenced by type name, in wich case it will return the closest node; if there is another in the same path that was 
+executed before, or of not, a random one. If there is only one node of such type, it will be returned.<p>
+
+Each node has its attributes, which can be read and written as LUA attributes, so to change a node behaviour, user can change the attributes:
+
+<pre class="code">
+-- We have jsut one RGB object; we access it by type name.
+if (__listen_manager.last=='Green') then
+  rgb.r=0.0
+  rgb.g=1.0
+  rgb.b=0.0
+  rgb.t=1.0
+fi
+</pre>
+
+In this example we access the <code>__listen_manager</code>, which keeps last sentence heard by the user, and if it was
+<code>"Green"</code>, changes the colore of <code>rgb</code> to green. This code does not activate the node, jsut changes the attributes.<p>
+
+Additionally there are several node attributes:
+
+<ul>
+ <li><code>name</code> Node name.</li>
+ <li><code>type</code> Type of the node.</li>
+ <li><code>param_list</code> Table with all the values.</li>
+</ul>
+
+The element param_list is necessary as the nodes are LUA proxies, so there is no way to do a for over the attributes. This way
+we have the node in a non-proxy way and we can for over it. Anyway it has some drawbacks accessing this way so the prefered way is the 
+normal attribute way.
+
+<h2>Guards</h2>
+
+In node conections user can set LUA guards, which are LUA expressions that should return a boolean, and if true then this branch is followed.
+For example:
+
+<pre class="code">
+__listen_manager.last=='Green'
+</pre>

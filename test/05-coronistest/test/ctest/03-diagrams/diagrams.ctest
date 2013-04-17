@@ -1,0 +1,36 @@
+###### DIAGRAMS ######
+
+log("Start diagrams tests")
+
+load("01-diagram.ctest")
+
+load("02-crowded.ctest")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

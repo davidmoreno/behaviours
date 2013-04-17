@@ -1,0 +1,55 @@
+<ab>
+ <event id="radio_manager" type="radio_manager" x="50.5" y="28">
+ <param name="channel">64</param>
+ <param name="timeout">5</param>
+ <param name="ack">1</param>
+ <param name="payload">22</param>
+ <param name="rxaddress">AISOY</param>
+ <param name="datarate">2</param>
+ <param name="crc">1</param>
+ </event>
+ <action id="radio_send_9" type="radio_send" x="418" y="326">
+ <param name="txaddress">MOWAY</param>
+ <param name="what">C B MOWAY</param>
+ </action>
+ <action id="rgb_9" type="rgb" x="237" y="15">
+ <param name="r">0</param>
+ <param name="g">1</param>
+ <param name="b">0</param>
+ <param name="t">1</param>
+ </action>
+ <action id="radio_send_10" type="radio_send" x="421" y="117">
+ <param name="txaddress">MOWAY</param>
+ <param name="what">C F MOWAY</param>
+ </action>
+ <action id="radio_send_11" type="radio_send" x="417" y="189">
+ <param name="txaddress">MOWAY</param>
+ <param name="what">C L MOWAY</param>
+ </action>
+ <action id="radio_send_12" type="radio_send" x="420" y="249">
+ <param name="txaddress">MOWAY</param>
+ <param name="what">C R MOWAY</param>
+ </action>
+ <event id="listen_13" type="listen" x="150" y="189">
+ <param name="what">izquierda</param>
+ </event>
+ <event id="listen_14" type="listen" x="146" y="250">
+ <param name="what">derecha</param>
+ </event>
+ <event id="listen_15" type="listen" x="147" y="114">
+ <param name="what">palante</param>
+ </event>
+ <event id="listen_17" type="listen" x="132" y="325">
+ <param name="what">patras</param>
+ </event>
+ <connection id="c_6" from="radio_manager" to="rgb_9">
+ </connection>
+ <connection id="c_7" from="listen_13" to="radio_send_11">
+ </connection>
+ <connection id="c_8" from="listen_14" to="radio_send_12">
+ </connection>
+ <connection id="c_9" from="listen_15" to="radio_send_10">
+ </connection>
+ <connection id="c_10" from="listen_17" to="radio_send_9">
+ </connection>
+</ab>

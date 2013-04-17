@@ -1,0 +1,5 @@
+add_subdirectory(01-lua)
+add_subdirectory(02-object)
+add_subdirectory(03-ab)
+add_subdirectory(04-server)
+add_subdirectory(04-dia)

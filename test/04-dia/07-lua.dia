@@ -1,0 +1,12 @@
+<ab>
+ <event id="start_1" type="start" x="100" y="10">
+ </event>
+ <action id="lua_action_5" type="lua_action" x="74" y="260">
+ <param name="exec">cv=require("luacv")
+
+print("Hello world")
+</param>
+ </action>
+ <connection id="c_3" from="start_1" to="lua_action_5">
+ </connection>
+</ab>

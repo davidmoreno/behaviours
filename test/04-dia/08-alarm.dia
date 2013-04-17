@@ -1,0 +1,28 @@
+<ab>
+ <event id="alarm_10" type="alarm" x="102.5" y="112">
+ <param name="day">16</param>
+ <param name="month">5</param>
+ <param name="year">0</param>
+ <param name="hour">17</param>
+ <param name="minute">13</param>
+ <param name="repeat">10</param>
+ </event>
+ <event id="start_12" type="start" x="74" y="29">
+ </event>
+ <action id="rgb_11" type="rgb" x="573" y="112">
+ <param name="r">0</param>
+ <param name="g">1</param>
+ <param name="b">0</param>
+ <param name="t">1</param>
+ </action>
+ <action id="rgb_13" type="rgb" x="199" y="33">
+ <param name="r">1</param>
+ <param name="g">0</param>
+ <param name="b">0</param>
+ <param name="t">1</param>
+ </action>
+ <connection id="c_1" from="alarm_10" to="rgb_11">
+ </connection>
+ <connection id="c_2" from="start_12" to="rgb_13">
+ </connection>
+</ab>

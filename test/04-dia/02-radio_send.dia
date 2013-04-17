@@ -1,0 +1,36 @@
+<ab>
+ <event id="start_3" type="start" x="96" y="11">
+ </event>
+ <event id="radio_manager" type="radio_manager" x="105.5" y="293">
+ <param name="channel">10</param>
+ <param name="timeout">1</param>
+ <param name="ack">0</param>
+ <param name="payload">23</param>
+ <param name="rxaddress">LOLA</param>
+ <param name="datarate">0</param>
+ <param name="crc">0</param>
+ </event>
+ <event id="radio_receive_7" type="radio_receive" x="94" y="98">
+ <param name="what">HolaLola</param>
+ </event>
+ <action id="wait_8" type="wait" x="455.5" y="104">
+ <param name="time">3.15</param>
+ </action>
+ <action id="radio_send_9" type="radio_send" x="454.5" y="24">
+ <param name="txaddress">PACO</param>
+ <param name="what">HolaPaco</param>
+ </action>
+ <action id="say_10" type="say" x="331" y="336">
+ <param name="what">Paco me ha dicho hola</param>
+ </action>
+ <connection id="c_1" from="radio_receive_7" to="wait_8">
+ </connection>
+ <connection id="c_2" from="wait_8" to="radio_send_9">
+ </connection>
+ <connection id="c_3" from="start_3" to="radio_send_9">
+ </connection>
+ <connection id="c_4" from="radio_manager" to="say_10">
+ </connection>
+ <connection id="c_5" from="start_3" to="start_3">
+ </connection>
+</ab>

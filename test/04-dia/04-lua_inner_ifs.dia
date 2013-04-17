@@ -1,0 +1,11 @@
+<ab>
+ <event id="start_5" type="start" x="99" y="79">
+ </event>
+ <action id="lua_action_6" type="lua_action" x="233" y="102">
+ <param name="exec">if (3&lt; 4 and 4&lt;5) then
+ print "peto"
+print "OK"</param>
+ </action>
+ <connection id="c_1" from="start_5" to="lua_action_6">
+ </connection>
+</ab>

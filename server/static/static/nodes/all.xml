@@ -1,0 +1,57 @@
+<node-descriptions>
+	<node-description id="condmerge">
+		<name lang="en">Join</name>
+		<name lang="es">Cruce</name>
+		<description lang="en">Condition or merge</description>
+		<description lang="es">Condición o unión</description>
+		<type>action</type>
+		<icon src="condmerge.png"/>
+		
+		<js>modules/condmerge.js</js>
+	</node-description>
+	
+	<node-description id="lua_action">
+		<name>Lua</name>
+		<description lang="en">Executes Lua code to perform an action</description>
+		<description lang="es">Ejecuta código Lua que realiza alguna acción</description>
+		<type>action</type>
+		<icon src="lua_action.png"/>
+		
+		<js>modules/lua.js</js>
+		<js>extra/codemirror.js</js>
+		<js>extra/codemirror_lua.js</js>
+	</node-description>
+
+	<node-description id="lua_event">
+		<name>Lua</name>
+		<description lang="en">Executes Lua code to check if some event is triggered. Must return true if the event is triggered, or false if not</description>
+		<description lang="es">Ejecuta código Lua para comprobar si activa el evento. Debe devolver 'true' si el evento se activa o 'false' en caso contrario</description>
+		<type>event</type>
+		<icon src="lua_event.png"/>
+		
+		<js>modules/lua.js</js>
+		<js>extra/codemirror.js</js>
+		<js>extra/codemirror_lua.js</js>
+	</node-description>
+
+	<node-description id="timeout">
+		<name lang="en">Timeout</name>
+		<name lang="es">Temporiz.</name>
+		<description lang="en">Triggers the event every T seconds.</description>
+		<description lang="es">Activa el evento cada T segundos.</description>
+		<type>event</type>
+		<icon src="timeout.png"/>
+		
+		<params>
+			<param id="timeout">
+				<type>float</type>
+				<description lang="en">Seconds between event each event activation </description>
+				<description lang="es">Cada cuantos segundos se activa el evento </description>
+				<max>100</max>
+				<min>0.1</min>
+				<default>0.5</default>
+			</param>
+		</params>
+		
+	</node-description>
+</node-descriptions>

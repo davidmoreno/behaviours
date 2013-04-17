@@ -1,0 +1,114 @@
+###### DIAGRAMS ######
+
+log("Start crowded diagram test")
+
+CreateNewProject()
+
+CreateWaitNode = function() {
+	click('[node-type=wait]')
+	click("a#close")
+}
+
+CreateTempNode = function() {
+	click('[node-type=timeout]')
+	click("a#close")
+}
+
+LinkWaitTemp = function() {
+	GetLastNodeId("wait")
+	click("${last_node_id}")
+	click("link=Connect/Disconnect node")
+	GetLastNodeId("timeout")
+	click("${last_node_id}")
+}
+
+FullBehavior = function() {
+	CreateWaitNode()
+	CreateTempNode()
+	LinkWaitTemp()
+}
+
+DeleteNodes = function() {
+	DeleteLastNode("wait")
+	DeleteLastNode("timeout")
+}
+
+# node init 
+click('[node-type=start]')
+
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+FullBehavior()
+
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+DeleteNodes()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

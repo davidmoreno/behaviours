@@ -1,0 +1,21 @@
+body{
+  font-family: sans;
+  margin:0px;
+  padding: 1em;
+  color: #555555;
+}
+
+a{
+  text-decoration: none;
+  color: #0044a4;
+}
+
+code, .code{
+  font-family: monospace;
+  font-weight: bold;
+}
+
+h1{
+  text-align: center;
+  border-bottom: 1px solid #AAA;
+}

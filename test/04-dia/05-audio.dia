@@ -1,0 +1,9 @@
+<ab>
+ <event id="start_1" type="start" x="100" y="10">
+ </event>
+ <action id="audio_3" type="audio" x="186" y="11">
+ <param name="file">audio_3</param>
+ </action>
+ <connection id="c_1" from="start_1" to="audio_3">
+ </connection>
+</ab>
