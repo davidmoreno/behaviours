@@ -17,14 +17,11 @@
  **/
 
 #include <ab/log.h>
-#include <aisoy1/bot.h>
 
 #ifdef __STAND_ALONE__
   #include <curl/curl.h>
   #include <curl/easy.h>
 #endif
-
-extern AISoy1::Bot bot;
 
 #include "webservice.h"
 #include <ab/manager.h>
