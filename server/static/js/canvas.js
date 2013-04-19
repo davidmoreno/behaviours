@@ -218,7 +218,7 @@ Canvas.prototype.setupViewpoint = function(source){
   that.svgRoot = null;
   that.viewpoint=svg.group('viewpoint')
   //var r=svg.circle(viewpoint, 100,100, 30,{fill:'#333',stroke:'none',id:'origin'})
-  var o=svg.image(viewpoint, 50,50, 90,90,"static/img/origin.png")
+  var o=svg.image(viewpoint, 50,50, 90,90,"img/origin.png")
   that.edges=svg.group(that.viewpoint,'edges')	
   that.root = $('#svgcanvas').svg('get').root();  	
   that.setupHandlers(that);

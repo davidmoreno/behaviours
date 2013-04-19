@@ -156,12 +156,12 @@ Main.prototype.startStop = function(silent){
 	var btn=$('#startstop')
 	
 	if ($('#startstop.play').length){
-		btn.find('img').attr('src','static/img/mainstop.png').attr('title',current_language.stopclick).attr('style','height:auto; width:auto;')
+		btn.find('img').attr('src','img/mainstop.png').attr('title',current_language.stopclick).attr('style','height:auto; width:auto;')
 		setTimeout(function(){
 		      $.post("/manager/",{run:1}, function(){
 			    btn.removeClass('play').addClass('stop')
 		      }).error(function(){
-			    btn.find('img').attr('src','static/img/play.png').attr('title',current_language.playclick).attr('style','height:auto; width:auto;')
+			    btn.find('img').attr('src','img/play.png').attr('title',current_language.playclick).attr('style','height:auto; width:auto;')
 			    if(!silent)
 			      alert(current_language.playerror);
 		      })
@@ -170,7 +170,7 @@ Main.prototype.startStop = function(silent){
 	} else if ($('#startstop.stop').length){
 		$.post("/manager/",{stop:1}, function(){
 			btn.removeClass('stop').addClass('play')
-			btn.find('img').attr('src','static/img/play.png').attr('title',current_language.playclick).attr('style','height:auto; width:auto;')		  
+			btn.find('img').attr('src','img/play.png').attr('title',current_language.playclick).attr('style','height:auto; width:auto;')		  
 		}).error(function(){
 		      if(!silent)
 			alert(current_language.stoperror);
@@ -207,7 +207,7 @@ Main.prototype.hideHelp = function(){
 }
 
 Main.prototype.loadHelp = function(section){
-  $('#ihelp').attr('src','static/doc/'+section+'.html')
+  $('#ihelp').attr('src','doc/'+section+'.html')
   this.showHelp();
 }
 
@@ -458,7 +458,7 @@ Main.prototype.save = function(){
 // 	main.showDialog();
 // 	$('#dialog #title').text(current_language.savingbehaviour)
 // 	$('#dialog #buttons').hide()
-// 	$('#dialog #content').html($('<div style="background:transparent; text-align:center; padding: 2em;"><img src="static/img/loading.gif"></div>'))
+// 	$('#dialog #content').html($('<div style="background:transparent; text-align:center; padding: 2em;"><img src="img/loading.gif"></div>'))
 // 	
 	$.post("/manager/",{save:1}, function(){
 	  var iframe = document.getElementById("hiddenDownloader");
@@ -498,7 +498,7 @@ $(document).ready(function(){
 
       var btn=$('#startstop')
       btn.removeClass('loading').addClass('play')
-      btn.find('img').attr('src','static/img/play.png').attr('title', current_language.loadtitle).attr('style','height:auto; width:auto;')
+      btn.find('img').attr('src','img/play.png').attr('title', current_language.loadtitle).attr('style','height:auto; width:auto;')
       //hideDialog(); 
     }
   }
@@ -506,7 +506,7 @@ $(document).ready(function(){
     if (!main.connecting_dialog){
       main.connecting_dialog=true
       var btn=$('#tools #startstop')
-      btn.find('img').attr('src','static/img/loading.gif').attr('title',current_language.connection_lost).attr('style','width: 50; height: 50;')
+      btn.find('img').attr('src','img/loading.gif').attr('title',current_language.connection_lost).attr('style','width: 50; height: 50;')
       var btn=$('#startstop').removeClass('stop').removeClass('play').addClass('loading')
     }
   }

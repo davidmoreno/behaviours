@@ -39,6 +39,5 @@ TestBasic::TestBasic(const char* type): Action(type)
 
 void TestBasic::exec()
 {
-	INFO("Exect testbasic %p",this);
-	AB::Action::exec();
+	INFO("Exec testbasic %p",this);
 }

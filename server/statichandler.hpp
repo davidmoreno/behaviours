@@ -15,15 +15,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
- 
 
 #pragma once
 
-#include <ab/action.h>
+#include <onion/onion.hpp>
+#include <vector>
 
-class TestBasic : public AB::Action{
-public:
-	TestBasic(const char* type);
-	
-	virtual void exec();
-};
+namespace AB{
+	/**
+	* @short Serves static content, but content can be overwritten by priority.
+	* 
+	* It sets a base directory, and for each subdirectory, in reverse alphabetical order, looks
+	* for the first that have the requested file. That file is returned to the client.
+	* 
+	* This way higher priority content will "overwrite" lower priority content, for example to 
+	* allow plugins to overwrite the base style.
+	*/
+	class StaticHandler : public Onion::Handler{
+		std::string basepath;
+		std::vector<Onion::Handler*> handlers;
+	public:
+		StaticHandler(const std::string &basepath);
+    virtual ~StaticHandler();
+		virtual onion_connection_status operator()(Onion::Request &req, Onion::Response &res);
+	};
+}

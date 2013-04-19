@@ -36,10 +36,11 @@ extern "C"{
 #include <sys/types.h>
 
 #include "nodemanager.hpp"
+#include "statichandler.hpp"
 
 namespace AB{
-	std::string static_dir="static";
-	std::string data_dir="data";
+	std::string static_dir=AB_PREFIX "/shared/ab";
+	std::string data_dir="~/ab/";
 }
 
 using namespace ABServer;
@@ -83,10 +84,13 @@ int main(void){
 		static_dir=std::string(getenv("DIAPATH")) + "/static/";
 		data_dir=std::string(getenv("DIAPATH")) + "/data/";
 	}
-	else{
+	
+	{
 		struct stat sb;
 		if (stat(static_dir.c_str(), &sb)<0){
-			ERROR("Can't open data dir. Set it with environment variable DIAPATH to the parent of static and data dirs. Alternatively run dia at the source directory of dia.");
+			ERROR("Can't open data dir (%s). Set it with environment variable DIAPATH to the parent "
+						"of static and data dirs. Alternatively run dia at the source directory of dia.",
+				 static_dir.c_str());
 			exit(1);
 		}
 	}
@@ -117,11 +121,11 @@ int main(void){
   url.add("^update/", &nodeManager, &NodeManager::update);
   url.add("^upload/", &nodeManager, &NodeManager::uploadXML);
   url.add("^wavload/", &nodeManager, &NodeManager::uploadWAV);
-  url.add("^static", new Onion::StaticHandler(static_dir));
-  url.add("^data", new Onion::StaticHandler(data_dir));
+  url.add("^static", new StaticHandler(static_dir));
+  //url.add("^data", new Onion::StaticHandler(data_dir));
   
 	
-	PluginLoader::loadPath(".");
+	PluginLoader::loadPath(AB_PREFIX "/lib/ab/");
 	
 //  onion_handler *w=onion_handler_webdav("data/files",NULL);
 //  onion_url_add_handler(url.c_ptr(), "^webdav/", w);

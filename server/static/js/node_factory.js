@@ -16,7 +16,7 @@ NodeFactory.prototype.updateAvailableNodes = function(){
 		  var files = filelist.files.split(" ");
 		  for(var n in files) {
 
-		    $.get('static/nodes/'+files[n], function(xml){ 
+		    $.get('nodes/'+files[n], function(xml){ 
 		      that.parseNodeDescription(xml); 
 		    }, 'xml')
 		  }
@@ -53,7 +53,7 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		var icon=xml.children('icon').attr('src')
 		if (!icon)
 			icon=id+'.png'
-		icon='static/img/'+icon
+		icon='img/'+icon
 
 		var klass
 		var li=$('<li>').attr('node-type',id)
@@ -137,7 +137,7 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 					return
 				var js=jss[0]
 				jss=jss.slice(1)
-				$.getScript('static/js/'+js, function(){ load_in_order(jss) }) 
+				$.getScript('js/'+js, function(){ load_in_order(jss) }) 
 			}
 			var jss=[]
 			xml.children('js').each(function(){ 

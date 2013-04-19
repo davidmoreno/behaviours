@@ -1,0 +1,7 @@
+<node-description id="testbasic">
+	<name lang="en">Test Basic</name>
+	<description lang="en">Just shows a message on console</description>
+	
+	<type>action</type>
+	<icon>test</icon>
+</node-description>

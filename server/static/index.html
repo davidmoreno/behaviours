@@ -3,15 +3,15 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title lid="title">Aisoy1 DIA</title>
 <style>
-@import "static/css/style.css";
+@import "css/style.css";
 </style>
-	<link rel="stylesheet" href="static/css/codemirror.css">
-	<link rel="stylesheet" href="static/css/lesser-dark.css">
-	<link rel="icon" type="image/png" href="static/img/favicon.png">
+	<link rel="stylesheet" href="css/codemirror.css">
+	<link rel="stylesheet" href="css/lesser-dark.css">
+	<link rel="icon" type="image/png" href="img/favicon.png">
 </header>
 <body>
 
-  <div id=loading class="hidden"><img src="static/img/loading.gif"></div>
+  <div id=loading class="hidden"><img src="img/loading.gif"></div>
   <div id="overwindow" class="hidden">
     <div id="gray" onclick="main.closeDialog()">
     </div>
@@ -90,10 +90,10 @@
     
 
     <div class="button_right main_buttons">
-      <a id="startstop" class="top_button play" href="#" onclick="main.startStop()"><img src="static/img/play.png" title="Play"></a>
+      <a id="startstop" class="top_button play" href="#" onclick="main.startStop()"><img src="img/play.png" title="Play"></a>
     </div>
-    <a href="http://www.coralbits.com" target="coralbits"><img src="static/img/coralbits.png"></a>
-    <a href="http://www.aisoy.com" target="coralbits"><img src="static/img/aisoy.png"></a>
+    <a href="http://www.coralbits.com" target="coralbits"><img src="img/coralbits.png"></a>
+    <a href="http://www.aisoy.com" target="coralbits"><img src="img/aisoy.png"></a>
    
   </div>
   
@@ -116,13 +116,13 @@
       <div id="mainhelp" class="main_buttons">
 	<ul>
 	  <li style="margin-top: 5px; margin-right:1em">
-	    <div id="viewtools"><img src="static/img/view_reset.png" id="view_reset" onclick="main.canvas.resetViewpoint()">
-	      <img src="static/img/view_all.png" id="view_all" onclick="main.canvas.viewAll()">
+	    <div id="viewtools"><img src="img/view_reset.png" id="view_reset" onclick="main.canvas.resetViewpoint()">
+	      <img src="img/view_all.png" id="view_all" onclick="main.canvas.viewAll()">
 	    </div></li>
 	  <li><a href="#" id="helpb" class="help" onclick="main.loadHelp('index')" lid="help">Ayuda</a></li>
 	  <li><a href="#" id="luab" class="lua_console" onclick="main.showLUAConsole()" lid="Lua">Lua</a></li>
 <!--	  <li><a href="#" class="console" onclick="main.showConsole()" lid="errors">Errores</a></li>
-	  <li style="padding:0px; margin-top: 5px;"><a href="#" onclick="main.showFiles()" id="files" lid="files"><img src="static/img/folder_simple.png" width=25></a></li>-->
+	  <li style="padding:0px; margin-top: 5px;"><a href="#" onclick="main.showFiles()" id="files" lid="files"><img src="img/folder_simple.png" width=25></a></li>-->
 	</ul>
       </div>
       
@@ -132,8 +132,8 @@
       
     <div id="extension">
     
-      <div id="scroll_right" onclick="main.canvas.toolsScrollR()"><img src="static/img/scroll_right.png"></div>
-      <div id="scroll_left" onclick="main.canvas.toolsScrollL()"><img src="static/img/scroll_left.png"></div>
+      <div id="scroll_right" onclick="main.canvas.toolsScrollR()"><img src="img/scroll_right.png"></div>
+      <div id="scroll_left" onclick="main.canvas.toolsScrollL()"><img src="img/scroll_left.png"></div>
  
       <div id="events">
 	<ul id="eventlist" class="toolbuttons">
@@ -147,7 +147,7 @@
       
       <!--<div id="flow"> 
 	<ul id="misc" class="toolbuttons ">
-	  <li><a href="#" onclick="main.behaviour.addNode('condmerge')" title="Indicar que hay un punto de separación o unión de cadenas. En las ramas que salen del nodo se indican las condiciones que deben cumplirse para ir por dicha rama"><div class="buttoncover"><img src="static/img/condmerge.png"><br><span lid="cross">Cruce</span></div></a></li>
+	  <li><a href="#" onclick="main.behaviour.addNode('condmerge')" title="Indicar que hay un punto de separación o unión de cadenas. En las ramas que salen del nodo se indican las condiciones que deben cumplirse para ir por dicha rama"><div class="buttoncover"><img src="img/condmerge.png"><br><span lid="cross">Cruce</span></div></a></li>
 	</ul>
       </div>-->
 	
@@ -157,16 +157,16 @@
 
   <!--<pre id="xml"></pre>-->
 
-  <script src="static/js/jquery-1.7.2.min.js"></script>
-  <script src="static/js/jquery.svg.min.js"></script>
-  <script src="static/js/jquery-ui.min.js"></script>
-  <script src="static/js/extra/jquery.form.min.js"></script>
-  <script src="static/js/lang/lang.js"></script>
-  <script src="static/js/connections.js"></script>
-  <script src="static/js/node.js"></script>
-  <script src="static/js/node_factory.js"></script>
-  <script src="static/js/behaviour.js"></script>
-  <script src="static/js/canvas.js"></script>
-  <script src="static/js/main.js"></script>
+  <script src="js/jquery-1.7.2.min.js"></script>
+  <script src="js/jquery.svg.min.js"></script>
+  <script src="js/jquery-ui.min.js"></script>
+  <script src="js/extra/jquery.form.min.js"></script>
+  <script src="js/lang/lang.js"></script>
+  <script src="js/connections.js"></script>
+  <script src="js/node.js"></script>
+  <script src="js/node_factory.js"></script>
+  <script src="js/behaviour.js"></script>
+  <script src="js/canvas.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>

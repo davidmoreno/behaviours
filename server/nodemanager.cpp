@@ -39,12 +39,13 @@ extern "C"{
 #include<iostream>
 #include <dirent.h>
 
+#include "utils.hpp"
 #include "nodemanager.hpp"
 
 static void registerAbNodes();
-static bool endswith(std::string const &fullString, std::string const &ending);
 
 using namespace ABServer;
+using namespace AB;
 
 void ABServer::init()
 {  
@@ -258,27 +259,7 @@ onion_connection_status NodeManager::node(Onion::Request& req, Onion::Response& 
       return OCS_PROCESSED;
     }
   if (req.query().has("list_files")){
-			DIR *dir=opendir((AB::static_dir + "static/nodes").c_str());
-			if (!dir){
-				ERROR("Cant read %s directory for xml listings %s", (AB::static_dir + "static/nodes").c_str(), strerror(errno));
-				return OCS_INTERNAL_ERROR;
-			}
-      std::string result = "";
-			dirent *ent;
-			while ( (ent=readdir(dir)) ){
-				DEBUG("%s", ent->d_name);
-				std::string str(ent->d_name);
-				if (endswith( str, ".xml")){
-					if (result!="")
-						result+=" ";
-					result+=str;
-				}
-			}
-			closedir(dir);
-      Onion::Dict d;
-      d.add("files",result);
-      d.setAutodelete(false); // Will be removed at return
-      return onion_shortcut_response_json(d.c_handler(), req.c_handler(), res.c_handler());
+    return list_xml_files(req, res);
     }
 
   else{
@@ -296,6 +277,38 @@ onion_connection_status NodeManager::node(Onion::Request& req, Onion::Response& 
       d.setAutodelete(false); // Will be removed at return
       return onion_shortcut_response_json(d.c_handler(), req.c_handler(), res.c_handler());
     }
+}
+
+
+/// Lists the XML files at nodes on static subdirs. FIXME use some JSON library.
+onion_connection_status NodeManager::list_xml_files(Onion::Request& req, Onion::Response& res)
+{
+	auto subd=getSubdirectories(AB::static_dir);
+	auto I=subd.begin(), endI=subd.end();
+	std::string result = "";
+	for (;I!=endI;++I){
+		std::string dirname=(AB::static_dir + "/" + *I + "/nodes/");
+		DIR *dir=opendir(dirname.c_str());
+		if (!dir){
+			ERROR("Cant read %s directory for xml listings %s", dirname.c_str(), strerror(errno));
+			return OCS_INTERNAL_ERROR;
+		}
+		dirent *ent;
+		while ( (ent=readdir(dir)) ){
+			DEBUG("%s", ent->d_name);
+			std::string str(ent->d_name);
+			if (endswith( str, ".xml")){
+				if (result!="")
+					result+=" ";
+				result+=str;
+			}
+		}
+		closedir(dir);
+	}
+	Onion::Dict d;
+	d.add("files",result);
+	d.setAutodelete(false); // Will be removed at return
+	return onion_shortcut_response_json(d.c_handler(), req.c_handler(), res.c_handler());
 }
 
 
@@ -571,11 +584,3 @@ static void registerAbNodes(){
   AB::Factory::registerClass<AB::Empty>("condmerge");
 }
 
-/// from http://stackoverflow.com/questions/874134/find-if-string-endswith-another-string-in-c
-static bool endswith(std::string const &fullString, std::string const &ending){
-	if (fullString.length() >= ending.length()) {
-		return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
-	} else {
-		return false;
-	}
-}

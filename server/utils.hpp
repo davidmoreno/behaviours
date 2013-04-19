@@ -15,15 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
- 
 
 #pragma once
 
-#include <ab/action.h>
+#include <string>
+#include <vector>
 
-class TestBasic : public AB::Action{
-public:
-	TestBasic(const char* type);
-	
-	virtual void exec();
+namespace AB{
+	bool isdir(const std::string &filename);
+	bool endswith(std::string const &fullString, std::string const &ending);
+	std::vector<std::string> getSubdirectories(const std::string& basepath);
 };
