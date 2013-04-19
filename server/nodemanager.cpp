@@ -26,30 +26,24 @@ extern "C"{
 #include <set>
 #include <ab/manager.h>
 #include <ab/node.h>
+#include <ab/event.h>
 #include <ab/factory.h>
 #include <ab/connection.h>
 #include <ab/log.h>
+#include <ab/builtin_nodes.hpp>
 
-#include <ab/events/start.h>
-#include <ab/events/timeout.h>
-#include <ab/events/luaevent.h>
-#include <ab/actions/luaaction.h>
-#include <ab/actions/empty.h>
-
-#include<iostream>
+#include <iostream>
 #include <dirent.h>
 
 #include "utils.hpp"
 #include "nodemanager.hpp"
-
-static void registerAbNodes();
 
 using namespace ABServer;
 using namespace AB;
 
 void ABServer::init()
 {  
-  registerAbNodes();
+  AB::registerBuiltinNodes();
 }
 
 //boost::mutex NodeManager::lua_mutex;
@@ -295,7 +289,7 @@ onion_connection_status NodeManager::list_xml_files(Onion::Request& req, Onion::
 		}
 		dirent *ent;
 		while ( (ent=readdir(dir)) ){
-			DEBUG("%s", ent->d_name);
+			//DEBUG("%s", ent->d_name);
 			std::string str(ent->d_name);
 			if (endswith( str, ".xml")){
 				if (result!="")
@@ -573,14 +567,5 @@ void NodeManager::mimeFill(const std::string & sourcefile)
     }
   fclose(fd);
   DEBUG("I know %d mime types", onion_dict_count(d.c_handler()));
-}
-
-
-static void registerAbNodes(){
-  AB::Factory::registerClass<AB::Start>("start");
-  AB::Factory::registerClass<AB::Timeout>("timeout");
-  AB::Factory::registerClass<AB::LUAEvent>("lua_event");
-  AB::Factory::registerClass<AB::LUAAction>("lua_action");
-  AB::Factory::registerClass<AB::Empty>("condmerge");
 }
 

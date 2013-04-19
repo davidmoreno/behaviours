@@ -54,4 +54,72 @@
 		</params>
 		
 	</node-description>
+	
+	<node-description id="alarm">
+		<name lang="en">Alarm</name>
+		<name lang="es">Alarma</name>
+		<description lang="en">Event triggered on a concrete time and date. Repetitions are allowed</description>
+		<description lang="es">Evento disparado a una hora y fecha determinada por el usuario. Permite repeticiones</description>
+	
+		<type>event</type>
+		<icon>alarm</icon>
+
+		<js>modules/alarm.js</js>
+	</node-description>
+
+	<node-description id="click">
+		<name>Click</name>
+		<description lang="en">Event triggered when the node is clicked</description>
+		<description lang="es">Evento disparado al pulsar con el ratón sobre el nodo</description>
+	
+		<type>event</type>
+		<icon>click</icon>
+	
+		<js>modules/click.js</js>
+	</node-description>
+	<node-description id="stop">
+		<name lang="en">Stop</name>
+		<name lang="es">Parar</name>
+		<description lang="en">Action that stops the behaviour execution</description>
+		<description lang="es">Acción que termina la ejecución del comportamiento</description>
+	
+		<type>action</type>
+		<icon>stop</icon>
+	
+		<js>modules/stop.js</js>
+	</node-description>
+
+	<node-description id="wait">
+		<name lang="en">Wait</name>
+		<name lang="es">Espera</name>
+		<description lang="en">Action that pauses the execution of the action chain during the selected time</description>
+		<description lang="es">Acción que permite que una determinada cadena de acciones tenga un retardo del tiempo indicado</description>
+	
+		<type>action</type>
+		<icon>wait</icon>
+
+		<params>
+		  <param id="t">
+		    <type>float</type>
+		    <description lang="en">Wait time </description>
+		    <description lang="es">Tiempo de espera </description>
+	            <min>0</min>
+		    <max>60</max>
+		    <default>1</default>
+		  </param>
+		</params>
+	</node-description>
+	
+	<node-description id="webservice">
+		<name>WebServ</name>
+		<description lang="en">Node to perform web requests</description>
+		<description lang="es">Nodo que permite realizar peticiones web</description>
+	
+		<type>action</type>
+		<icon>webservice</icon>	
+
+		<js>modules/webservice.js</js>
+	</node-description>
+	
+	
 </node-descriptions>
