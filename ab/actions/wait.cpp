@@ -18,12 +18,9 @@
 
 #include <sstream>
 #include <algorithm>
-#include <aisoy1/bot.h>
 #include "wait.h"
 
 using namespace AB;
-
-extern AISoy1::Bot bot;
 
 Wait::Wait(const char *type) : AB::Action(type)
 {

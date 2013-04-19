@@ -17,10 +17,6 @@
  **/
 
 #include <ab/log.h>
-#include <aisoy1/bot.h>
-
-
-extern AISoy1::Bot bot;
 
 #include "stop.h"
 #include <ab/manager.h>
@@ -33,15 +29,12 @@ Stop::Stop(const char *type) : Action(type)
 
 void Stop::exec()
 {
-#ifdef __STAND_ALONE__
  if(manager) {
    WARNING("Stopping");
    manager->cancel();
-   exit(0);
  } else {
    ERROR("Unable to stop: no Manager available");
  }
-#endif
 }
 
 void Stop::setManager(AB::Manager* m)

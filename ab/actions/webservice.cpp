@@ -18,22 +18,18 @@
 
 #include <ab/log.h>
 
-#ifdef __STAND_ALONE__
-  #include <curl/curl.h>
-  #include <curl/easy.h>
-#endif
+#include <curl/curl.h>
+#include <curl/easy.h>
 
 #include "webservice.h"
 #include <ab/manager.h>
 
 using namespace AB;
 
-#ifdef __STAND_ALONE__
 int webservice_writer(char *data, size_t size, size_t nmemb, std::string *buffer) {
   buffer->append(data);
   return 0;
 }
-#endif
 
 WebService::WebService(const char *type) : Action(type)
 {
@@ -70,7 +66,6 @@ AttrList WebService::attrList()
 void WebService::exec()
 {
   INFO("service: %s, url: %s, timeout: %d", service.c_str(), url.c_str(), timeout);
-#ifdef __STAND_ALONE__
   CURL *curl;
   std::string response="";
 
@@ -89,7 +84,6 @@ void WebService::exec()
   curl_easy_cleanup(curl);
 
   DEBUG("Web request got: %d", code);
-#endif
 }
 
 void WebService::setManager(AB::Manager* m)
