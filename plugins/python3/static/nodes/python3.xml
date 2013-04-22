@@ -1,0 +1,16 @@
+<node-description id="python3action">
+	<name lang="en">Python3</name>
+	<description lang="en">Executes some Python3 code</description>
+	
+	<type>action</type>
+	<icon>test</icon>
+	
+	<icon src="python3.png"/>
+	
+	<params>
+		<param id="code">
+			<type>text</type>
+			<description lang="en">Code to be executed on action</description>
+		</param>
+	</params>
+</node-description>

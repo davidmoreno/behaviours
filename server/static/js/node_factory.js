@@ -35,7 +35,7 @@ NodeFactory.prototype.getTranslatedField = function(xml, tag){
 		return xml.children(tag).text()
 }
 
-NodeFactory.prototype.paramTypes={ string:String, float:Number, array:Array }
+NodeFactory.prototype.paramTypes={ string:String, float:Number, array:Array, text:Text }
 
 NodeFactory.prototype.parseNodeDescription = function(xml){
 	var that=this
