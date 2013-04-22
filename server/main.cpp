@@ -130,7 +130,7 @@ int main(void){
 //  onion_handler *w=onion_handler_webdav("data/files",NULL);
 //  onion_url_add_handler(url.c_ptr(), "^webdav/", w);
 	    
-  nodeManager.mimeFill();
+  //nodeManager.mimeFill();
 
 	INFO("Listening at 127.0.0.1:8081");
 	
