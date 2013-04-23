@@ -1,4 +1,4 @@
-SET(LIBS ab_static z xml2 ${LUA_LIB} boost_thread-mt dl)
+SET(LIBS ab_static z xml2 ${LUA_LIB} boost_thread-mt dl boost_system)
 
 add_executable(01-simple 01-simple.cpp)
 target_link_libraries(01-simple ${LIBS} -shared-libgcc)
