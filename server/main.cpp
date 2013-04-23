@@ -40,7 +40,7 @@ extern "C"{
 
 namespace AB{
 	std::string static_dir=AB_PREFIX "/shared/ab";
-	std::string data_dir="~/ab/";
+	std::string data_dir=std::string(getenv("HOME"))+"/behaviours/";
 }
 
 using namespace ABServer;
@@ -79,10 +79,9 @@ static void on_SIGINT(int){
 }
 
 int main(void){
-	if (getenv("DIAPATH")){
-		WARNING("Setting default path to %s", getenv("DIAPATH"));
-		static_dir=std::string(getenv("DIAPATH")) + "/static/";
-		data_dir=std::string(getenv("DIAPATH")) + "/data/";
+	if (getenv("ABPATH")){
+		WARNING("Setting default path to %s", getenv("ABPATH"));
+		static_dir=std::string(getenv("ABPATH")) + "/static/";
 	}
 	
 	{
@@ -102,7 +101,7 @@ int main(void){
   AB::manager_notify_node_enter = node_notify_enter;
   AB::manager_notify_node_exit = node_notify_exit;
   
-  manager.loadBehaviour("data/current.dia");
+  manager.loadBehaviour(data_dir + "current.dia");
   o=new Onion::Onion(O_POOL);
   
   signal(SIGINT, on_SIGINT);

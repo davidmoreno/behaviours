@@ -34,6 +34,7 @@ extern "C"{
 
 #include <iostream>
 #include <dirent.h>
+#include <sys/stat.h>
 
 #include "utils.hpp"
 #include "nodemanager.hpp"
@@ -58,6 +59,8 @@ NodeManager::NodeManager(AB::Manager* ab)
   downloaded = "";
   needsAutosave = false;
   forceUpdate = false;
+	current_ab_file=data_dir+"/current.dia";
+	mkdir(data_dir.c_str(),0777);
   gettimeofday(&lastAutosave, NULL);
 }
 
@@ -84,7 +87,7 @@ onion_connection_status NodeManager::manager(Onion::Request& req, Onion::Respons
 {
   Onion::Dict post=req.post();
   if (post.has("run")){
-      ab->saveBehaviour("data/current.dia");
+      ab->saveBehaviour(current_ab_file);
       if (abthread==NULL){
           abthread=new boost::thread(&AB::Manager::exec, ab);
           res<<"OK";
@@ -105,9 +108,10 @@ onion_connection_status NodeManager::manager(Onion::Request& req, Onion::Respons
        return OCS_PROCESSED;
     }
   } else if(post.has("save")) {
-    ab->saveBehaviour("data/current.dia");
+    ab->saveBehaviour(current_ab_file);
     DEBUG("save:%s",post.get("save").c_str());
     if(post.get("save") != "0") {
+			WARNING("Save not properly working yet. You have a copy at %s/current.dia", data_dir.c_str());
       std::string filename = "cp data/current.dia data/files/"+ab->name()+".dia";
     //ab->saveBehaviour(filename,true);
       if(system(filename.c_str()))
@@ -125,7 +129,7 @@ onion_connection_status NodeManager::manager(Onion::Request& req, Onion::Respons
   } else if(post.has("description")) {
     ab->setName(req.post().get("name"));
     ab->setDescription(req.post().get("description"));
-    ab->saveBehaviour("data/current.dia");
+    ab->saveBehaviour(current_ab_file);
     res<<"OK";
     return OCS_PROCESSED;
 
@@ -142,8 +146,8 @@ onion_connection_status NodeManager::manager(Onion::Request& req, Onion::Respons
   }
 
   if(req.query().has("refresh")) {
-    ab->saveBehaviour("data/current.dia");
-    return onion_shortcut_response_file("data/current.dia", req.c_handler(), res.c_handler());
+    ab->saveBehaviour(current_ab_file);
+    return onion_shortcut_response_file(current_ab_file.c_str(), req.c_handler(), res.c_handler());
   }
 
   return OCS_NOT_PROCESSED;
@@ -361,6 +365,7 @@ onion_connection_status NodeManager::lua(Onion::Request& req, Onion::Response& r
 
 onion_connection_status NodeManager::uploadXML(Onion::Request &req, Onion::Response &res)
 {
+	WARNING("Upload XMLs not working yet");
   if (req.hasFiles()){
 
       std::string orig=req.files().get("upload");
@@ -379,7 +384,7 @@ onion_connection_status NodeManager::uploadXML(Onion::Request &req, Onion::Respo
         name = "data/files/"+ab->name()+".dia";
       ab->saveBehaviour(name,true);
 
-      ab->saveBehaviour("data/current.dia");
+      ab->saveBehaviour(current_ab_file);
 
       res<<"OK";
       return OCS_PROCESSED;
@@ -425,7 +430,7 @@ onion_connection_status NodeManager::update(Onion::Request &req, Onion::Response
           //        else
           //          d.add("startStop","off");
           //        // autosaves each minute, if needed
-          //        ab->saveBehaviour("data/current.dia");
+          //        ab->saveBehaviour(current_ab_file);
           //        lastAutosave = now;
           //        needsAutosave = false;
           //        forceUpdate = false;

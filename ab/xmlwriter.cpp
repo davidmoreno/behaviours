@@ -68,7 +68,10 @@ void writeBehaviour(const std::string &file, Manager *manager, bool includeFiles
 
   writeNodes(root_element, manager, includeFiles);
   writeMetadata(root_element, manager);
-  xmlSaveFormatFileEnc(file.c_str(), doc, "UTF-8", 1);
+  int n=xmlSaveFormatFileEnc(file.c_str(), doc, "UTF-8", 1);
+	if (n<0){
+		ERROR("Error writing XML file: %s", strerror(errno));
+	}
   
   xmlFreeDoc(doc);
   xmlCleanupParser();

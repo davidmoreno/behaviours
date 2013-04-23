@@ -26,16 +26,10 @@ void ab_init(void){
 	AB::Factory::registerClass<TestBasic>("testbasic");
 }
 
-Onion::Handler *ab_urls(void){
-	return NULL;
-}
-
-
 TestBasic::TestBasic(const char* type): Action(type)
 {
 
 }
-
 
 void TestBasic::exec()
 {

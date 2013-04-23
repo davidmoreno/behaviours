@@ -49,6 +49,7 @@ namespace ABServer{
 		std::queue<AB::Node *> activeNodes;
 		std::queue<AB::Node *> inactiveNodes;
 		std::string luaOutput;
+		std::string current_ab_file;
 		//static boost::mutex lua_mutex, activeNodes_mutex, inactiveNodes_mutex;
 
 		std::string downloaded;
