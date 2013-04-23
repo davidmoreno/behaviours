@@ -79,7 +79,7 @@ void WebService::exec()
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, webservice_writer);
 
-  CURLcode code = curl_easy_perform(curl);
+  CURLcode __attribute__((unused)) code = curl_easy_perform(curl);
 
   curl_easy_cleanup(curl);
 

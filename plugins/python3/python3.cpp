@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#include <Python.h>
 #include <ab/action.h>
 #include <ab/factory.h>
-#include <python3.3m/Python.h>
 
 namespace AB{
 	class Python3Action : public Action{
