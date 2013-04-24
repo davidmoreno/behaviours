@@ -17,6 +17,8 @@
  **/
 
 #include <Python.h>
+#include <wchar.h>
+
 #include <ab/action.h>
 #include <ab/factory.h>
 #include <ab/manager.h>
@@ -132,8 +134,15 @@ namespace Python3{
 			return AB::to_object( PyFloat_AsDouble(obj) );
 		if (PyLong_Check(obj))
 			return AB::to_object( (int)PyLong_AsLong(obj) );
-		if (PyUnicode_Check(obj))
-			return AB::to_object( PyUnicode_AsUTF8(obj) );
+		if (PyUnicode_Check(obj)){
+			Py_ssize_t size;
+			wchar_t *str=PyUnicode_AsWideCharString(obj, &size);
+			char str8[wcslen(str) + 1];
+			wcstombs( str8, str, wcslen(str) );
+			PyMem_Free(str);
+
+			return AB::to_object( std::string(str8) );
+		}
 		
 		throw(AB::object_not_convertible( obj->ob_type->tp_name, "Object"));
 	}
