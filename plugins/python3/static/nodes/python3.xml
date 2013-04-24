@@ -13,4 +13,9 @@
 			<description lang="en">Code to be executed on action</description>
 		</param>
 	</params>
+
+	<js>modules/python.js</js>
+	<js>extra/codemirror.js</js>
+	<js>extra/codemirror_python.js</js>
+
 </node-description>

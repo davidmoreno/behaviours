@@ -13,6 +13,6 @@ install(TARGETS python3
 	LIBRARY DESTINATION lib/ab
 	)
 	
-install(DIRECTORY static/nodes static/img
+install(DIRECTORY static/nodes static/img static/js
 	DESTINATION shared/ab/python3
 	)
