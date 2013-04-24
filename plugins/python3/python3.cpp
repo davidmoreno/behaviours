@@ -18,6 +18,7 @@
 
 #include <Python.h>
 #include <ab/action.h>
+#include <ab/event.h>
 #include <ab/factory.h>
 #include <ab/manager.h>
 
@@ -35,8 +36,23 @@ namespace AB{
 		
     virtual void setManager(Manager* manager);
 	};
+	
+	class Python3Event : public Event{
+		std::string code;
+	public:
+		Python3Event(const char* type);
+    virtual ~Python3Event();
+    virtual bool check();
+		
+    virtual AttrList attrList();
+    virtual Object attr(const std::string& name);
+    virtual void setAttr(const std::string& name, Object obj);
+		
+    virtual void setManager(Manager* manager);
+	};
 	namespace Python3{
 		PyObject *PyInit_ab(void);
+		void python3_init();
 		Manager *ab_module_manager=NULL;
 	}
 }
@@ -46,21 +62,26 @@ namespace AB{
 void ab_init(void){
 	DEBUG("Loaded python3 plugin");
 	AB::Factory::registerClass<AB::Python3Action>("python3action");
+	AB::Factory::registerClass<AB::Python3Event>("python3event");
 }
 
 using namespace AB;
 using namespace AB::Python3;
 
 static int python_ref_count=0;
-
-Python3Action::Python3Action(const char* type): Action(type)
-{
+void AB::Python3::python3_init(){
 	if (python_ref_count==0){
 		PyImport_AppendInittab("ab",PyInit_ab);
 		Py_SetProgramName((wchar_t*)("behaviours"));
 		Py_Initialize();
+		
 	}
 	python_ref_count++;
+}
+
+Python3Action::Python3Action(const char* type): Action(type)
+{
+	python3_init();
 	code="";
 }
 
@@ -73,7 +94,8 @@ Python3Action::~Python3Action()
 
 void Python3Action::exec()
 {
-	PyRun_SimpleString( code.c_str() );
+	if ( PyRun_SimpleString( code.c_str() ) < 0)
+		PyErr_Print();
 }
 
 AttrList Python3Action::attrList()
@@ -97,6 +119,58 @@ void Python3Action::setAttr(const std::string& name, Object obj)
 }
 
 void Python3Action::setManager(Manager* manager)
+{
+	AB::Node::setManager(manager);
+	AB::Python3::ab_module_manager=manager;
+}
+
+Python3Event::Python3Event(const char* type): Event(type)
+{
+	python3_init();
+	code="";
+	setFlags(flags()|AB::Event::Polling);
+}
+
+Python3Event::~Python3Event()
+{
+	python_ref_count--;
+	if (python_ref_count==0)
+		Py_Finalize();
+}
+
+bool Python3Event::check()
+{
+	if (code.size()==0)
+		return false;
+	if ( PyRun_SimpleString( code.c_str() ) < 0){
+		//PyErr_Print();
+		return false;
+	}
+	else
+		return true;
+}
+
+AttrList Python3Event::attrList()
+{
+	auto attr=AB::Node::attrList();
+	attr.push_back("code");
+	return attr;
+}
+
+Object Python3Event::attr(const std::string& name)
+{
+	return to_object(code);
+}
+
+void Python3Event::setAttr(const std::string& name, Object obj)
+{
+	if (name=="code")
+		code=object2string(obj);
+	else
+		return Event::setAttr(name, obj);
+}
+
+void Python3Event::setManager(Manager* manager)
 {
 	AB::Node::setManager(manager);
 	AB::Python3::ab_module_manager=manager;
