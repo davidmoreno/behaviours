@@ -25,7 +25,9 @@
 
 namespace AB{
 namespace Python3{
-
+	static PyObject *object2pyobject(AB::Object &obj);
+	static Object to_object(PyObject *obj);
+	
 	extern Manager *ab_module_manager;
 	static PyObject *manager_error;
 
@@ -33,7 +35,49 @@ namespace Python3{
 		PyObject_HEAD
 		Node *node;
 	} NodeObject;
+	
 
+	static PyObject *node_getattr(PyObject *self, char *attr){
+		NodeObject *oself=(NodeObject*)self;
+		try{
+			auto v=oself->node->attr(attr);
+			return object2pyobject(v);
+		}
+		catch(const AB::attribute_not_found &a){
+			return NULL;
+		}
+	}
+	static int node_setattr(PyObject *self, char *attr, PyObject *value){
+		NodeObject *oself=(NodeObject*)self;
+		try{
+			oself->node->setAttr(attr, to_object(value));
+			return 0;
+		}
+		catch(const AB::attribute_not_found &a){
+			return -1;
+		}
+	}
+	
+	static PyObject *node_dir(PyObject *self){
+		NodeObject *oself=(NodeObject*)self;
+		try{
+			auto attrlist=oself->node->attrList();
+			auto I=attrlist.begin(), endI=attrlist.end();
+			PyObject *ret=PyList_New(attrlist.size());
+			Py_INCREF(ret);
+			int i;
+			for(i=0;I!=endI;++i,++I){
+				PyObject *name=PyUnicode_FromString((*I).c_str());
+				Py_INCREF(name);
+				PyList_SetItem(ret, i, name);
+			}
+			return ret;
+		}
+		catch(const AB::attribute_not_found &a){
+			return NULL;
+		}
+	}
+	
 	static PyTypeObject NodeObjectType = {
 			PyVarObject_HEAD_INIT(NULL,0)
 			"ab.node",             /*tp_name*/
@@ -41,8 +85,8 @@ namespace Python3{
 			0,                         /*tp_itemsize*/
 			0,                         /*tp_dealloc*/
 			0,                         /*tp_print*/
-			0,                         /*tp_getattr*/
-			0,                         /*tp_setattr*/
+			node_getattr,                         /*tp_getattr*/
+			node_setattr,                         /*tp_setattr*/
 			0,                         /*tp_compare*/
 			0,                         /*tp_repr*/
 			0,                         /*tp_as_number*/
@@ -59,8 +103,7 @@ namespace Python3{
 	};
 
 
-	
-	static PyObject *PyObject_new(AB::Object &obj){
+	static PyObject *object2pyobject(AB::Object &obj){
 		auto t=obj->type();
 		if (t==AB::Integer::type)
 				return PyLong_FromLong(object2int(obj));
@@ -81,6 +124,20 @@ namespace Python3{
 		DEBUG("Create node %s failed", obj->type());
 		return NULL;
 	}
+	
+	static Object to_object(PyObject *obj){
+		if (PyBool_Check(obj))
+			return AB::to_object( obj == Py_True );
+		if (PyFloat_Check(obj))
+			return AB::to_object( PyFloat_AsDouble(obj) );
+		if (PyLong_Check(obj))
+			return AB::to_object( (int)PyLong_AsLong(obj) );
+		if (PyUnicode_Check(obj))
+			return AB::to_object( PyUnicode_AsUTF8(obj) );
+		
+		throw(AB::object_not_convertible( obj->ob_type->tp_name, "Object"));
+	}
+
 
 	/// Define a new class for the manager. 
 	static PyObject *ab_manager_resolve(PyObject *self, PyObject *args){
@@ -92,7 +149,7 @@ namespace Python3{
 		
 		try{
 			AB::Object n( ab_module_manager->resolve(name) );
-			return PyObject_new(n);
+			return object2pyobject(n);
 		}
 		catch(const AB::attribute_not_found &e){
 			PyErr_SetString(manager_error, (std::string("Could not resolve symbol ")+name).c_str());
@@ -113,6 +170,11 @@ namespace Python3{
 		ab_methods
 	};
 
+	static struct PyMethodDef node_methods[] = {
+		{ "__dir__", (PyCFunction)node_dir, METH_NOARGS, NULL},
+		{NULL, NULL, 0, NULL}
+	};
+	
 	PyObject *PyInit_ab(void){
 		auto m = PyModule_Create(&ab_module);
 		if (!m)
@@ -122,6 +184,7 @@ namespace Python3{
 		PyModule_AddObject(m, "exception", manager_error);
 		
 		NodeObjectType.tp_new = PyType_GenericNew;
+		NodeObjectType.tp_methods = node_methods;
 		if (PyType_Ready(&NodeObjectType) < 0)
 			return NULL;
 
