@@ -1,4 +1,4 @@
-SET(SOURCES python3.cpp)
+SET(SOURCES python3.cpp ab_module.cpp)
 
 find_library(PYTHON3_LIB NAMES python3.3m python3.2mu PATH ${LIBPATH})
 find_path(PYTHON3_HEADER Python.h ${CMAKE_INCLUDE_PATH} /usr/include/python3.3m  /usr/include/python3.2mu)

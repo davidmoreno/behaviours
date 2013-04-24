@@ -26,6 +26,7 @@
 #include <onion/onion.hpp>
 #include <onion/dict.hpp>
 #include <boost/thread.hpp>
+#include <memory>
 
 const size_t max_queue_size = 25;
 namespace AB{
@@ -43,7 +44,7 @@ namespace ABServer{
 	 * @short Serves JSON data with all available nodes, and more info.
 	 */
 	class NodeManager{
-		AB::Manager *ab;
+		std::shared_ptr<AB::Manager> ab;
 		boost::thread *abthread;
 
 		std::queue<AB::Node *> activeNodes;
@@ -57,7 +58,7 @@ namespace ABServer{
 		bool needsAutosave, forceUpdate;
 
 	public:
-		NodeManager(AB::Manager *ab);
+		NodeManager(std::shared_ptr<AB::Manager> &ab);
 		
 		Onion::Dict attributesOf(AB::Node *node);
 		

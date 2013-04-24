@@ -24,6 +24,7 @@
 #include "event.h"
 #include "action.h"
 #include "connection.h"
+#include "pluginloader.h"
 #define foreach BOOST_FOREACH
 
 using namespace AB;
@@ -41,6 +42,7 @@ Manager::Manager() :
   lua=new LUA();
   lua->setManager(this);
   execThreadId=boost::this_thread::get_id(); // Can be used directly, if before calling exec.
+  PluginLoader::loadPath(AB_PREFIX "/lib/ab/");
 }
 
 Manager::~Manager()

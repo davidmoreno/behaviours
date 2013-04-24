@@ -71,6 +71,11 @@ bool PluginLoader::loadPlugin(const std::string& filename)
 	void *dl=dlopen(filename.c_str(), RTLD_LAZY | RTLD_GLOBAL);
 	bool inuse=false;
 	
+	if (!dl){
+		WARNING("Plugin file at %s could not be loaded: %s", filename.c_str(), dlerror());
+		return false;
+	}
+	
 	// Trick to compiler to allow void* to ab_init_f conversion.
 	union{
 		ab_init_f *init;
@@ -81,15 +86,25 @@ bool PluginLoader::loadPlugin(const std::string& filename)
 	if (!init) // Check also C++ name
 		init_v=dlsym(dl, "_Z7ab_initv");
 	
-	if (init){
-		inuse=true;
-		init();
+	if (!init){
+		WARNING("Plugin file at %s could not be loaded: %s", filename.c_str(), dlerror());
+		return false;
 	}
 	
-	if (!inuse)
-		dlclose(dl);
-	else{
+	if (init){
 		INFO("Loaded plugin at %s", filename.c_str());
+		inuse=true;
+		try{
+			init();
+		}
+		catch(const std::exception &e){
+			ERROR("Error loading plugin %s: %s", filename.c_str(), e.what());
+		}
 	}
-	return false;
+	
+	if (!inuse){
+		dlclose(dl);
+		return false;
+	}
+	return true;
 }

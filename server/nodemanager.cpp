@@ -51,9 +51,8 @@ void ABServer::init()
 //boost::mutex NodeManager::activeNodes_mutex;
 //boost::mutex NodeManager::inactiveNodes_mutex;
 
-NodeManager::NodeManager(AB::Manager* ab)
+NodeManager::NodeManager(std::shared_ptr<AB::Manager> &ab) : ab(ab)
 {
-  this->ab=ab;
   abthread=NULL;
   luaOutput = "";
   downloaded = "";
@@ -89,7 +88,7 @@ onion_connection_status NodeManager::manager(Onion::Request& req, Onion::Respons
   if (post.has("run")){
       ab->saveBehaviour(current_ab_file);
       if (abthread==NULL){
-          abthread=new boost::thread(&AB::Manager::exec, ab);
+          abthread=new boost::thread(&AB::Manager::exec, ab.get());
           res<<"OK";
           return OCS_PROCESSED;
       }

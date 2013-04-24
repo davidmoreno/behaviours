@@ -55,6 +55,14 @@ static const std::string base64_chars =
  */
 void readBehaviour(const std::string &file, Manager *manager)
 {
+	{
+		struct stat st;
+		if (stat(file.c_str(), &st)<0){
+			ERROR("Could not load behaviour from %s", file.c_str());
+			return;
+		}
+	}
+	
   LIBXML_TEST_VERSION;
 
   xmlDoc *doc = NULL;

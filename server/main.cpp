@@ -28,7 +28,6 @@ extern "C"{
 #include <ab/log.h>
 #include <ab/factory.h>
 #include <ab/events/start.h>
-#include <ab/pluginloader.h>
 #include <signal.h>
 #include <iostream>
 #include <unistd.h>
@@ -49,22 +48,21 @@ using namespace AB;
 
 Onion::Onion *o;
  
-AB::Manager manager;
-   
-NodeManager nodeManager(&manager);
+std::shared_ptr<AB::Manager> manager;
+std::shared_ptr<NodeManager> nodeManager;
   
 static void node_notify_enter(AB::Node *n) {
-  nodeManager.activateNode(n);
+  nodeManager->activateNode(n);
 }
 
 static void node_notify_exit(AB::Node *n) {
-  nodeManager.deactivateNode(n);
+  nodeManager->deactivateNode(n);
 }
 
 static void lua_output_update(const std::string &str) {
   if(!str.empty()) {
     WARNING("got: %s from Lua",str.c_str());
-    nodeManager.updateLuaOutput(str);
+    nodeManager->updateLuaOutput(str);
   }
 }
 
@@ -94,6 +92,9 @@ int main(void){
 		}
 	}
 	
+	manager=make_shared<Manager>();
+	nodeManager=make_shared<NodeManager>(manager);
+	
   ABServer::init();
   //DIA::init(&manager);
 
@@ -101,7 +102,7 @@ int main(void){
   AB::manager_notify_node_enter = node_notify_enter;
   AB::manager_notify_node_exit = node_notify_exit;
   
-  manager.loadBehaviour(data_dir + "current.dia");
+  manager->loadBehaviour(data_dir + "current.dia");
   o=new Onion::Onion(O_POOL);
   
   signal(SIGINT, on_SIGINT);
@@ -113,19 +114,16 @@ int main(void){
   Onion::Url url(o);
 	
   url.add("", new Onion::RedirectHandler("/static/index.html"));
-  url.add("^manager/", &nodeManager, &NodeManager::manager);
-  url.add("^node/", &nodeManager, &NodeManager::node);
-  url.add("^connections/", &nodeManager, &NodeManager::connections);
-  url.add("^lua/", &nodeManager, &NodeManager::lua);
-  url.add("^update/", &nodeManager, &NodeManager::update);
-  url.add("^upload/", &nodeManager, &NodeManager::uploadXML);
-  url.add("^wavload/", &nodeManager, &NodeManager::uploadWAV);
+  url.add("^manager/", nodeManager.get(), &NodeManager::manager);
+  url.add("^node/", nodeManager.get(), &NodeManager::node);
+  url.add("^connections/", nodeManager.get(), &NodeManager::connections);
+  url.add("^lua/", nodeManager.get(), &NodeManager::lua);
+  url.add("^update/", nodeManager.get(), &NodeManager::update);
+  url.add("^upload/", nodeManager.get(), &NodeManager::uploadXML);
+  url.add("^wavload/", nodeManager.get(), &NodeManager::uploadWAV);
   url.add("^static", new StaticHandler(static_dir));
   //url.add("^data", new Onion::StaticHandler(data_dir));
   
-	
-	PluginLoader::loadPath(AB_PREFIX "/lib/ab/");
-	
 //  onion_handler *w=onion_handler_webdav("data/files",NULL);
 //  onion_url_add_handler(url.c_ptr(), "^webdav/", w);
 	    

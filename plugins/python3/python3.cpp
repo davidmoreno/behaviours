@@ -19,6 +19,7 @@
 #include <Python.h>
 #include <ab/action.h>
 #include <ab/factory.h>
+#include <ab/manager.h>
 
 namespace AB{
 	class Python3Action : public Action{
@@ -31,8 +32,15 @@ namespace AB{
     virtual AttrList attrList();
     virtual Object attr(const std::string& name);
     virtual void setAttr(const std::string& name, Object obj);
+		
+    virtual void setManager(Manager* manager);
 	};
+	namespace Python3{
+		PyObject *PyInit_ab(void);
+		Manager *ab_module_manager=NULL;
+	}
 }
+
 
 
 void ab_init(void){
@@ -41,12 +49,14 @@ void ab_init(void){
 }
 
 using namespace AB;
+using namespace AB::Python3;
 
 static int python_ref_count=0;
 
 Python3Action::Python3Action(const char* type): Action(type)
 {
 	if (python_ref_count==0){
+		PyImport_AppendInittab("ab",PyInit_ab);
 		Py_SetProgramName((wchar_t*)("behaviours"));
 		Py_Initialize();
 	}
@@ -84,4 +94,10 @@ void Python3Action::setAttr(const std::string& name, Object obj)
 		code=object2string(obj);
 	else
 		return Action::setAttr(name, obj);
+}
+
+void Python3Action::setManager(Manager* manager)
+{
+	AB::Node::setManager(manager);
+	AB::Python3::ab_module_manager=manager;
 }
