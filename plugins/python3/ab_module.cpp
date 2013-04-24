@@ -138,7 +138,6 @@ namespace Python3{
 		throw(AB::object_not_convertible( obj->ob_type->tp_name, "Object"));
 	}
 
-
 	/// Define a new class for the manager. 
 	static PyObject *ab_manager_resolve(PyObject *self, PyObject *args){
 		const char *name;
@@ -157,8 +156,36 @@ namespace Python3{
 		}
 	}
 
+	static PyObject *ab_manager_list_nodes(PyObject *self){
+		auto nodelist=ab_module_manager->getNodes();
+		auto typelist=AB::Factory::list();
+		PyObject *ret=PyList_New(nodelist.size() + typelist.size());
+		Py_INCREF(ret);
+		{
+			auto I=nodelist.begin(), endI=nodelist.end();
+			int i;
+			for(i=0;I!=endI;++i,++I){
+				PyObject *name=PyUnicode_FromString((*I)->name().c_str());
+				Py_INCREF(name);
+				PyList_SetItem(ret, i, name);
+			}
+		}
+		int b=nodelist.size();
+		{
+			auto I=typelist.begin(), endI=typelist.end();
+			int i;
+			for(i=0;I!=endI;++i,++I){
+				PyObject *name=PyUnicode_FromString((*I).c_str());
+				Py_INCREF(name);
+				PyList_SetItem(ret, b + i, name);
+			}
+		}
+		return ret;
+	}
+	
 	static PyMethodDef ab_methods[] = {
 		{"resolve", ab_manager_resolve, METH_VARARGS, NULL},
+		{"list_nodes", (PyCFunction)ab_manager_list_nodes, METH_NOARGS, NULL},
 		{NULL, NULL, 0, NULL}
 	};
 

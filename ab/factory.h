@@ -105,8 +105,8 @@ namespace AB {
       * 
       * @return The list of known type names
       */
-      static std::vector<std::string> list();
-		
+    static std::vector<std::string> list();
+
     /**
      * @short Debugger helper that just returns all the known elements as a string
      *
