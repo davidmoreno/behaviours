@@ -21,6 +21,9 @@
 #include <ab/event.h>
 #include <ab/factory.h>
 #include <ab/manager.h>
+#include "python3.hpp"
+
+
 
 namespace AB{
 	class Python3Action : public Action{
@@ -51,6 +54,7 @@ namespace AB{
     virtual void setManager(Manager* manager);
 	};
 	namespace Python3{
+		PyObject *globals;
 		PyObject *PyInit_ab(void);
 		void python3_init();
 		Manager *ab_module_manager=NULL;
@@ -59,24 +63,34 @@ namespace AB{
 
 
 
+void python3_interpreter(FILE *fd){
+	sleep(5);
+	PyRun_InteractiveLoopFlags(fd, "__stdin__", (PyCompilerFlags*)NULL);
+}
+
 void ab_init(void){
 	DEBUG("Loaded python3 plugin");
 	AB::Factory::registerClass<AB::Python3Action>("python3action");
 	AB::Factory::registerClass<AB::Python3Event>("python3event");
+
+	AB::Python3::python3_init();
+	
+	new boost::thread(python3_interpreter, stdin);
 }
 
 using namespace AB;
 using namespace AB::Python3;
 
-static int python_ref_count=0;
 void AB::Python3::python3_init(){
-	if (python_ref_count==0){
-		PyImport_AppendInittab("ab",PyInit_ab);
-		Py_SetProgramName((wchar_t*)("behaviours"));
-		Py_Initialize();
-		
-	}
-	python_ref_count++;
+	PyImport_AppendInittab("ab",PyInit_ab);
+	Py_SetProgramName((wchar_t*)("behaviours"));
+	Py_Initialize();
+
+	globals=PyDict_New();
+	Py_INCREF(globals);
+	PyDict_SetItemString(globals, "__builtins__", PyEval_GetBuiltins());	
+	
+	PyEval_InitThreads();
 }
 
 Python3Action::Python3Action(const char* type): Action(type)
@@ -87,15 +101,27 @@ Python3Action::Python3Action(const char* type): Action(type)
 
 Python3Action::~Python3Action()
 {
-	python_ref_count--;
-	if (python_ref_count==0)
-		Py_Finalize();
 }
 
 void Python3Action::exec()
 {
-	if ( PyRun_SimpleString( code.c_str() ) < 0)
+	if (code.size()==0)
+		return;
+	
+	PyObject *locals=PyDict_New();
+	Py_INCREF(locals);
+	Py_INCREF(globals);
+	
+	auto o=to_object(this) ;
+	PyDict_SetItemString(locals, "self", object2pyobject( o ));
+	
+	PyObject *obj=PyRun_String( code.c_str() ,Py_file_input, globals, locals);
+	if (!obj)
 		PyErr_Print();
+	else
+		Py_DECREF(obj);
+	Py_DECREF(globals);
+	Py_DECREF(locals);
 }
 
 AttrList Python3Action::attrList()
@@ -126,28 +152,34 @@ void Python3Action::setManager(Manager* manager)
 
 Python3Event::Python3Event(const char* type): Event(type)
 {
-	python3_init();
 	code="";
 	setFlags(flags()|AB::Event::Polling);
 }
 
 Python3Event::~Python3Event()
 {
-	python_ref_count--;
-	if (python_ref_count==0)
-		Py_Finalize();
 }
 
 bool Python3Event::check()
 {
 	if (code.size()==0)
 		return false;
-	if ( PyRun_SimpleString( code.c_str() ) < 0){
-		//PyErr_Print();
-		return false;
-	}
+	
+	PyObject *locals=PyDict_New();
+	Py_INCREF(locals);
+	Py_INCREF(globals);
+	
+	auto o=to_object(this) ;
+	PyDict_SetItemString(locals, "self", object2pyobject( o ));
+	
+	PyObject *obj=PyRun_String( code.c_str() ,Py_file_input, globals, locals);
+	if (!obj)
+		PyErr_Print();
 	else
-		return true;
+		Py_DECREF(obj);
+	Py_DECREF(globals);
+	Py_DECREF(locals);
+	return false;
 }
 
 AttrList Python3Event::attrList()

@@ -25,11 +25,10 @@
 #include <ab/log.h>
 #include <ab/object_basic.h>
 
+#include "python3.hpp"
+
 namespace AB{
 namespace Python3{
-	static PyObject *object2pyobject(AB::Object &obj);
-	static Object to_object(PyObject *obj);
-	
 	extern Manager *ab_module_manager;
 	static PyObject *manager_error;
 
@@ -80,6 +79,13 @@ namespace Python3{
 		}
 	}
 	
+	static PyObject *node_notify(PyObject *self,PyObject *args,PyObject *kwargs){
+		NodeObject *oself=(NodeObject*)self;
+		ab_module_manager->notify(oself->node);
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
+	
 	static PyTypeObject NodeObjectType = {
 			PyVarObject_HEAD_INIT(NULL,0)
 			"ab.node",             /*tp_name*/
@@ -95,7 +101,7 @@ namespace Python3{
 			0,                         /*tp_as_sequence*/
 			0,                         /*tp_as_mapping*/
 			0,                         /*tp_hash */
-			0,                         /*tp_call*/
+			node_notify,                         /*tp_call*/
 			0,                         /*tp_str*/
 			0,                         /*tp_getattro*/
 			0,                         /*tp_setattro*/
@@ -105,7 +111,7 @@ namespace Python3{
 	};
 
 
-	static PyObject *object2pyobject(AB::Object &obj){
+	PyObject *object2pyobject(AB::Object &obj){
 		auto t=obj->type();
 		if (t==AB::Integer::type)
 				return PyLong_FromLong(object2int(obj));
@@ -127,7 +133,7 @@ namespace Python3{
 		return NULL;
 	}
 	
-	static Object to_object(PyObject *obj){
+	Object to_object(PyObject *obj){
 		if (PyBool_Check(obj))
 			return AB::to_object( obj == Py_True );
 		if (PyFloat_Check(obj))
