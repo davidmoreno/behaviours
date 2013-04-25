@@ -36,8 +36,15 @@ namespace Python3{
 		PyObject_HEAD
 		Node *node;
 	} NodeObject;
-	
 
+	typedef struct{
+		PyObject_HEAD
+	} NodesObject;
+	
+	
+	static PyObject *ab_manager_resolve(PyObject *self, PyObject *args);
+	static PyObject *ab_manager_resolve(PyObject *self, char *name);
+	
 	static PyObject *node_getattr(PyObject *self, char *attr){
 		NodeObject *oself=(NodeObject*)self;
 		try{
@@ -84,6 +91,18 @@ namespace Python3{
 		return Py_None;
 	}
 	
+	static PyObject *nodes_getattr(PyObject *self,char *attr){
+		return ab_manager_resolve(self, attr);
+	}
+	static PyObject *nodes_getitem(PyObject *self,PyObject *attr){
+		Py_ssize_t size;
+		wchar_t *str=PyUnicode_AsWideCharString(attr, &size);
+		char str8[wcslen(str) + 1];
+		wcstombs( str8, str, wcslen(str) );
+		PyMem_Free(str);
+		return ab_manager_resolve(self, str8);
+	}
+	
 	static PyTypeObject NodeObjectType = {
 			PyVarObject_HEAD_INIT(NULL,0)
 			"ab.node",             /*tp_name*/
@@ -106,6 +125,36 @@ namespace Python3{
 			0,                         /*tp_as_buffer*/
 			Py_TPFLAGS_DEFAULT,        /*tp_flags*/
 			"Node objects",           /* tp_doc */
+	};
+
+	static PyTypeObject NodesObjectType = {
+			PyVarObject_HEAD_INIT(NULL,0)
+			"ab.nodes",             /*tp_name*/
+			sizeof(NodesObject), /*tp_basicsize*/
+			0,                         /*tp_itemsize*/
+			0,                         /*tp_dealloc*/
+			0,                         /*tp_print*/
+			nodes_getattr,             /*tp_getattr*/
+			0,                         /*tp_setattr*/
+			0,                         /*tp_compare*/
+			0,                         /*tp_repr*/
+			0,                         /*tp_as_number*/
+			0,                         /*tp_as_sequence*/
+			0,                         /*tp_as_mapping*/
+			0,                         /*tp_hash */
+			0,                         /*tp_call*/
+			0,                         /*tp_str*/
+			0,                         /*tp_getattro*/
+			0,                         /*tp_setattro*/
+			0,                         /*tp_as_buffer*/
+			Py_TPFLAGS_DEFAULT,        /*tp_flags*/
+			"Nodes easy access",           /* tp_doc */
+	};
+	
+	static PyMappingMethods nodes_mapping = {
+		NULL, 
+		nodes_getitem,
+		NULL
 	};
 
 
@@ -153,12 +202,16 @@ namespace Python3{
 
 	/// Define a new class for the manager. 
 	static PyObject *ab_manager_resolve(PyObject *self, PyObject *args){
-		const char *name;
+		char *name;
 		
 		if (!PyArg_ParseTuple(args, "s", &name)){
 			return NULL;
 		}
-		
+		return ab_manager_resolve(self, name);
+	}
+	
+	/// Define a new class for the manager. 
+	static PyObject *ab_manager_resolve(PyObject *self, char *name){
 		try{
 			AB::Object n( ab_module_manager->resolve(name) );
 			return object2pyobject(n);
@@ -211,6 +264,12 @@ namespace Python3{
 		{ "__dir__", (PyCFunction)node_dir, METH_NOARGS, NULL},
 		{NULL, NULL, 0, NULL}
 	};
+
+	static struct PyMethodDef nodes_methods[] = {
+		{ "__dir__", (PyCFunction)ab_manager_list_nodes, METH_NOARGS, NULL},
+		//{ "__getitem__", (PyCFunction)nodes_getitem, METH_VARARGS, NULL},
+		{NULL, NULL, 0, NULL}
+	};
 	
 	PyObject *PyInit_ab(void){
 		auto m = PyModule_Create(&ab_module);
@@ -218,6 +277,14 @@ namespace Python3{
 			return NULL;
 		manager_error = PyErr_NewException("ab.exception", NULL, NULL);
 		PyModule_AddObject(m, "exception", manager_error);
+
+		NodesObjectType.tp_methods = nodes_methods;
+		NodesObjectType.tp_as_mapping=&nodes_mapping;
+		if (PyType_Ready(&NodesObjectType) < 0)
+			return NULL;
+		NodesObject *nodes=PyObject_New(NodesObject, &NodesObjectType);
+		PyModule_AddObject(m, "nodes", (PyObject*)nodes);
+
 		
 		NodeObjectType.tp_new = PyType_GenericNew;
 		NodeObjectType.tp_methods = node_methods;
