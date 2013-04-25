@@ -262,7 +262,8 @@ Main.prototype.lua_exec = function(cmd){
 	if(that.lua_ready) {
 	  that.lua_ready = false
 	  $('#loading').show()  
-	  $.post('/lua/',{exec:cmd},function(){
+	  $.post('/lua/',{exec:cmd},function(data){
+			$('#lua_console pre').append('\n'+data+'\n')
 	    that.lua_ready = true
 	    $('#loading').hide()
 	  }).error(function(){

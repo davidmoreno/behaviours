@@ -341,6 +341,7 @@ onion_connection_status NodeManager::lua(Onion::Request& req, Onion::Response& r
   Onion::Dict post=req.post();
   if (post.count()){
       std::string luacode=post.get("exec");
+      luaOutput="";
       WARNING("%s", luacode.c_str());
       try {
         if (std::find(luacode.begin(), luacode.end(), '=')!=luacode.end()) {
@@ -356,8 +357,8 @@ onion_connection_status NodeManager::lua(Onion::Request& req, Onion::Response& r
         std::cout<<"--LUA "<<e.what()<<std::endl;
         luaOutput = luaOutput + "\n " + e.what();
       }
-      res<<"OK";
-      return OCS_INTERNAL_ERROR;
+      res<<luaOutput;
+      return OCS_PROCESSED;
     }
   return OCS_INTERNAL_ERROR;
 }
