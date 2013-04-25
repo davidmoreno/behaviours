@@ -65,11 +65,9 @@ namespace Python3{
 			auto attrlist=oself->node->attrList();
 			auto I=attrlist.begin(), endI=attrlist.end();
 			PyObject *ret=PyList_New(attrlist.size());
-			Py_INCREF(ret);
 			int i;
 			for(i=0;I!=endI;++i,++I){
 				PyObject *name=PyUnicode_FromString((*I).c_str());
-				Py_INCREF(name);
 				PyList_SetItem(ret, i, name);
 			}
 			return ret;
@@ -175,13 +173,11 @@ namespace Python3{
 		auto nodelist=ab_module_manager->getNodes();
 		auto typelist=AB::Factory::list();
 		PyObject *ret=PyList_New(nodelist.size() + typelist.size());
-		Py_INCREF(ret);
 		{
 			auto I=nodelist.begin(), endI=nodelist.end();
 			int i;
 			for(i=0;I!=endI;++i,++I){
 				PyObject *name=PyUnicode_FromString((*I)->name().c_str());
-				Py_INCREF(name);
 				PyList_SetItem(ret, i, name);
 			}
 		}
@@ -191,7 +187,6 @@ namespace Python3{
 			int i;
 			for(i=0;I!=endI;++i,++I){
 				PyObject *name=PyUnicode_FromString((*I).c_str());
-				Py_INCREF(name);
 				PyList_SetItem(ret, b + i, name);
 			}
 		}
@@ -222,7 +217,6 @@ namespace Python3{
 		if (!m)
 			return NULL;
 		manager_error = PyErr_NewException("ab.exception", NULL, NULL);
-		Py_INCREF(manager_error);
 		PyModule_AddObject(m, "exception", manager_error);
 		
 		NodeObjectType.tp_new = PyType_GenericNew;
@@ -230,9 +224,6 @@ namespace Python3{
 		if (PyType_Ready(&NodeObjectType) < 0)
 			return NULL;
 
-		//Py_INCREF(&NodeObjectType);
-		//PyModule_AddObject(m, "Node", (PyObject*)&NodeObjectType);
-		
 		return m;
 	}
 }

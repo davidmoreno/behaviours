@@ -28,6 +28,7 @@
 namespace AB{
 	class Python3Action : public Action{
 		std::string code;
+		PyObject *compiled_code;
 	public:
 		Python3Action(const char* type);
     virtual ~Python3Action();
@@ -42,6 +43,7 @@ namespace AB{
 	
 	class Python3Event : public Event{
 		std::string code;
+		PyObject *compiled_code;
 	public:
 		Python3Event(const char* type);
     virtual ~Python3Event();
@@ -75,7 +77,7 @@ void ab_init(void){
 
 	AB::Python3::python3_init();
 	
-	new boost::thread(python3_interpreter, stdin);
+	//new boost::thread(python3_interpreter, stdin);
 }
 
 using namespace AB;
@@ -87,7 +89,6 @@ void AB::Python3::python3_init(){
 	Py_Initialize();
 
 	globals=PyDict_New();
-	Py_INCREF(globals);
 	PyDict_SetItemString(globals, "__builtins__", PyEval_GetBuiltins());	
 	
 	PyEval_InitThreads();
@@ -97,10 +98,12 @@ Python3Action::Python3Action(const char* type): Action(type)
 {
 	python3_init();
 	code="";
+	compiled_code=NULL;
 }
 
 Python3Action::~Python3Action()
 {
+	Py_XDECREF(compiled_code);
 }
 
 void Python3Action::exec()
@@ -109,7 +112,6 @@ void Python3Action::exec()
 		return;
 	
 	PyObject *locals=PyDict_New();
-	Py_INCREF(locals);
 	Py_INCREF(globals);
 	
 	auto o=to_object(this) ;
@@ -138,8 +140,13 @@ Object Python3Action::attr(const std::string& name)
 
 void Python3Action::setAttr(const std::string& name, Object obj)
 {
-	if (name=="code")
+	if (name=="code"){
 		code=object2string(obj);
+		Py_XDECREF(compiled_code);
+		compiled_code=Py_CompileString(code.c_str(), this->name().c_str(), Py_file_input);
+		if (!compiled_code)
+			PyErr_Print();
+	}
 	else
 		return Action::setAttr(name, obj);
 }
@@ -154,29 +161,33 @@ Python3Event::Python3Event(const char* type): Event(type)
 {
 	code="";
 	setFlags(flags()|AB::Event::Polling);
+	compiled_code=NULL;
 }
 
 Python3Event::~Python3Event()
 {
+	Py_XDECREF(compiled_code);
 }
 
 bool Python3Event::check()
 {
-	if (code.size()==0)
+	DEBUG("Check");
+	if (!compiled_code)
 		return false;
 	
 	PyObject *locals=PyDict_New();
-	Py_INCREF(locals);
 	Py_INCREF(globals);
 	
 	auto o=to_object(this) ;
 	PyDict_SetItemString(locals, "self", object2pyobject( o ));
 	
-	PyObject *obj=PyRun_String( code.c_str() ,Py_file_input, globals, locals);
+	PyObject *obj=PyEval_EvalCode( compiled_code, globals, locals);
 	if (!obj)
 		PyErr_Print();
-	else
+	else{
+		PyObject_Print(obj, stdout, Py_PRINT_RAW);
 		Py_DECREF(obj);
+	}
 	Py_DECREF(globals);
 	Py_DECREF(locals);
 	return false;
@@ -196,8 +207,13 @@ Object Python3Event::attr(const std::string& name)
 
 void Python3Event::setAttr(const std::string& name, Object obj)
 {
-	if (name=="code")
+	if (name=="code"){
 		code=object2string(obj);
+		Py_XDECREF(compiled_code);
+		compiled_code=Py_CompileString(code.c_str(), this->name().c_str(), Py_file_input);
+		if (!compiled_code)
+			PyErr_Print();
+	}
 	else
 		return Event::setAttr(name, obj);
 }
