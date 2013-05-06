@@ -62,8 +62,6 @@ namespace ABServer{
 		
 		Onion::Dict attributesOf(AB::Node *node);
 		
-		void mimeFill(const std::string & sourcefile = "static/mime.types");
-		
 		onion_connection_status manager(Onion::Request &req, Onion::Response &res);
 		onion_connection_status lua(Onion::Request &req, Onion::Response &res);
 		onion_connection_status node(Onion::Request &req, Onion::Response &res);
@@ -71,6 +69,7 @@ namespace ABServer{
 		onion_connection_status update(Onion::Request &req, Onion::Response &res);
 		onion_connection_status uploadXML(Onion::Request &req, Onion::Response &res);
 		onion_connection_status uploadWAV(Onion::Request &req, Onion::Response &res);
+		onion_connection_status save(Onion::Request &req, Onion::Response &res);
 		
 		void activateNode(AB::Node *n);
 		void deactivateNode(AB::Node *n);

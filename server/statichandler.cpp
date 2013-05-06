@@ -47,7 +47,7 @@ StaticHandler::StaticHandler(const std::string& basepath) : basepath(basepath)
 	auto I=paths.begin(), endI=paths.end();
 	for(;I!=endI;++I){
 		ONION_DEBUG("%s",I->c_str());
-		handlers.push_back(new Onion::StaticHandler(basepath+"/"+*I));
+		handlers.push_back(new Onion::StaticHandler(basepath+"/"+*I+"/"));
 	}
 }
 

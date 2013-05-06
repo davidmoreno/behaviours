@@ -291,7 +291,7 @@ Behaviour.prototype.clear = function(only_client){
   }
 }
 
-Behaviour.prototype.setMetaData = function(){
+Behaviour.prototype.setMetaData = function(onclose){
   if( !$('#overwindow').is(':visible') ) {
     
     $('#overwindow').fadeIn('fast')
@@ -334,7 +334,10 @@ Behaviour.prototype.setMetaData = function(){
 
       $.post("/manager/",{name:that.name,description:that.description}).error(function(txt){
 	  alert(current_language.parameter_setting_error+txt.responseText)
-	  $.post("/manager/",{save:0})
+	  $.post("/manager/",{save:0},function(){
+			if (onclose)
+				onclose()
+		})
 	})
     }
     

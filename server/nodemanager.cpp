@@ -58,7 +58,7 @@ NodeManager::NodeManager(std::shared_ptr<AB::Manager> &ab) : ab(ab)
   downloaded = "";
   needsAutosave = false;
   forceUpdate = false;
-	current_ab_file=data_dir+"/current.dia";
+	current_ab_file=data_dir+"/current.ab";
 	mkdir(data_dir.c_str(),0777);
   gettimeofday(&lastAutosave, NULL);
 }
@@ -106,20 +106,10 @@ onion_connection_status NodeManager::manager(Onion::Request& req, Onion::Respons
        }
        return OCS_PROCESSED;
     }
-  } else if(post.has("save")) {
-    ab->saveBehaviour(current_ab_file);
-    DEBUG("save:%s",post.get("save").c_str());
-    if(post.get("save") != "0") {
-			WARNING("Save not properly working yet. You have a copy at %s/current.dia", data_dir.c_str());
-      std::string filename = "cp data/current.dia data/files/"+ab->name()+".dia";
-    //ab->saveBehaviour(filename,true);
-      if(system(filename.c_str()))
-        return OCS_INTERNAL_ERROR;
-      DEBUG("Saving behaviour: %s", filename.c_str());
-    }
-    res<<"OK";
-    return OCS_PROCESSED;
-
+  } else if (post.has("save")) {
+		ab->saveBehaviour(current_ab_file);
+		res<<"OK";
+		return OCS_PROCESSED;
   } else if(post.has("clear")) {
     ab->clear();
     res<<"OK";
@@ -152,6 +142,11 @@ onion_connection_status NodeManager::manager(Onion::Request& req, Onion::Respons
   return OCS_NOT_PROCESSED;
 }
 
+onion_connection_status NodeManager::save(Onion::Request &req, Onion::Response &res){
+	ab->saveBehaviour(current_ab_file);
+	res.setHeader("Content-Disposition", "attachment; filename="+req.path());
+	return onion_shortcut_response_file(current_ab_file.c_str(),req.c_handler(), res.c_handler());
+}
 
 onion_connection_status NodeManager::node(Onion::Request& req, Onion::Response& res)
 {
@@ -494,83 +489,5 @@ void NodeManager::deactivateNode(AB::Node *n)
 void NodeManager::updateLuaOutput(const std::string & str) 
 {
   luaOutput.append("\n "+str);
-}
-
-void NodeManager::mimeFill(const std::string & sourcefile)
-{
-  
-  onion_mime_set(NULL);
-  Onion::Dict d;
-
-  FILE *fd=fopen(sourcefile.c_str(), "rt");
-  if (!fd){
-      WARNING("Could not read MIME types (%s), returned mime types may be incorrect. Adding minimal set.",sourcefile.c_str());
-      d.add("html", "text/html",0);
-      d.add("htm", "text/html",0);
-      d.add("js", "application/javascript",0);
-      d.add("css", "text/css",0);
-      d.add("png", "image/png",0);
-      d.add("jpg", "image/jpeg",0);
-      d.add("dia","application/octet-stream",0);
-      return;
-    }
-  char mimetype[128];
-  char extension[8];
-  int mode=0; // 0 mimetype, 1 extension
-  unsigned int i=0;
-  int c;
-
-  while ( (c=getc(fd)) >= 0){
-      if (c=='#'){
-          while ( (c=getc(fd)) >= 0 && c!='\n');
-        }
-      if (c=='\n'){
-          if (mode==1 && i!=0){
-              extension[i]=0;
-              d.add(extension, mimetype, OD_DUP_ALL);
-              //ONION_DEBUG("Add mimetype '%s' (%s).", extension, mimetype);
-            }
-          mode=0;
-          i=0;
-        }
-      else{
-          if (isspace(c)){
-              if (mode==0){
-                  mimetype[i]='\0';
-                  mode=1;
-                  i=0;
-                }
-              else if (i!=0){
-                  extension[i]='\0';
-                  i=0;
-                  d.add(extension, mimetype, OD_DUP_ALL);
-                  //ONION_DEBUG("Add mimetype '%s' (%s)", extension, mimetype);
-                }
-            }
-          else{
-              if (mode==0){
-                  if (i>=sizeof(mimetype)-1){
-                      while ( (c=getc(fd)) >= 0 && c!='\n');
-                    }
-                  else
-                    mimetype[i++]=c;
-                }
-              else{
-                  if (i>=sizeof(extension)-1){
-                      while ( (c=getc(fd)) >= 0 && c!='\n');
-                      extension[i]='\0';
-                      i=0;
-                      mode=0;
-                      d.add(extension, mimetype,  OD_DUP_ALL);
-                      //ONION_DEBUG("Add mimetype '%s' (%s)..", extension, mimetype);
-                    }
-                  else
-                    extension[i++]=c;
-                }
-            }
-        }
-    }
-  fclose(fd);
-  DEBUG("I know %d mime types", onion_dict_count(d.c_handler()));
 }
 

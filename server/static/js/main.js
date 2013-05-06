@@ -444,38 +444,23 @@ Main.prototype.refresh = function(force){
 
 
 Main.prototype.save = function(){
-  var that = this;
-  
-  this.canvas.updateServer()
-  
-    if (this.behaviour.name=="")
-      this.behaviour.setMetaData();
-   
-    var timerId=setInterval(function(){
-      if(that.behaviour.name != "" && that.behaviour.ready) { 
-	clearInterval(timerId)
-	$('#loading').show()
-	that.behaviour.ready=false
-// 	main.showDialog();
-// 	$('#dialog #title').text(current_language.savingbehaviour)
-// 	$('#dialog #buttons').hide()
-// 	$('#dialog #content').html($('<div style="background:transparent; text-align:center; padding: 2em;"><img src="img/loading.gif"></div>'))
-// 	
-	$.post("/manager/",{save:1}, function(){
-	  var iframe = document.getElementById("hiddenDownloader");
-	  iframe.src = "../data/files/"+that.behaviour.name+".dia"; 
-	  $('#loading').hide()
-	  that.behaviour.ready=true
-	}).error(function(){
-	  //main.hideDialog();
-	  $('#loading').hide()
-	  that.behaviour.ready=true
-	  alert(current_language.saving_file_error);
-	  
-	})
+	var that = this;
 	
-      }
-    },1000);  
+	this.canvas.updateServer()
+
+	if (this.behaviour.name==""){
+		this.behaviour.setMetaData(this.save);
+		return;
+	}
+		
+	if(that.behaviour.name != "" && that.behaviour.ready) { 
+		$('#loading').show()
+		that.behaviour.ready=false
+	  var iframe = document.getElementById("hiddenDownloader");
+	  iframe.src = "/data/"+that.behaviour.name+".ab"; 
+	  $('#loading').hide()
+	  that.behaviour.ready=true
+	} 
 }
 
 

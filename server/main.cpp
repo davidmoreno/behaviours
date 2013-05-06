@@ -95,45 +95,45 @@ int main(void){
 	manager=make_shared<Manager>();
 	nodeManager=make_shared<NodeManager>(manager);
 	
-  ABServer::init();
-  //DIA::init(&manager);
+	ABServer::init();
+	//DIA::init(&manager);
 
-  AB::lua_ab_print_real = lua_output_update;
-  AB::manager_notify_node_enter = node_notify_enter;
-  AB::manager_notify_node_exit = node_notify_exit;
-  
-  manager->loadBehaviour(data_dir + "current.dia");
-  o=new Onion::Onion(O_POOL);
-  
-  signal(SIGINT, on_SIGINT);
-  signal(SIGTERM, on_SIGINT);
-  
-  o->setHostname("0.0.0.0");
-  o->setPort("8081");
-  
-  Onion::Url url(o);
+	AB::lua_ab_print_real = lua_output_update;
+	AB::manager_notify_node_enter = node_notify_enter;
+	AB::manager_notify_node_exit = node_notify_exit;
 	
-  url.add("", new Onion::RedirectHandler("/static/index.html"));
-  url.add("^manager/", nodeManager.get(), &NodeManager::manager);
-  url.add("^node/", nodeManager.get(), &NodeManager::node);
-  url.add("^connections/", nodeManager.get(), &NodeManager::connections);
-  url.add("^lua/", nodeManager.get(), &NodeManager::lua);
-  url.add("^update/", nodeManager.get(), &NodeManager::update);
-  url.add("^upload/", nodeManager.get(), &NodeManager::uploadXML);
-  url.add("^wavload/", nodeManager.get(), &NodeManager::uploadWAV);
-  url.add("^static", new StaticHandler(static_dir));
-  //url.add("^data", new Onion::StaticHandler(data_dir));
-  
+	manager->loadBehaviour(data_dir + "current.ab");
+	o=new Onion::Onion(O_POOL);
+	
+	signal(SIGINT, on_SIGINT);
+	signal(SIGTERM, on_SIGINT);
+	
+	o->setHostname("0.0.0.0");
+	o->setPort("8081");
+	
+	Onion::Url url(o);
+	
+	url.add("", new Onion::RedirectHandler("/static/index.html"));
+	url.add("^manager/", nodeManager.get(), &NodeManager::manager);
+	url.add("^node/", nodeManager.get(), &NodeManager::node);
+	url.add("^connections/", nodeManager.get(), &NodeManager::connections);
+	url.add("^lua/", nodeManager.get(), &NodeManager::lua);
+	url.add("^update/", nodeManager.get(), &NodeManager::update);
+	url.add("^upload/", nodeManager.get(), &NodeManager::uploadXML);
+	url.add("^wavload/", nodeManager.get(), &NodeManager::uploadWAV);
+	url.add("^static/", new StaticHandler(static_dir));
+	url.add("^data/", nodeManager.get(), &NodeManager::save);
+	
 //  onion_handler *w=onion_handler_webdav("data/files",NULL);
 //  onion_url_add_handler(url.c_ptr(), "^webdav/", w);
-	    
-  //nodeManager.mimeFill();
+			
+	//nodeManager.mimeFill();
 
 	INFO("Listening at 127.0.0.1:8081");
 	
-  o->listen();
-  
-  delete o;
-  std::cout<<"closed"<<endl;
+	o->listen();
+	
+	delete o;
+	std::cout<<"closed"<<endl;
 }
 
