@@ -38,7 +38,7 @@ extern "C"{
 #include "statichandler.hpp"
 
 namespace AB{
-	std::string static_dir=AB_PREFIX "/shared/ab";
+	std::string static_dir=AB_PREFIX "/shared/ab/static/";
 	std::string data_dir=std::string(getenv("HOME"))+"/behaviours/";
 }
 

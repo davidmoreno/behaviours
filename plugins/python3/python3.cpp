@@ -92,11 +92,21 @@ void AB::Python3::python3_init(){
 	PyDict_SetItemString(globals, "__builtins__", PyEval_GetBuiltins());	
 	
 	PyEval_InitThreads();
+	
+	FILE *init_fd=fopen( AB_PREFIX "/shared/ab/python3/__init__.py", "ro" );
+	if (!init_fd){
+		ERROR("Could not execute __init__ to set p a proper python3 environment");
+	}
+	else{
+		PyObject *init_ret=PyRun_File(init_fd, "__init__.py", Py_file_input, globals, globals);
+		Py_XDECREF(init_ret);
+		
+		fclose(init_fd);
+	}
 }
 
 Python3Action::Python3Action(const char* type): Action(type)
 {
-	python3_init();
 	code="";
 	compiled_code=NULL;
 }
