@@ -1,3 +1,16 @@
+behaviours (0.2-1) unstable; urgency=low
+
+  * Added initial Python __init__.py executed at plugin start.
+
+ -- David Moreno Montero <dmoreno@coralbits.com>  Tue, 14 May 2013 09:56:27 +0200
+
+behaviours (0.2-1) unstable; urgency=low
+
+  * Python3 plugin added
+  * Many many bugfixes.
+
+ -- David Moreno <dmoreno@coralbits.com>  Fri, 26 Apr 2013 10:55:57 +0100
+
 behaviours (0.1-1) unstable; urgency=low
 
   * Initial release 

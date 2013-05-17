@@ -1,7 +1,7 @@
 Source: behaviours
 Section: devel
 Priority: optional
-Maintainer: David Morenon <dmoreno@coralbits.com>
+Maintainer: AISoy Robotics SL <aisoy@aisoy.com>
 Build-Depends: debhelper (>= 8.0.0), cmake, python3-dev, liblua5.2-dev, libxml2-dev
 Standards-Version: 3.9.3
 Homepage: http://github.com/davidmoreno/behaviours
