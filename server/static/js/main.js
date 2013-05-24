@@ -322,7 +322,7 @@ Main.prototype.setupGUI = function(){
       main.startStop(true);
     
     $.post("/manager/",{save:0})
-    return current_language.before_unload;
+    //return current_language.before_unload;
     
   }
   
