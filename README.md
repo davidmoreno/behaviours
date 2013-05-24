@@ -1,3 +1,15 @@
+Behaviours is a platform to create complex programs and behaviours just connecting the simple actions t
+hat conform a program. 
+
+Normally the program is based on several simple algorithms and behaviours and there is a lot of plumbing
+between the elements. With behaviours the plumbing is simplified to the maximum just connecting boxes, 
+letting the programmer concentrate on high level concepts.
+
+This allows to create complex programs with just some drag and drop.
+
+Plase check the [wiki](https://github.com/davidmoreno/behaviours/wiki) for more information on how to use
+behaviours and how to expand it.
+
 Compilation instructions
 ------------------------
 
@@ -28,20 +40,13 @@ By default it installs to /usr/share, but can be changed to for example /tmp/ to
 Also available is -DCMAKE_BUILD_TYPE=Debug, which compiles AB in debug mode, which shows 
 more information as it executes.
 
-Creating plugins
-----------------
-
-Check plugins directory for some examples. basic is a really basic plugin that creates a new action.
-
-Basically you must create a .so file with a `void ab_init(void)` function. It can register new node 
-types and so on. As new requisites appear the signature may change and more facilities given.
-
-Also user can create a subdirectory at `${ABPATH}/shared/ab/static/[yourname]/` to add static content. It has a 
-reverse alphabetical order priority, which means that is a file exists in both `aa` and `bb`, the one in
-`bb` will be returned. This allows to create custom skins, create new node definitions and generally
-expand the HTML5 interface.
 
 License
 -------
 
 Behaviour is AGPLv3 licensed.
+
+Anybody can use it, copy it, share it under the same terms. Code modifications must be shared with your users.
+
+This is a Free Software project; any help is appreciated, be it code, documentation, helping awareness of 
+the program... or anything you may think of. We are eager to hear from people interested in Behaviours.
