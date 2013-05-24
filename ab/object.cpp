@@ -20,11 +20,10 @@
 #include <stdio.h>
 #include <sstream>
 
-#include <boost/make_shared.hpp>
-
 #include "log.h"
 #include "object.h"
 #include "object_basic.h"
+
 #include <stdlib.h>
 
 using namespace AB;
@@ -50,19 +49,19 @@ namespace AB {
 
   Object to_object(const std::string &s)
   {
-    return boost::make_shared<String>(s);
+    return std::make_shared<String>(s);
   }
   Object to_object(int n)
   {
-    return boost::make_shared<Integer>(n);
+    return std::make_shared<Integer>(n);
   }
   Object to_object(double n)
   {
-    return boost::make_shared<Float>(n);
+    return std::make_shared<Float>(n);
   }
-  Object to_object(boost::function<Object(ObjectList)> f)
+  Object to_object(std::function<Object(ObjectList&)> f)
   {
-    return boost::make_shared<CallableObject>(f);
+    return std::make_shared<CallableObject>(f);
   }
 
   std::string object2string(const Object &obj)

@@ -19,12 +19,11 @@
 #ifndef AB_OBJECT_H
 #define AB_OBJECT_H
 
-#include <boost/shared_ptr.hpp>
-#include <boost/function.hpp>
+#include <memory>
+#include <functional>
 #include <exception>
 #include <vector>
 #include <string>
-#include <boost/bind.hpp>
 
 struct lua_State;
 
@@ -61,7 +60,7 @@ namespace AB {
   };
 
   class ObjectBase;
-  typedef boost::shared_ptr<ObjectBase> Object;
+  typedef std::shared_ptr<ObjectBase> Object;
   typedef std::vector<Object> ObjectList;
   typedef std::vector<std::string> AttrList;
 
@@ -70,7 +69,7 @@ namespace AB {
   static inline Object to_object(const char *str) { return to_object(std::string(str)); }
   Object to_object(int);
   Object to_object(double);
-  Object to_object(boost::function<Object(ObjectList)> f);
+  Object to_object(std::function<Object(ObjectList&)> f);
 
   /**
    * @short Generic object. All data data goes through the scripting languages are of this type.
@@ -116,11 +115,11 @@ namespace AB {
 
     template<typename A>
     Object method2object(Object (A::*f)(ObjectList &)) {
-      return to_object(boost::bind(f,static_cast<A*>(this),_1));
+      return to_object(std::bind(f,static_cast<A*>(this),std::placeholders::_1));
     }
     template<typename A>
     Object method2object(Object (A::*f)()) {
-      return to_object(boost::bind(f,static_cast<A*>(this)));
+      return to_object(std::bind(f,static_cast<A*>(this)));
     }
 
     // Easy setAttrs

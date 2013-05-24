@@ -10,5 +10,5 @@ SET(SOURCES
 add_library(ab_static STATIC ${SOURCES})
 
 #add_library(ab SHARED ${SOURCES})
-target_link_libraries(ab_static ${LUA_LIB} ${BOOST_THREAD} z xml2 curl)
+target_link_libraries(ab_static ${LUA_LIB} z xml2 curl)
 

@@ -19,9 +19,8 @@
 #ifndef AB_LUA_OBJECT_H
 #define AB_LUA_OBJECT_H
 
-#include <boost/bind.hpp>
-#include <boost/function.hpp>
-#include <boost/make_shared.hpp>
+#include <functional>
+#include <memory>
 
 #include "object.h"
 extern "C" {
@@ -37,7 +36,7 @@ namespace AB {
   };
 
   class lua_bridge_class : public AB::LUAObject {
-    typedef boost::function<int (lua_State *)> f_t;
+    typedef std::function<int (lua_State *)> f_t;
     f_t f;
   public:
     lua_bridge_class(f_t _f) {
@@ -51,12 +50,12 @@ namespace AB {
   template<typename T>
   Object lua_bridge(int (T::*m)(lua_State *), T *o)
   {
-    return boost::make_shared<lua_bridge_class>(boost::bind(m,o,_1));
+    return std::make_shared<lua_bridge_class>(std::bind(m,o,std::placeholders::_1));
   }
 
   static inline Object lua_bridge_to_function(int (*f)(lua_State *))
   {
-    return boost::make_shared<lua_bridge_class>(f);
+    return std::make_shared<lua_bridge_class>(f);
   }
 
 }

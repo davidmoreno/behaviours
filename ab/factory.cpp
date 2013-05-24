@@ -23,9 +23,9 @@
 #include "log.h"
 
 using namespace AB;
-std::map<std::string, boost::function<Node*(const std::string& type)> > Factory::knownTypes;
+std::map<std::string, std::function<Node*(const std::string& type)> > Factory::knownTypes;
 
-bool Factory::registerCreator(const std::string &type, boost::function<Node*(const std::string& type)> f)
+bool Factory::registerCreator(const std::string &type, std::function<Node*(const std::string& type)> f)
 {
 
   knownTypes[type]=f;
@@ -73,7 +73,7 @@ Action* Factory::createAction(const std::string& type)
 std::string Factory::list_as_string()
 {
   std::string ret;
-  std::map<std::string, boost::function<Node*(const std::string& type)> >::iterator I=Factory::knownTypes.begin(), endI=Factory::knownTypes.end();
+  std::map<std::string, std::function<Node*(const std::string& type)> >::iterator I=Factory::knownTypes.begin(), endI=Factory::knownTypes.end();
   for(; I!=endI; ++I) {
     ret+="<"+I->first+"> ";
   }
@@ -82,7 +82,7 @@ std::string Factory::list_as_string()
 
 std::vector<std::string> Factory::list(){
 	std::vector<std::string> ret;
-  std::map<std::string, boost::function<Node*(const std::string& type)> >::iterator I=Factory::knownTypes.begin(), endI=Factory::knownTypes.end();
+  std::map<std::string, std::function<Node*(const std::string& type)> >::iterator I=Factory::knownTypes.begin(), endI=Factory::knownTypes.end();
   for(; I!=endI; ++I){
     ret.push_back(I->first);
   }

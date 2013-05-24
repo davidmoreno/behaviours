@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include <boost/foreach.hpp>
+#include <sstream>
 
 #include "log.h"
 #include "manager.h"
@@ -25,7 +25,6 @@
 #include "action.h"
 #include "connection.h"
 #include "pluginloader.h"
-#define foreach BOOST_FOREACH
 
 using namespace AB;
 
@@ -41,7 +40,7 @@ Manager::Manager() :
   srand(time(NULL));
   lua=new LUA();
   lua->setManager(this);
-  execThreadId=boost::this_thread::get_id(); // Can be used directly, if before calling exec.
+  execThreadId=std::this_thread::get_id(); // Can be used directly, if before calling exec.
   PluginLoader::loadPath(AB_PREFIX "/lib/ab/");
 }
 
@@ -50,14 +49,14 @@ Manager::~Manager()
   std::map<Node*,std::vector<Connection*> > oldConnections=nodeConnections;
   nodeConnections.clear();
   typedef std::pair<Node*,std::vector<Connection*> > pair;
-  foreach(pair p, oldConnections) {
+  for(pair p: oldConnections) {
     if (nodes.count(p.first)>0) {
-      foreach(Connection *s, p.second) {
+      for(Connection *s: p.second) {
         delete s;
       }
     }
   }
-  foreach(Node *ev, nodes) {
+  for(Node *ev: nodes) {
     delete ev;
   }
   if (lua)
@@ -71,7 +70,7 @@ void Manager::clear()
   std::set<Node*> keepNodes;
   activeEvents.clear();
 
-  foreach(Node *n, nodes) {
+  for(Node *n: nodes) {
     if (n->flags()&Node::ManualRemoval) {
       keepNodes.insert(n);
       Event *ev=dynamic_cast<Event*>(n);
@@ -89,9 +88,9 @@ void Manager::clear()
   std::map<Node*,std::vector<Connection*> > oldConnections=nodeConnections;
   nodeConnections.clear();
   typedef std::pair<Node*,std::vector<Connection*> > pair;
-  foreach(pair p, oldConnections) {
+  for(pair p: oldConnections) {
     if (nodes.count(p.first)>0) {
-      foreach(Connection *s, p.second) {
+      for(Connection *s: p.second) {
         if (nodes.count(s->to())>0) {
           Connection *nc=connect(p.first, s->to());
           nc->setGuard(s->guard());
@@ -101,8 +100,8 @@ void Manager::clear()
     }
   }
 #ifdef __DEBUG__
-  foreach(pair p, nodeConnections) {
-    foreach(Connection *s, p.second) {
+  for(pair p: nodeConnections) {
+    for(Connection *s: p.second) {
       DEBUG("%s;",s->unicode().c_str());
     }
   }
@@ -253,15 +252,15 @@ void Manager::sync()
 #ifdef __DEBUG__
   typedef std::pair<Node*, std::vector<Connection*> > pair;
 
-  foreach(pair c, nodeConnections) {
-    foreach(Connection *conn, c.second) {
+  for(pair c: nodeConnections) {
+    for(Connection *conn: c.second) {
       DEBUG("%s", conn->unicode().c_str());
     }
   }
 #endif
 
   DEBUG("Sync!");
-  foreach(Event *ev, activeEvents) {
+  for(Event *ev: activeEvents) {
     DEBUG("Check %s: %X, %s", ev->name().c_str(), ev->flags(), ev->flags()&Event::NeedSync ? "true" : "false");
     if (ev->flags()&Event::NeedSync) {
       ev->sync();
@@ -273,7 +272,7 @@ void Manager::sync()
 
 void Manager::exec()
 {
-  execThreadId=boost::this_thread::get_id();
+  execThreadId=std::this_thread::get_id();
   int t=0;
   running_=true;
 	syncOnNextCycle=true;
@@ -281,7 +280,7 @@ void Manager::exec()
     if (syncOnNextCycle)
       sync();
     //DEBUG("Checks at t=%d", t);
-    foreach(Event *ev, activeEvents) {
+    for(Event *ev: activeEvents) {
       //DEBUG("Check %s %d", ev->name().c_str(), ev->flags());
       if (ev->flags()&Event::Polling) {
         if (ev->check()) {
@@ -293,7 +292,7 @@ void Manager::exec()
       }
     }
     {
-      boost::mutex::scoped_lock l(pendingNotificationsMutex);
+      std::lock_guard<std::mutex> l(pendingNotificationsMutex);
       while (!pendingNotifications.empty()) {
         Node *n=pendingNotifications.front();
         pendingNotifications.pop();
@@ -312,9 +311,9 @@ void Manager::exec()
  */
 void Manager::notify(Node *node)
 {
-  if (boost::this_thread::get_id()!=execThreadId) {
+  if (std::this_thread::get_id()!=execThreadId) {
     DEBUG("Pushing for notification at proper thread");
-    boost::mutex::scoped_lock l(pendingNotificationsMutex);
+    std::lock_guard<std::mutex> l(pendingNotificationsMutex);
     pendingNotifications.push(node);
   } else {
     try {
@@ -369,21 +368,21 @@ Node *Manager::notifyOne(Node *node)
   if (nodeConnections.count(node)>0) {
     DEBUG("Notify node %s", node->name().c_str());
     std::vector<Connection*> p=nodeConnections[node];
-    foreach(Connection *conn, p) {
+    for(Connection *conn: p) {
       if (conn->checkGuard()) {
         return conn->to();
       }
     }
     // Ok, do one random without the guards. Nor truly normal distribution, but should be ok for small <1000 numbers.
     int n=0;
-    foreach(Connection *conn, p) {
+    for(Connection *conn: p) {
       if (conn->guard()=="") {
         n++;
       }
     }
     if (n>0) {
       n=rand()%n;
-      foreach(Connection *conn, p) {
+      for(Connection *conn: p) {
         if (conn->guard()=="") {
           if (n==0)
             return conn->to();
@@ -410,7 +409,7 @@ const std::set<Event*> &Manager::getActiveEvents()
 
 Node *Manager::getNode(const std::string &id)
 {
-  foreach(Node *ev, nodes) {
+  for(Node *ev: nodes) {
     if (ev->name()==id)
       return ev;
   }
@@ -461,7 +460,7 @@ AB::Object Manager::resolve(const std::string &var)
 {
   DEBUG("Resolving variable %s", var.c_str());
   // Check it its an object name
-  foreach(Node *nn, nodes) {
+  for(Node *nn: nodes) {
     if (nn->name()==var) {
       DEBUG("Found as name");
       return to_object(nn);
@@ -473,7 +472,7 @@ AB::Object Manager::resolve(const std::string &var)
     return to_object(lastNode);
   }
 
-  foreach(Node *nn, nodes) {
+  for(Node *nn: nodes) {
     if (nn->type()==var) {
       DEBUG("Found as type: %s", nn->type());
       return to_object(nn);
@@ -488,7 +487,7 @@ AB::Object Manager::resolve(const std::string &var)
   }
 
   // Ok, just look at attrs at any known object
-  foreach(Node *nn, nodes) {
+  for(Node *nn: nodes) {
     try {
       return nn->attr(var);
     } catch(const AB::attribute_not_found &e) {

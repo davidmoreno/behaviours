@@ -3,14 +3,11 @@
 #include <ab/action.h>
 #include <ab/manager.h>
 #include <ab/luaobject.h>
-#include <boost/make_shared.hpp>
 
 extern "C" {
 #include <lua.h>
 }
 
-
-//#include <boost/bind.hpp>
 
 using namespace AB;
 
@@ -34,12 +31,12 @@ public:
 };
 
 class Image : public ObjectBase {
-  boost::shared_ptr<Size> size;
+  std::shared_ptr<Size> size;
 public:
   Object sizeCallable;
 
   Image(int w, int h) : ObjectBase("Image"), size(new Size(w,h)) {
-    sizeCallable=method2object(&Image::get_size);
+    sizeCallable=method2object<Image>(&Image::get_size);
   }
 
   Object get_size(ObjectList &l) {
@@ -88,15 +85,15 @@ public:
   }
 
   Object getImage(ObjectList &ol) {
-    Object img=boost::shared_ptr<ObjectBase>(new Image(320,200));
+    Object img=std::shared_ptr<ObjectBase>(new Image(320,200));
     return img;
   }
 
   virtual Object attr(const std::string& name) {
     if (name=="test")
-      return method2object(&TestNode::test);
+      return method2object<TestNode>(&TestNode::test);
     if (name=="getImage")
-      return method2object(&TestNode::getImage);
+      return method2object<TestNode>(&TestNode::getImage);
     return Node::attr(name);
   }
 

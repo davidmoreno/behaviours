@@ -23,6 +23,7 @@ extern "C"{
 #include <onion/mime.h>
 }
 
+#include <algorithm>
 #include <set>
 #include <ab/manager.h>
 #include <ab/node.h>
@@ -47,9 +48,9 @@ void ABServer::init()
   AB::registerBuiltinNodes();
 }
 
-//boost::mutex NodeManager::lua_mutex;
-//boost::mutex NodeManager::activeNodes_mutex;
-//boost::mutex NodeManager::inactiveNodes_mutex;
+//std::mutex NodeManager::lua_mutex;
+//std::mutex NodeManager::activeNodes_mutex;
+//std::mutex NodeManager::inactiveNodes_mutex;
 
 NodeManager::NodeManager(std::shared_ptr<AB::Manager> &ab) : ab(ab)
 {
@@ -88,13 +89,15 @@ onion_connection_status NodeManager::manager(Onion::Request& req, Onion::Respons
   if (post.has("run")){
       ab->saveBehaviour(current_ab_file);
       if (abthread==NULL){
-          abthread=new boost::thread(&AB::Manager::exec, ab.get());
+          abthread=new std::thread(&AB::Manager::exec, ab.get());
           res<<"OK";
           return OCS_PROCESSED;
       }
   } else if (post.has("stop")) {
     if (abthread!=NULL){
       ab->cancel();
+			
+			/** FIXME, with boost:
       if (abthread->timed_join(boost::get_system_time() + boost::posix_time::milliseconds(2000))){
         delete abthread;
         abthread=NULL;
@@ -104,6 +107,11 @@ onion_connection_status NodeManager::manager(Onion::Request& req, Onion::Respons
          res.setCode(HTTP_INTERNAL_ERROR);
          res<<"Timedout trying to join to AB manager thread.";
        }
+       */
+			 // No boost
+			 abthread->join();
+			 delete abthread;
+			 res<<"OK";
        return OCS_PROCESSED;
     }
   } else if (post.has("save")) {
@@ -468,7 +476,7 @@ onion_connection_status NodeManager::update(Onion::Request &req, Onion::Response
 
 void NodeManager::activateNode(AB::Node *n)
 {
-  // boost::mutex::scoped_lock lock(NodeManager::activeNodes_mutex);
+  // std::mutex::scoped_lock lock(NodeManager::activeNodes_mutex);
   if (n->name().substr(0,2) != "__" )
     activeNodes.push(n);
   if(activeNodes.size() > max_queue_size)
@@ -478,7 +486,7 @@ void NodeManager::activateNode(AB::Node *n)
 
 void NodeManager::deactivateNode(AB::Node *n)
 {
-  //boost::mutex::scoped_lock lock(NodeManager::inactiveNodes_mutex);
+  //std::mutex::scoped_lock lock(NodeManager::inactiveNodes_mutex);
   if (n->name().substr(0,2) != "__" )
     inactiveNodes.push(n);
   if(inactiveNodes.size() > max_queue_size)

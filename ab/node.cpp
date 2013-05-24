@@ -19,7 +19,6 @@
 #include <sstream>
 #include <string>
 #include <stdio.h>
-#include <boost/concept_check.hpp>
 
 #include "node.h"
 #include "log.h"
@@ -67,7 +66,7 @@ static Object name_of_node(Node *n, ObjectList)
 Object Node::attr(const std::string& name)
 {
   if (name=="__str__")
-    return to_object(boost::bind(&name_of_node,this,_1));
+    return to_object(std::bind(&name_of_node,this,std::placeholders::_1));
   return AB::ObjectBase::attr(name);
 }
 
@@ -89,7 +88,7 @@ namespace AB {
 
   Object to_object(Node *n)
   {
-    return boost::shared_ptr<ObjectBase>(n,no_delete);
+    return std::shared_ptr<ObjectBase>(n,no_delete);
   }
   Node *object2node(Object o)
   {

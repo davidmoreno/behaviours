@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include <boost/foreach.hpp>
 #include <sstream>
 
 #include <ab/log.h>
@@ -25,7 +24,6 @@
 
 #include "alarm.h"
 
-#define foreach BOOST_FOREACH
 
 using namespace AB;
 
@@ -167,7 +165,7 @@ bool AlarmManager::checkAlarm(time_t rawtime)
   if (timeinfo && rawtime > lastAlarm && triggered)
     triggered = false;
       
-  foreach(Event *ev, manager->getActiveEvents()) {
+  for(Event *ev: manager->getActiveEvents()) {
     
     Alarm *tev=dynamic_cast<Alarm*>(ev);
     

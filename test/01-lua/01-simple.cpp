@@ -1,6 +1,7 @@
 #include <ab/log.h>
 #include "../tests.h"
 
+#include <algorithm>
 
 #include <ab/lua.h>
 #include <ab/manager.h>
