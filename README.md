@@ -1,5 +1,8 @@
-Behaviours is a platform to create complex programs and behaviours just connecting the simple actions t
-hat conform a program. 
+Behaviours is a platform to create complex programs and behaviours just connecting the simple actions 
+that conform a program. 
+
+![Behaviours example](https://raw.github.com/wiki/davidmoreno/behaviours/images/behaviours.png)
+
 
 Normally the program is based on several simple algorithms and behaviours and there is a lot of plumbing
 between the elements. With behaviours the plumbing is simplified to the maximum just connecting boxes, 
