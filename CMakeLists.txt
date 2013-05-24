@@ -26,17 +26,6 @@ if (${ARM})
 else (${ARM})
   find_library(LUA_LIB NAMES lua5.2 lua liblua PATH ${LIBPATH})
 endif (${ARM})
-message("-- Search for boost::thread")
-find_library(BOOST_THREAD NAMES boost_thread boost_thread-mt PATH ${LIBPATH})
-
-if (${ARM})
-  if (${BOOST_THREAD})
-  else (${BOOST_THREAD})
-    SET(BOOST_THREAD boost_thread)
-    message("-- Using fixed boost::thread")
-  endif (${BOOST_THREAD})
-endif(${ARM})
-
 
 
 ##

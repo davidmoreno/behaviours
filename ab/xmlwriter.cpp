@@ -18,10 +18,12 @@
 
 #include <string.h>
 #include <fstream>
+#include <sstream>
+#include <iomanip>
+
 #include <sys/stat.h>
 #include <libxml/tree.h>
 #include <libxml/parser.h>
-#include <boost/foreach.hpp>
 
 #include "event.h"
 #include "action.h"
@@ -29,8 +31,6 @@
 #include "factory.h"
 #include "connection.h"
 #include "log.h"
-
-#define foreach BOOST_FOREACH
 
 
 using namespace AB;
@@ -83,7 +83,7 @@ static void writeNodes(xmlNode *root_element, Manager *manager, bool includeFile
   Action *a;
   Event *ev;
   
-  foreach(Node *node, manager->getNodes()) {
+  for(Node *node: manager->getNodes()) {
     if((a = dynamic_cast<Action*>(node)) != NULL) {
       
       cur = xmlNewChild(root_element, NULL, BAD_CAST "action", NULL);
@@ -98,7 +98,7 @@ static void writeNodes(xmlNode *root_element, Manager *manager, bool includeFile
       xmlNewProp(cur, BAD_CAST "x", BAD_CAST x);
       xmlNewProp(cur, BAD_CAST "y", BAD_CAST y);
       if(std::string(a->type()) != "imagecapture") {
-	foreach(std::string key, node->attrList()) {
+	for(std::string key: node->attrList()) {
 	  std::string value = object2string(node->attr(key));
 	  sanitizeXmlString(value);
 	  WARNING("%s: %s",key.c_str(), value.c_str());
@@ -127,7 +127,7 @@ static void writeNodes(xmlNode *root_element, Manager *manager, bool includeFile
 
       xmlNewProp(cur, BAD_CAST "x", BAD_CAST x);
       xmlNewProp(cur, BAD_CAST "y", BAD_CAST y);
-      foreach(std::string key, node->attrList()) {
+      for(std::string key: node->attrList()) {
 	  std::string value = object2string(node->attr(key));
 	  sanitizeXmlString(value);
 	  WARNING("%s: %s",key.c_str(), value.c_str());
@@ -148,7 +148,7 @@ static void writeNodes(xmlNode *root_element, Manager *manager, bool includeFile
       
   }
   // second round, connections
-  foreach(Connection *connection, manager->getConnections()) {
+  for(Connection *connection: manager->getConnections()) {
     cur = xmlNewChild(root_element, NULL, BAD_CAST "connection", NULL);
     xmlNewProp(cur, BAD_CAST "id", BAD_CAST connection->name().c_str());
     xmlNewProp(cur, BAD_CAST "from", BAD_CAST connection->from()->name().c_str());

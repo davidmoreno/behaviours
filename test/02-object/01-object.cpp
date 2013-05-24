@@ -1,9 +1,6 @@
 #include <sstream>
 #include <math.h>
 
-#include <boost/make_shared.hpp>
-#include <boost/bind.hpp>
-
 #include <ab/log.h>
 #include <ab/object.h>
 
@@ -38,7 +35,7 @@ public:
   AB::Object real;
   AB::Object imaginary;
 
-  static AB::Object create(double a, double b) { return boost::make_shared<Complex>(a,b); }
+  static AB::Object create(double a, double b) { return std::make_shared<Complex>(a,b); }
   Complex(double a, double b) : ObjectBase(Complex::type), real(AB::to_object(a)), imaginary(AB::to_object(b)) {}
 
   virtual AB::AttrList attrList() {
@@ -49,7 +46,7 @@ public:
 
   AB::Object attr(const std::string &name) {
     if (name=="__str__")
-      return AB::to_object(boost::bind(&Complex::str, this, _1));
+      return AB::to_object(std::bind(&Complex::str, this, std::placeholders::_1));
     if (name=="__float__")
       return method2object(&Complex::dble);
     if (name=="real")
@@ -57,7 +54,7 @@ public:
     if (name=="imaginary")
       return imaginary;
     if (name=="len")
-      return AB::to_object(boost::bind(&Complex::len, this));
+      return AB::to_object(std::bind(&Complex::len, this));
     if (name=="len2")
       return method2object(&Complex::len);
     throw(AB::attribute_not_found(name));

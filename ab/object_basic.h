@@ -50,12 +50,12 @@ namespace AB {
   public:
     static const char *type;
 
-    CallableObject(boost::function<Object(ObjectList&)> _f) : ObjectBase(CallableObject::type), f(_f) {}
+    CallableObject(std::function<Object(ObjectList&)> _f) : ObjectBase(CallableObject::type), f(_f) {}
 
     virtual Object call(ObjectList& params) {
       return f(params);
     }
-    boost::function<Object(ObjectList&)> f;
+    std::function<Object(ObjectList&)> f;
   };
 }
 

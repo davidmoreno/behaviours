@@ -19,8 +19,7 @@
 #ifndef FACTORY_H
 #define FACTORY_H
 
-#include <boost/function.hpp>
-#include <boost/shared_ptr.hpp>
+#include <functional>
 
 #include <string>
 #include <map>
@@ -39,7 +38,7 @@ namespace AB {
    * Node creators must be registered, and the the creators can be called.
    */
   class Factory {
-    static std::map<std::string, boost::function<Node*(const std::string& type)> > knownTypes;
+    static std::map<std::string, std::function<Node*(const std::string& type)> > knownTypes;
 
     template<class T>
     static AB::Node *createNode(const std::string& type) {
@@ -61,7 +60,7 @@ namespace AB {
     /**
      * @short Registers a new creator for a class object
      */
-    static bool registerCreator(const std::string &type, boost::function<Node*(const std::string& type)> f);
+    static bool registerCreator(const std::string &type, std::function<Node*(const std::string& type)> f);
 
     /**
      * @short Template to ease the adding of new types.

@@ -19,9 +19,6 @@
 #ifndef AB_NODE_H
 #define AB_NODE_H
 
-#include <boost/bind.hpp>
-#include <boost/function.hpp>
-
 #include "object.h"
 
 #include <vector>

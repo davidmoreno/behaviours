@@ -21,8 +21,8 @@
 
 #include "object.h"
 
-#include <boost/thread.hpp>
-
+#include <thread>
+#include <mutex>
 #include <string>
 #include <set>
 #include <map>
@@ -271,7 +271,7 @@ namespace AB {
     std::set<Node*> nodes;
     Node *lastNode;
     std::queue<Node *> pendingNotifications;
-    boost::mutex pendingNotificationsMutex;
+    std::mutex pendingNotificationsMutex;
     Meta metadata;
     
 
@@ -280,7 +280,7 @@ namespace AB {
     volatile bool running_;
     bool syncOnNextCycle; ///< Whenever some part of the graph changes, new event, new action, new connection.. or removal, next cycle must sync.
 
-    boost::thread::id execThreadId;
+    std::thread::id execThreadId;
   };
 
   /// Overwrite to get a notification on each node notify enter

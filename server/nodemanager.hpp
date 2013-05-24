@@ -25,7 +25,8 @@
 #include <onion/types.h>
 #include <onion/onion.hpp>
 #include <onion/dict.hpp>
-#include <boost/thread.hpp>
+
+#include <thread>
 #include <memory>
 
 const size_t max_queue_size = 25;
@@ -45,13 +46,12 @@ namespace ABServer{
 	 */
 	class NodeManager{
 		std::shared_ptr<AB::Manager> ab;
-		boost::thread *abthread;
+		std::thread *abthread;
 
 		std::queue<AB::Node *> activeNodes;
 		std::queue<AB::Node *> inactiveNodes;
 		std::string luaOutput;
 		std::string current_ab_file;
-		//static boost::mutex lua_mutex, activeNodes_mutex, inactiveNodes_mutex;
 
 		std::string downloaded;
 		struct timeval lastAutosave;
