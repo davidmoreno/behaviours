@@ -1,14 +1,8 @@
-include_directories(${XML2_HEADERS})
-include_directories(${LUA_HEADERS})
-#include_directories(${INCLUDEDIR}/libxml2)
+add_executable(ab main.cpp)
+target_link_libraries(ab onioncpp_static onion_handlers_static 
+	onion_static ab_static xml2 z ${LUA_LIB} dl gcrypt pthread rt gnutls
+	boost_system boost_thread-mt)
 
-SET(SOURCES 
-	manager.cpp node.cpp object.cpp xmlreader.cpp xmlwriter.cpp factory.cpp connection.cpp lua.cpp pluginloader.cpp builtin_nodes.cpp
-	actions/luaaction.cpp  actions/webservice.cpp actions/wait.cpp actions/stop.cpp actions/load.cpp
-	events/luaevent.cpp events/timeout.cpp events/alarm.cpp )
-
-add_library(ab_static STATIC ${SOURCES})
-
-#add_library(ab SHARED ${SOURCES})
-target_link_libraries(ab_static ${LUA_LIB} z xml2 curl)
-
+install(TARGETS ab
+	RUNTIME DESTINATION bin
+	)

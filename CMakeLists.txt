@@ -34,7 +34,7 @@ if (${ARM})
   include_directories (${AISOY1API_BUILD}/../src/real/)
 endif(${ARM})
 
-include_directories (${CMAKE_CURRENT_SOURCE_DIR})
+include_directories (${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 
 IF (${CMAKE_BUILD_TYPE} MATCHES "Debug")
@@ -49,7 +49,8 @@ add_definitions(-DAB_PREFIX=\"${CMAKE_INSTALL_PREFIX}\")
 
 find_library(LIBAISOY1 NAMES aisoy1 PATH /usr/lib /usr/local/lib )
 
-add_subdirectory(ab)
+add_subdirectory(lib)
 add_subdirectory(plugins)
 add_subdirectory(server)
+add_subdirectory(ab)
 add_subdirectory(test)
