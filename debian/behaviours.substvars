@@ -1,2 +1,2 @@
-shlibs:Depends=libboost-system1.50.0 (>= 1.50.0-1), libboost-thread1.50.0 (>= 1.50.0-1), libc6 (>= 2.4), libc6 (>= 2.13-28), libcurl3-gnutls (>= 7.16.2), libgcc1 (>= 1:4.4.0), libgcrypt11 (>= 1.4.5), libgnutls26 (>= 2.12.17-0), liblua5.2-0, libpython3.2 (>= 3.2~a4), libstdc++6 (>= 4.6), libxml2 (>= 2.7.4), zlib1g (>= 1:1.1.4)
+shlibs:Depends=libc6 (>= 2.14), libcurl3-gnutls (>= 7.16.2), libgcc1 (>= 1:4.1.1), libgcrypt11 (>= 1.4.5), libgnutls26 (>= 2.12.17-0), liblua5.2-0, libpython3.2 (>= 3.2~a4), libstdc++6 (>= 4.5), libxml2 (>= 2.7.4), zlib1g (>= 1:1.1.4)
 misc:Depends=
