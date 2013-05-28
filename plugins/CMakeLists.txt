@@ -1,2 +1,2 @@
 add_subdirectory(basic)
-add_subdirectory(python3)
+add_subdirectory(python2)

@@ -1,0 +1,44 @@
+<node-descriptions>
+	<node-description id="python2action">
+		<name lang="en">Python2</name>
+		<description lang="en">Executes some Python2 code</description>
+		
+		<type>action</type>
+		<icon>test</icon>
+		
+		<icon src="python2action.png"/>
+		
+		<params>
+			<param id="code">
+				<type>text</type>
+				<description lang="en">Code to be executed on action</description>
+			</param>
+		</params>
+
+		<js>modules/python.js</js>
+		<js>extra/codemirror.js</js>
+		<js>extra/codemirror_python.js</js>
+
+	</node-description>
+	<node-description id="python2event">
+		<name lang="en">Python2</name>
+		<description lang="en">Executes some Python2 code; if true executes the event</description>
+		
+		<type>event</type>
+		<icon>test</icon>
+		
+		<icon src="python2action.png"/>
+		
+		<params>
+			<param id="code">
+				<type>text</type>
+				<description lang="en">Code to be executed to check if event happens</description>
+			</param>
+		</params>
+
+		<js>modules/python.js</js>
+		<js>extra/codemirror.js</js>
+		<js>extra/codemirror_python.js</js>
+
+	</node-description>
+</node-descriptions>

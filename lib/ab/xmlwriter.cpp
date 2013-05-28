@@ -101,9 +101,9 @@ static void writeNodes(xmlNode *root_element, Manager *manager, bool includeFile
 	for(std::string key: node->attrList()) {
 	  std::string value = object2string(node->attr(key));
 	  sanitizeXmlString(value);
-	  WARNING("%s: %s",key.c_str(), value.c_str());
+	  //WARNING("%s: %s",key.c_str(), value.c_str());
 	  xmlNode *param = xmlNewChild(cur, NULL, BAD_CAST "param", BAD_CAST value.c_str());
-	  WARNING("Got param");
+	  //WARNING("Got param");
 	  if(param)
 	    xmlNewProp(param, BAD_CAST "name", BAD_CAST key.c_str());
 	  else WARNING("Did not get param");
