@@ -80,6 +80,11 @@ void ab_init(void){
 	//new boost::thread(python2_interpreter, stdin);
 }
 
+void ab_finalize(void){
+	Py_Finalize();
+}
+
+
 using namespace AB;
 using namespace AB::Python2;
 
@@ -127,11 +132,13 @@ void Python2Action::exec()
 	auto o=to_object(this) ;
 	PyDict_SetItemString(locals, "self", object2pyobject( o ));
 	
-	PyObject *obj=PyRun_String( code.c_str() ,Py_file_input, globals, locals);
+	PyObject *obj=PyEval_EvalCode( (PyCodeObject*)compiled_code, globals, locals);
 	if (!obj)
 		PyErr_Print();
-	else
+	else{
+		PyObject_Print(obj, stdout, Py_PRINT_RAW);
 		Py_DECREF(obj);
+	}
 	Py_DECREF(globals);
 	Py_DECREF(locals);
 }

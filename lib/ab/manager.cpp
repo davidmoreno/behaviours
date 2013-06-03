@@ -272,6 +272,7 @@ void Manager::sync()
 
 void Manager::exec()
 {
+  DEBUG("Start execution of behaviour");
   execThreadId=std::this_thread::get_id();
   int t=0;
   running_=true;
@@ -303,6 +304,7 @@ void Manager::exec()
     usleep(200000);
     t++;
   }
+  DEBUG("Finished execution of behaviour");
 }
 
 /**

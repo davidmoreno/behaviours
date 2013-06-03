@@ -39,6 +39,7 @@ extern "C"{
 
 #include "utils.hpp"
 #include "nodemanager.hpp"
+#include "../lib/ab/manager.h"
 
 using namespace ABServer;
 using namespace AB;
@@ -54,6 +55,7 @@ void ABServer::init()
 
 NodeManager::NodeManager(std::shared_ptr<AB::Manager> &ab) : ab(ab)
 {
+	running=false;
   abthread=NULL;
   luaOutput = "";
   downloaded = "";
@@ -83,36 +85,42 @@ Onion::Dict NodeManager::attributesOf(AB::Node *node)
   return nodeData;
 }
 
+void NodeManager::exec_behaviour_thread()
+{
+	running=true;
+	ab->exec();
+	running=false;
+}
+
+
+void NodeManager::exec_behaviour()
+{
+	if (running)
+		return;
+	if (abthread.get()){
+		try{
+			abthread->join();
+		}
+		catch(...){
+		}
+	}
+	abthread=std::make_shared<std::thread>(&NodeManager::exec_behaviour_thread, this);
+}
+
+
 onion_connection_status NodeManager::manager(Onion::Request& req, Onion::Response& res)
 {
   Onion::Dict post=req.post();
   if (post.has("run")){
       ab->saveBehaviour(current_ab_file);
-      if (abthread==NULL){
-          abthread=new std::thread(&AB::Manager::exec, ab.get());
-          res<<"OK";
-          return OCS_PROCESSED;
-      }
+			exec_behaviour();
+			res<<"OK";
+			return OCS_PROCESSED;
   } else if (post.has("stop")) {
-    if (abthread!=NULL){
+    if (abthread.get()){
       ab->cancel();
-			
-			/** FIXME, with boost:
-      if (abthread->timed_join(boost::get_system_time() + boost::posix_time::milliseconds(2000))){
-        delete abthread;
-        abthread=NULL;
-        res<<"OK";
-       }
-       else{
-         res.setCode(HTTP_INTERNAL_ERROR);
-         res<<"Timedout trying to join to AB manager thread.";
-       }
-       */
-			 // No boost
-			 abthread->join();
-			 delete abthread;
-			 res<<"OK";
-       return OCS_PROCESSED;
+			res<<"OK";
+			return OCS_PROCESSED;
     }
   } else if (post.has("save")) {
 		ab->saveBehaviour(current_ab_file);

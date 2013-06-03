@@ -46,7 +46,8 @@ namespace ABServer{
 	 */
 	class NodeManager{
 		std::shared_ptr<AB::Manager> ab;
-		std::thread *abthread;
+		std::shared_ptr<std::thread> abthread;
+		bool running;
 
 		std::queue<AB::Node *> activeNodes;
 		std::queue<AB::Node *> inactiveNodes;
@@ -57,6 +58,7 @@ namespace ABServer{
 		struct timeval lastAutosave;
 		bool needsAutosave, forceUpdate;
 
+		void exec_behaviour_thread();
 	public:
 		NodeManager(std::shared_ptr<AB::Manager> &ab);
 		
@@ -70,6 +72,8 @@ namespace ABServer{
 		onion_connection_status uploadXML(Onion::Request &req, Onion::Response &res);
 		onion_connection_status uploadWAV(Onion::Request &req, Onion::Response &res);
 		onion_connection_status save(Onion::Request &req, Onion::Response &res);
+
+		void exec_behaviour();
 		
 		void activateNode(AB::Node *n);
 		void deactivateNode(AB::Node *n);
