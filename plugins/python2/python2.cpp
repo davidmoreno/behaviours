@@ -92,7 +92,8 @@ void AB::Python2::python2_init(){
 	//TODO PyImport_AppendInittab("ab",PyInit_ab);
 	//TODO Py_SetProgramName("behaviours");
 	Py_Initialize();
-
+	PyInit_ab();
+	
 	globals=PyDict_New();
 	PyDict_SetItemString(globals, "__builtins__", PyEval_GetBuiltins());	
 	
@@ -100,7 +101,7 @@ void AB::Python2::python2_init(){
 	
 	FILE *init_fd=fopen( AB_PREFIX "/shared/ab/python2/__init__.py", "ro" );
 	if (!init_fd){
-		ERROR("Could not execute __init__ to set p a proper python3 environment");
+		ERROR("Could not execute __init__ to set p a proper python2 environment");
 	}
 	else{
 		PyObject *init_ret=PyRun_File(init_fd, "__init__.py", Py_file_input, globals, globals);

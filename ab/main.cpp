@@ -19,6 +19,7 @@
 #include <ab/manager.h>
 #include <memory>
 #include <signal.h>
+#include <ab/builtin_nodes.hpp>
 
 std::shared_ptr<AB::Manager> manager;
 
@@ -43,6 +44,9 @@ int main(int argc, char **argv){
 	signal(SIGTERM, on_SIGINT);
 
 	manager=std::make_shared<AB::Manager>();
+  AB::registerBuiltinNodes();
+	
+	
 	manager->loadBehaviour(argv[1]);
 	manager->exec();
 	return 0;
