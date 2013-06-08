@@ -14,7 +14,7 @@
 
   Alarm.prototype.configure = function(){
     var that = this
-    main.showDialog()
+    this.configureDialogSetup()
     
   //   try {
   //     var date = new Date($.ajax({'type': 'GET', 'url': '/'}).getResponseHeader('Date'));
@@ -98,7 +98,6 @@
     
     $('#dialog #title').html(current_language.configuration_of+this.type+' <span class="name">(object id '+this.id+')</span>')
     $('#dialog #content').html(ul)
-    this.dialogShowDefaultButtons()
     
   }
 

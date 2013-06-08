@@ -155,14 +155,24 @@ Node.prototype.realtime_update_base = function(){
 	}
 }
 
+Node.prototype.configureDialogSetup=function(){
+	main.showDialog()
+	$('#dialog #content').html('')
+	var tt=$('#dialog #title').html(current_language.configuration_of)
+	var name='<span id="name">'+this.id+'</span>'
+	name.click(function(){
+	})
+	tt.append(name).append('</span> <div class="id">('+this.type+')</div>')
+	this.dialogShowDefaultButtons()
+}
+
 /**
 	* @short Shows the dialog to configure this node type, for that id
 	*/
 Node.prototype.configure=function(){
-  
-	var that=this
-	main.showDialog()
-	$('#dialog #content').html('')
+	this.configureDialogSetup()
+ 	var that=this
+
 	if (this.paramOptions && this.paramOptions.length!=0){
 		var p=this.paramOptions
 		var ul=$('<ul>')
@@ -252,11 +262,6 @@ Node.prototype.configure=function(){
 		$('#dialog #content').html(ul)
 		firstInput.focus()
 	}
-	var that=this
-	$('#dialog #title').html(current_language.configuration_of+this.type+' <span class="name">(object id '+this.id+')</span>')
-	
-	this.dialogShowDefaultButtons()
-
 	if (this.paramDoc){
 		$('#dialog #content').append($('<div class="doc">').html(this.paramDoc))
 	}
