@@ -396,7 +396,10 @@ div#svgcanvas{
 	font-size: 0.8em;
 }
 
-#dialog h1 .name{
+#dialog h1 #name{
+}
+
+#dialog h1 .type{
 	font-size: 0.3em;
 }
 

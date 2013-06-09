@@ -269,6 +269,13 @@ Behaviour.prototype.sendNodeParams = function(node){
 	}
 }
 
+Behaviour.prototype.sendNodeName = function(node, new_name, fn){
+	$.post("/node/"+node.id,{name:new_name}, fn).error(function(txt){
+		alert(current_language.node_name_change_error+txt.responseText)
+	})
+}
+
+
 Behaviour.prototype.clear = function(only_client){
   
   for (var i in this.state){

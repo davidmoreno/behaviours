@@ -239,6 +239,11 @@ onion_connection_status NodeManager::node(Onion::Request& req, Onion::Response& 
               res<<"OK";
               return OCS_PROCESSED;
             }
+          if (req.post().has("name")){
+			  node->setName(req.post().get("name"));
+			  res<<"OK";
+			  return OCS_PROCESSED;
+		  }
           return OCS_INTERNAL_ERROR;
         }
       Onion::Dict d=attributesOf(node);

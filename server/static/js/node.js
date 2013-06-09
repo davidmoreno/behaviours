@@ -21,7 +21,7 @@
  * 
  * More available methods, but more rare to reimplement them:
  * 
- * this.rename          -- Change current name, do change all references through all the graph as needed.
+ * this.setName         -- Change current name, do change all references through all the graph as needed.
  * this.remove          -- Callback just before node is removed.
  */
 Node = function(id, options, behaviour){
@@ -159,10 +159,13 @@ Node.prototype.configureDialogSetup=function(){
 	main.showDialog()
 	$('#dialog #content').html('')
 	var tt=$('#dialog #title').html(current_language.configuration_of)
-	var name='<span id="name">'+this.id+'</span>'
+	var name=$('<a href="#" id="name">'+this.id+'</span>')
+	var that=this
 	name.click(function(){
+		var name=prompt(current_language.set_node_id, that.id)
+		that.setName(name)
 	})
-	tt.append(name).append('</span> <div class="id">('+this.type+')</div>')
+	tt.append(name).append('</span> <div class="type">('+this.type+')</div>')
 	this.dialogShowDefaultButtons()
 }
 
@@ -358,12 +361,24 @@ Node.prototype.position = function(x,y){
 	}
 }
 
-Node.prototype.rename = function(new_name){
-	var state=this.behaviour.state
-	delete state[this.id]
-	$('#'+this.id).attr('id',new_name)
-	this.id=new_name
-	state[this.id]=this
+Node.prototype.setName = function(new_name){
+	if (new_name == this.id)
+		return
+	if (new_name in this.behaviour.state){
+		alert(current_language.new_name_exists_error)
+		return
+	}
+	var that=this
+	this.behaviour.sendNodeName(this, new_name, function(){
+		var state=that.behaviour.state
+		delete state[that.id]
+		$('#'+that.id).attr('id',new_name)
+		that.behaviour.connections[new_name]=that.behaviour.connections[that.id]
+		delete that.behaviour.connections[that.id]
+		that.id=new_name
+		state[that.id]=that
+		$('#dialog #name').text(new_name)
+	})
 }
 
 Node.prototype.remove = function(){

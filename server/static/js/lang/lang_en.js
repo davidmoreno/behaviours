@@ -165,6 +165,9 @@ current_language={
   helpb:'Help',
   helpb_title:'Manual',  
   luab:'Lua',
-  luab_title:'Lua console. Write and execute code or monitor the output from all Lua nodes'
+  luab_title:'Lua console. Write and execute code or monitor the output from all Lua nodes',
+  set_node_id:'Set node name',
+  new_name_exists_error:'Selected node name already exists. Not doing anything.',
+  node_name_change_error:'Server error changing node name: '
 }
 

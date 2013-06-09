@@ -3,8 +3,7 @@
 
 (function(){
 var python_configure = function(){
-  main.showDialog()
-  $('#dialog #title').html(current_language.configuration_of+this.type+' <span class="name">(object id '+this.id+')</span>')
+  this.configureDialogSetup()
 
   var tr=$('<tr>')
   var table=$('<table>').append(tr)
@@ -50,8 +49,6 @@ var python_configure = function(){
 	$(editor).focus()
 	
 	$(editor).find('.CodeMirror-scroll').attr('height: 100%;')
-	
-  this.dialogShowDefaultButtons()
 }
 
 python_accept_configure = function(){
