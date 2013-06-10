@@ -373,8 +373,6 @@ Node.prototype.setName = function(new_name){
 		var state=that.behaviour.state
 		delete state[that.id]
 		$('#'+that.id).attr('id',new_name)
-		that.behaviour.connections[new_name]=that.behaviour.connections[that.id]
-		delete that.behaviour.connections[that.id]
 		that.id=new_name
 		state[that.id]=that
 		$('#dialog #name').text(new_name)
