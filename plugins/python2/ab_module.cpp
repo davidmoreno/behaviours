@@ -188,6 +188,8 @@ namespace Python2{
 			return AB::to_object( PyFloat_AsDouble(obj) );
 		if (PyLong_Check(obj))
 			return AB::to_object( (int)PyLong_AsLong(obj) );
+		if (PyInt_Check(obj))
+			return AB::to_object( (int)PyInt_AsLong(obj) );
 		if (PyUnicode_Check(obj)){
 			Py_ssize_t size;
 			const char *str;
