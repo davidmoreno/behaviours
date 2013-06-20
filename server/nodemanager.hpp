@@ -72,6 +72,7 @@ namespace ABServer{
 		onion_connection_status uploadXML(Onion::Request &req, Onion::Response &res);
 		onion_connection_status uploadWAV(Onion::Request &req, Onion::Response &res);
 		onion_connection_status save(Onion::Request &req, Onion::Response &res);
+		onion_connection_status events(Onion::Request &req, Onion::Response &res);
 
 		void exec_behaviour();
 		

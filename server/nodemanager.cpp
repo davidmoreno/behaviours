@@ -41,6 +41,8 @@ extern "C"{
 #include "nodemanager.hpp"
 #include "../lib/ab/manager.h"
 
+#include "server/eventQueue.h"
+
 using namespace ABServer;
 using namespace AB;
 
@@ -291,6 +293,21 @@ onion_connection_status NodeManager::node(Onion::Request& req, Onion::Response& 
       return onion_shortcut_response_json(d.c_handler(), req.c_handler(), res.c_handler());
     }
 }
+
+
+onion_connection_status NodeManager::events(Onion::Request& req, Onion::Response& res){
+  
+  if(req.query().has("start")){
+    Onion::Dict post = req.query(); 
+    //std::string id = post.get("start");
+    //res<<id;
+    EventQueue queue;
+    std::string test = queue.test();
+    res<<test;
+  }
+  return OCS_PROCESSED;
+}
+
 
 
 /// Lists the XML files at nodes on static subdirs. FIXME use some JSON library.

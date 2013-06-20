@@ -123,6 +123,7 @@ int main(void){
 	url.add("^wavload/", nodeManager.get(), &NodeManager::uploadWAV);
 	url.add("^static/", new StaticHandler(static_dir));
 	url.add("^data/", nodeManager.get(), &NodeManager::save);
+	url.add("^events", nodeManager.get(), &NodeManager::events);
 	
 //  onion_handler *w=onion_handler_webdav("data/files",NULL);
 //  onion_url_add_handler(url.c_ptr(), "^webdav/", w);
