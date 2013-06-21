@@ -41,7 +41,7 @@ extern "C"{
 #include "nodemanager.hpp"
 #include "../lib/ab/manager.h"
 
-#include "server/eventQueue.h"
+#include "eventQueue.h"
 
 using namespace ABServer;
 using namespace AB;
@@ -299,11 +299,14 @@ onion_connection_status NodeManager::events(Onion::Request& req, Onion::Response
   
   if(req.query().has("start")){
     Onion::Dict post = req.query(); 
-    //std::string id = post.get("start");
+    std::string id = post.get("start");
     //res<<id;
     EventQueue queue;
     std::string test = queue.test();
     res<<test;
+    //CircularBuffer<int> buffer;
+
+
   }
   return OCS_PROCESSED;
 }
