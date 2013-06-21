@@ -11,7 +11,6 @@ template <class T> class CircularBuffer
 {
 	private:
 		T *data;
-		std::vector<T> data2;
 		int size;
 		int write_index;
 		int first;

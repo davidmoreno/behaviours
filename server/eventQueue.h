@@ -4,6 +4,7 @@
 #include <iostream>
 #include <json/json.h>
 #include "circularBuffer.hpp"
+#include <memory>
 
 class EventQueue{
 	public:
@@ -13,7 +14,7 @@ class EventQueue{
 		std::string test();
 
 	private:
-		CircularBuffer<json_object> queue;
+		CircularBuffer<std::shared_ptr<json_object>> queue;
 
 };
 

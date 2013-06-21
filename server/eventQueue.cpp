@@ -18,11 +18,14 @@ void EventQueue::pushEvent(const std::string &type, json_object obj){
 
 	json_object_object_add(jobj,"type", jstring);
 	json_object_object_add(jobj,"obj", &obj);
-	queue.add(*jobj);
+
+	std::shared_ptr<json_object> ptr(jobj);
+
+	queue.add(ptr);
 }
 
 json_object* EventQueue::getEvents(int id){
-	std::vector<json_object> events;
+	std::vector<std::shared_ptr<json_object>> events;
 
 	queue.read(id,events);
 	json_object *jobj = json_object_new_object();
@@ -30,8 +33,8 @@ json_object* EventQueue::getEvents(int id){
 	std::string temp;
 
 	if(events.size() > 0){
-		for (std::vector<json_object>::iterator it = events.begin() ; it != events.end(); ++it)
-			json_object_array_add(jarray,&(*it));
+		for (std::vector<std::shared_ptr<json_object>>::iterator it = events.begin() ; it != events.end(); ++it)
+			json_object_array_add(jarray,(*it).get());
 		temp = "messages "+toString(queue.getLastPosition());
 	}
 	else
