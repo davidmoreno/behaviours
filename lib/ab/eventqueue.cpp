@@ -49,22 +49,23 @@ void EventQueue::pushEvent(const std::string& type, const std::string& key, cons
 	json_object *obj=json_object_new_object();
 	json_object_object_add(obj,key.c_str(), json_object_new_string(value.c_str()));
 	pushEvent(type, obj);
+	wait_for_event.notify_all();
 }
 
 
-json_object* EventQueue::getEvents(int id){
+json_object* EventQueue::getEvents(int from_id){
 	std::lock_guard<std::mutex> lock(mutex);
 
 	json_object *jobj = json_object_new_object();
 	json_object_object_add(jobj, "id", json_object_new_int(start_id+queue.count()));
 
 	size_t skip=0;
-	if (id>start_id)
-		skip=id-start_id;
+	if (from_id>start_id)
+		skip=from_id-start_id;
 	if (queue.count()>skip){
 		std::vector<std::shared_ptr<json_object>> events=queue.read(skip);
 
-		DEBUG("Skip %ld elements on the circular queue (first_id on queue is %d). Want from id %d. Got %ld elements.", skip, start_id,id, events.size());
+		DEBUG("Skip %ld elements on the circular queue (first_id on queue is %d). Want from id %d. Got %ld elements.", skip, start_id,from_id, events.size());
 
 		json_object *jarray = json_object_new_array();
 		
@@ -83,6 +84,18 @@ std::string EventQueue::getJSONString(int from_id){
 	std::string ret=json_object_get_string(json);
 	json_object_put(json);
 	return ret;
+}
+
+std::string EventQueue::getJSONStringBlock(int from_id){
+	{
+		std::unique_lock<std::mutex> lock(mutex);
+		size_t skip=0;
+		if (from_id>start_id)
+			skip=from_id-start_id;
+		while(queue.count()<=skip)
+			wait_for_event.wait(lock);
+	}
+	return getJSONString(from_id);
 }
 
 

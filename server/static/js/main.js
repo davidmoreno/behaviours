@@ -8,9 +8,15 @@ Main=function(){
 	this.connecting_dialog=false
 	this.initUpdates()
 	this.lua_ready = true
+	this.last_event_id = 0
 	
-
+	var main=this
+	this.event_processors={
+		"lua_console" : function(data){ main.lua_console_append(data.message) },
+		"lua_exception" : function(data){ main.lua_console_append("LUA EXCEPTION: "+data.what) }
+	}
 	
+	this.checkEvents()
 }
 
 /**
@@ -54,38 +60,34 @@ Main.prototype.checkServer = function() {
  * @short updates general state, active/inactive nodes and Lua output
  * 
  */
-Main.prototype.updateState = function (state) {
+Main.prototype.processEvents = function (events) {
   var that = this
   var behaviour = main.behaviour
-  
-//   if(state.startStop) {
-//     var btn=$('#startstop')
-//     if ($('#startstop.play').length && state.startStop == 'on'){
-// 	    btn.removeClass('play').addClass('stop')
-// 	    btn.find('img').attr('src','static/img/mainstop.png').attr('title',current_language.stopclick).attr('style','height:auto; width:auto;')
-//     }
-//     else if ($('#startstop.stop').length && state.startStop == 'off'){
-// 	    btn.removeClass('stop').addClass('play')
-// 	    btn.find('img').attr('src','static/img/play.png').attr('title',current_language.playclick).attr('style','height:auto; width:auto;')
-//     }
-//   }
-  
-  if(state.active)
-    for (var id in state.active)
-      behaviour.state[id].activate()
-	
-  if(state.inactive)
-    for (var id in state.inactive)
-      behaviour.state[id].deactivate()
-  
-  if(state.luaOutput) { 
-    var text = state.luaOutput
-    var pre=$('#lua_console pre')
-    pre.append(text)
-  
-   }
-   
-  $.get('/update/?state', main.updateState) 
+
+  for(var i=0;i<events.length;i++){
+		try{
+			var ev=events[i]
+			that.event_processors[ev.type](ev.obj)
+		}
+		catch(e){
+			console.error(e)
+		}
+	}
+}
+
+/**
+ * @short Call each 1000 ms to check if new event available
+ */
+Main.prototype.checkEvents = function(){
+	var main=this
+	setTimeout(function(){
+		$.get('/events?start='+main.last_event_id, function(data){ 
+			if (data.data)
+				main.processEvents(data.data); 
+			main.last_event_id=data.id
+			main.checkEvents(); 
+		})
+	},1000)
 }
 
 
@@ -247,14 +249,23 @@ Main.prototype.hideLUAConsole = function(){
 Main.prototype.showLUAConsole = function(){
     if($('#lua_console').is(":visible"))
       main.hideLUAConsole()
-    else $('#lua_console').fadeIn()
+    else{ 
+			$('#lua_console').fadeIn()
+			$('#lua_console input').select().focus()
+		}
 }
 
 Main.prototype.executeLUA = function(){
   var expr=$('#lua_console input').val()
-  $('#lua_console pre').append('\n\n>>> '+expr+'\n')
+	main.lua_console_append('>>> '+expr)
   main.lua_exec(expr)
   $('#lua_console input').select().focus()
+}
+
+Main.prototype.lua_console_append = function(data){
+	var p=$('#lua_console pre')
+	p.append(data+"\n")
+	p.scrollTop(p[0].scrollHeight);
 }
 
 Main.prototype.lua_exec = function(cmd){
@@ -262,8 +273,7 @@ Main.prototype.lua_exec = function(cmd){
 	if(that.lua_ready) {
 	  that.lua_ready = false
 	  $('#loading').show()  
-	  $.post('/lua/',{exec:cmd},function(data){
-			$('#lua_console pre').append('\n'+data+'\n')
+	  $.post('/lua/',{exec:cmd},function(){
 	    that.lua_ready = true
 	    $('#loading').hide()
 	  }).error(function(){

@@ -23,6 +23,7 @@
 #include "circularbuffer.hpp"
 #include <memory>
 #include <mutex>
+#include <condition_variable>
 
 typedef struct json_object json_object;
 
@@ -32,14 +33,16 @@ namespace AB{
 			EventQueue();
 			void pushEvent(const std::string &, json_object *);
 			void pushEvent(const std::string &type, const std::string &key, const std::string &value);
-			json_object* getEvents(int start_id);
-			std::string getJSONString(int count);
+			json_object* getEvents(int from_id);
+			std::string getJSONString(int from_id);
+			std::string getJSONStringBlock(int from_id);
 			std::string test(int start_id);
 
 		private:
 			CircularBuffer<std::shared_ptr<json_object>> queue;
 			int start_id;
 			std::mutex mutex;
+			std::condition_variable wait_for_event;
 	};
 }
 

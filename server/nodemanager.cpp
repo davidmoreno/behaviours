@@ -298,7 +298,7 @@ onion_connection_status NodeManager::events(Onion::Request& req, Onion::Response
 		start=atoi(req.query().get("start").c_str());
 	
 	res.setHeader("Content-Type","text/json");
-	res<<ab->eventQueue.getJSONString(start);
+	res<<ab->eventQueue.getJSONStringBlock(start);
 
 	return OCS_PROCESSED;
 }
