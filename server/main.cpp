@@ -110,7 +110,6 @@ int main(void){
 	url.add("^node/", nodeManager.get(), &NodeManager::node);
 	url.add("^connections/", nodeManager.get(), &NodeManager::connections);
 	url.add("^lua/", nodeManager.get(), &NodeManager::lua);
-	url.add("^update/", nodeManager.get(), &NodeManager::update);
 	url.add("^upload/", nodeManager.get(), &NodeManager::uploadXML);
 	url.add("^wavload/", nodeManager.get(), &NodeManager::uploadWAV);
 	url.add("^static/", new StaticHandler(static_dir));

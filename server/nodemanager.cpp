@@ -40,6 +40,7 @@ extern "C"{
 #include "utils.hpp"
 #include "nodemanager.hpp"
 #include "../lib/ab/manager.h"
+#include "../lib/ab/node.h"
 
 using namespace ABServer;
 using namespace AB;
@@ -440,76 +441,13 @@ onion_connection_status NodeManager::uploadWAV(Onion::Request &req, Onion::Respo
   return OCS_INTERNAL_ERROR;
 }
 
-onion_connection_status NodeManager::update(Onion::Request &req, Onion::Response &res)
-{
-
-  if(req.query().has("state")) {
-      DEBUG("got /update/state query");
-      Onion::Dict d;
-      //    struct timeval now;
-      bool empty = true;
-      while(empty) {
-          //      gettimeofday(&now, NULL);
-          //      float dt=(now.tv_sec-lastAutosave.tv_sec) + float(now.tv_usec - lastAutosave.tv_usec)/10000000.0;
-          //      if (forceUpdate || (needsAutosave && dt>60.0)) {
-          //        if(abthread!=NULL)
-          //          d.add("startStop","on");
-          //        else
-          //          d.add("startStop","off");
-          //        // autosaves each minute, if needed
-          //        ab->saveBehaviour(current_ab_file);
-          //        lastAutosave = now;
-          //        needsAutosave = false;
-          //        forceUpdate = false;
-          //        WARNING("autosaving");
-          //        empty = false;
-          //      }
-          if (!activeNodes.empty()) {
-              Onion::Dict active;
-              do {
-                  active.add(activeNodes.front()->name(),"on");
-                  activeNodes.pop();
-                } while (!activeNodes.empty());
-              active.setAutodelete(false);
-              d.add("active", active);
-              empty = false;
-            }
-          if (!inactiveNodes.empty()) {
-              Onion::Dict inactive;
-              do {
-                  inactive.add(inactiveNodes.front()->name(),"off");
-                  inactiveNodes.pop();
-                } while (!activeNodes.empty());
-              inactive.setAutodelete(false);
-              d.add("inactive", inactive);
-              empty = false;
-            }
-          if(empty)
-            usleep(100000);
-        }
-      d.setAutodelete(false); // Will be removed at return
-      return onion_shortcut_response_json(d.c_handler(), req.c_handler(), res.c_handler());
-    }
-  return OCS_NOT_PROCESSED;
-}
-
 void NodeManager::activateNode(AB::Node *n)
 {
-  // std::mutex::scoped_lock lock(NodeManager::activeNodes_mutex);
-  if (n->name().substr(0,2) != "__" )
-    activeNodes.push(n);
-  if(activeNodes.size() > max_queue_size)
-    activeNodes.pop();
-  
+	ab->eventQueue.pushEvent("node_enter_exit", "enter", n->name());
 }
 
 void NodeManager::deactivateNode(AB::Node *n)
 {
-  //std::mutex::scoped_lock lock(NodeManager::inactiveNodes_mutex);
-  if (n->name().substr(0,2) != "__" )
-    inactiveNodes.push(n);
-  if(inactiveNodes.size() > max_queue_size)
-    inactiveNodes.pop();
-
+	ab->eventQueue.pushEvent("node_enter_exit", "exit", n->name());
 }
 

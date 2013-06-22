@@ -42,6 +42,8 @@ void EventQueue::pushEvent(const std::string &type, json_object *obj){
 		start_id++;
 	
 	queue.add(ptr);
+	wait_for_event.notify_all();
+	DEBUG("Notify event ready");
 }
 
 void EventQueue::pushEvent(const std::string& type, const std::string& key, const std::string& value)
@@ -49,7 +51,6 @@ void EventQueue::pushEvent(const std::string& type, const std::string& key, cons
 	json_object *obj=json_object_new_object();
 	json_object_object_add(obj,key.c_str(), json_object_new_string(value.c_str()));
 	pushEvent(type, obj);
-	wait_for_event.notify_all();
 }
 
 
@@ -89,11 +90,10 @@ std::string EventQueue::getJSONString(int from_id){
 std::string EventQueue::getJSONStringBlock(int from_id){
 	{
 		std::unique_lock<std::mutex> lock(mutex);
-		size_t skip=0;
-		if (from_id>start_id)
-			skip=from_id-start_id;
-		while(queue.count()<=skip)
+		while(static_cast<size_t>(from_id)>=(start_id+queue.count())){
+			DEBUG("Wait for events (ask from %d, I'm at %ld)", from_id, (start_id+queue.count()));
 			wait_for_event.wait(lock);
+		}
 	}
 	return getJSONString(from_id);
 }

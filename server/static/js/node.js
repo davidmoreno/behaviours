@@ -288,8 +288,8 @@ Node.prototype.deactivate = function(){
     text.attr('fill','green')
     setTimeout(function(){
 	text.attr('fill','black')
-    },100)
-  },100)
+    },300)
+  },300)
 }
 
 

@@ -40,7 +40,7 @@ namespace AB{
 
 		private:
 			CircularBuffer<std::shared_ptr<json_object>> queue;
-			int start_id;
+			volatile int start_id;
 			std::mutex mutex;
 			std::condition_variable wait_for_event;
 	};

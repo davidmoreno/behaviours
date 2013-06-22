@@ -49,8 +49,6 @@ namespace ABServer{
 		std::shared_ptr<std::thread> abthread;
 		bool running;
 
-		std::queue<AB::Node *> activeNodes;
-		std::queue<AB::Node *> inactiveNodes;
 		std::string current_ab_file;
 
 		std::string downloaded;

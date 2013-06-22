@@ -6,54 +6,24 @@ Main=function(){
 	this.canvas=new Canvas()
 	this.behaviour=new Behaviour(this.canvas)
 	this.connecting_dialog=false
-	this.initUpdates()
 	this.lua_ready = true
 	this.last_event_id = 0
 	
 	var main=this
 	this.event_processors={
 		"lua_console" : function(data){ main.lua_console_append(data.message) },
-		"lua_exception" : function(data){ main.lua_console_append("LUA EXCEPTION: "+data.what) }
+		"lua_exception" : function(data){ main.lua_console_append("LUA EXCEPTION: "+data.what) },
+		"node_enter_exit" : function(data){
+			if (data.enter){
+				main.behaviour.get(data.enter).activate()
+			}
+			else{
+				main.behaviour.get(data.exit).deactivate()
+			}
+		}
 	}
 	
 	this.checkEvents()
-}
-
-/**
- * @short Initializes polling to update state from server (e.g. LUA feedback, active nodes, etc.)
- * 
- */
-Main.prototype.initUpdates = function() {
-  var that = this
-  $.get('/update/?state', that.updateState) 
-  that.checkServer();
-}
-
-/**
- * @short checks server state; when server recovers from a crash, reinitializes updates
- * 
- */
-Main.prototype.checkServer = function() {
-//   var that = this
-//   $.ajax({
-//     url:'check',
-//     type:'HEAD',
-//     complete: function(xhr, text) {  
-//       setTimeout(function(){
-//         console.log(xhr.status+text)
-//         if (xhr.status != 404) { // server not ready
-// 	  that.server_ready = false
-// 	  $('#loading').show()
-// 	  that.checkServer()
-// 	} else if (!that.server_ready) { // server ready but just recovered
-// 	  that.server_ready = true
-// 	  $('#loading').hide()
-// 	  window.onbeforeunload=function(){}
-// 	  document.location='http://'+document.location.hostname+':8081'
-// 	} else that.checkServer(); // server ok
-//       },1000) 
-//     }
-//   })
 }
 
 /**
@@ -67,6 +37,8 @@ Main.prototype.processEvents = function (events) {
   for(var i=0;i<events.length;i++){
 		try{
 			var ev=events[i]
+			if (!(ev.type in that.event_processors))
+				raise(i+" is not a known event")
 			that.event_processors[ev.type](ev.obj)
 		}
 		catch(e){
@@ -238,10 +210,6 @@ Main.prototype.hideFiles = function(){
   $('#webdav').fadeOut()
 }
 
-Main.prototype.reloadConsole = function(){
-  $('#iconsole').attr('src','../stderr')
-}
-
 Main.prototype.hideLUAConsole = function(){
   $('#lua_console').fadeOut()
 }
@@ -281,15 +249,6 @@ Main.prototype.lua_exec = function(cmd){
 	  })
 	}
 }
-
-// Main.prototype.js_node_notify_enter = function(id){
-//   this.behaviour.get(id).activate()
-// }
-// 
-// Main.prototype.js_node_notify_exit = function(id){
-//   this.behaviour.get(id).deactivate()
-// }
-
 
 Main.prototype.setupGUI = function(){
   
