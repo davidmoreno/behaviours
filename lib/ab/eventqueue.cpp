@@ -19,15 +19,16 @@
 
 #include <sstream>
 
-#include <ab/log.h>
-
 #include "eventqueue.hpp"
+#include "log.h"
 
+using namespace AB;
 
 EventQueue::EventQueue() : start_id(0){
 }
 
 void EventQueue::pushEvent(const std::string &type, json_object *obj){
+	std::lock_guard<std::mutex> lock(mutex);
 	json_object *jobj = json_object_new_object();
 	json_object *jstring = json_object_new_string(type.c_str());
 
@@ -43,6 +44,7 @@ void EventQueue::pushEvent(const std::string &type, json_object *obj){
 }
 
 json_object* EventQueue::getEvents(int id){
+	std::lock_guard<std::mutex> lock(mutex);
 	int skip=0;
 	if (id>start_id)
 		skip=id-start_id;

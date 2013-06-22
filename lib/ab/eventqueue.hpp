@@ -23,18 +23,22 @@
 #include <json/json.h>
 #include "circularbuffer.hpp"
 #include <memory>
+#include <mutex>
 
-class EventQueue{
-	public:
-		EventQueue();
-		void pushEvent(const std::string &, json_object *);
-		json_object* getEvents(int start_id);
-		std::string getJSONString(int count);
-		std::string test(int start_id);
+namespace AB{
+	class EventQueue{
+		public:
+			EventQueue();
+			void pushEvent(const std::string &, json_object *);
+			json_object* getEvents(int start_id);
+			std::string getJSONString(int count);
+			std::string test(int start_id);
 
-	private:
-		CircularBuffer<std::shared_ptr<json_object>> queue;
-		int start_id;
-};
+		private:
+			CircularBuffer<std::shared_ptr<json_object>> queue;
+			int start_id;
+			std::mutex mutex;
+	};
+}
 
 #endif

@@ -19,11 +19,8 @@
 #ifndef __CIRCULAR_BUFFER_HPP__
 #define __CIRCULAR_BUFFER_HPP__
 
-
 #include <iostream>
 #include <vector>
-#include <json/json_object_private.h>
-
 
 template <class T> class CircularBuffer
 {
