@@ -59,13 +59,6 @@ static void node_notify_exit(AB::Node *n) {
   nodeManager->deactivateNode(n);
 }
 
-static void lua_output_update(const std::string &str) {
-  if(!str.empty()) {
-    WARNING("got: %s from Lua",str.c_str());
-    nodeManager->updateLuaOutput(str);
-  }
-}
-
 static void on_SIGINT(int){
 	static bool twice=false;
 	if (twice){
@@ -98,7 +91,6 @@ int main(void){
 	ABServer::init();
 	//DIA::init(&manager);
 
-	AB::lua_ab_print_real = lua_output_update;
 	AB::manager_notify_node_enter = node_notify_enter;
 	AB::manager_notify_node_exit = node_notify_exit;
 	

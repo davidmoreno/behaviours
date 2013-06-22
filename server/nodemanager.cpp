@@ -57,7 +57,6 @@ NodeManager::NodeManager(std::shared_ptr<AB::Manager> &ab) : ab(ab)
 {
 	running=false;
   abthread=NULL;
-  luaOutput = "";
   downloaded = "";
   needsAutosave = false;
   forceUpdate = false;
@@ -299,7 +298,7 @@ onion_connection_status NodeManager::events(Onion::Request& req, Onion::Response
 		start=atoi(req.query().get("start").c_str());
 	
 	res.setHeader("Content-Type","text/json");
-	res<<ab->eventQueue.test(start);
+	res<<ab->eventQueue.getJSONString(start);
 
 	return OCS_PROCESSED;
 }
@@ -370,13 +369,11 @@ onion_connection_status NodeManager::lua(Onion::Request& req, Onion::Response& r
   Onion::Dict post=req.post();
   if (post.count()){
       std::string luacode=post.get("exec");
-      luaOutput="";
       WARNING("%s", luacode.c_str());
       try {
         if (std::find(luacode.begin(), luacode.end(), '=')!=luacode.end()) {
             ab->eval(luacode);
             std::cout<<"--LUA "<<luacode<<std::endl;
-            luaOutput = luaOutput + "\n " + luacode;
 
           } else {
             ab->eval(std::string("print(")+luacode+")");
@@ -384,11 +381,12 @@ onion_connection_status NodeManager::lua(Onion::Request& req, Onion::Response& r
       } catch(const std::exception &e) {
         WARNING("%s",e.what());
         std::cout<<"--LUA "<<e.what()<<std::endl;
-        luaOutput = luaOutput + "\n " + e.what();
+				ab->eventQueue.pushEvent("lua_exception", "what", e.what() );
       }
-      res<<luaOutput;
+      res<<"OK";
       return OCS_PROCESSED;
     }
+	res<<"Need exec parameter with lua code to execute at server.";
   return OCS_INTERNAL_ERROR;
 }
 
@@ -486,11 +484,6 @@ onion_connection_status NodeManager::update(Onion::Request &req, Onion::Response
               d.add("inactive", inactive);
               empty = false;
             }
-          if (!luaOutput.empty()) {
-              d.add("luaOutput",std::string(" ")+luaOutput);
-              luaOutput.clear();
-              empty = false;
-            }
           if(empty)
             usleep(100000);
         }
@@ -518,10 +511,5 @@ void NodeManager::deactivateNode(AB::Node *n)
   if(inactiveNodes.size() > max_queue_size)
     inactiveNodes.pop();
 
-}
-
-void NodeManager::updateLuaOutput(const std::string & str) 
-{
-  luaOutput.append("\n "+str);
 }
 

@@ -51,7 +51,6 @@ namespace ABServer{
 
 		std::queue<AB::Node *> activeNodes;
 		std::queue<AB::Node *> inactiveNodes;
-		std::string luaOutput;
 		std::string current_ab_file;
 
 		std::string downloaded;
@@ -78,7 +77,6 @@ namespace ABServer{
 		
 		void activateNode(AB::Node *n);
 		void deactivateNode(AB::Node *n);
-		void updateLuaOutput(const std::string & str);
 	private:
 		onion_connection_status list_xml_files(Onion::Request &req, Onion::Response &res);
 		

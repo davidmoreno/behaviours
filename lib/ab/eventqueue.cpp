@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#include <json/json.h>
 
 #include <sstream>
 
@@ -43,20 +44,28 @@ void EventQueue::pushEvent(const std::string &type, json_object *obj){
 	queue.add(ptr);
 }
 
+void EventQueue::pushEvent(const std::string& type, const std::string& key, const std::string& value)
+{
+	json_object *obj=json_object_new_object();
+	json_object_object_add(obj,key.c_str(), json_object_new_string(value.c_str()));
+	pushEvent(type, obj);
+}
+
+
 json_object* EventQueue::getEvents(int id){
 	std::lock_guard<std::mutex> lock(mutex);
-	int skip=0;
-	if (id>start_id)
-		skip=id-start_id;
-	
-	std::vector<std::shared_ptr<json_object>> events=queue.read(skip);
-
-	DEBUG("Skip %d elements on the circular queue (first_id on queue is %d). Want from id %d. Got %ld elements.", skip, start_id,id, events.size());
 
 	json_object *jobj = json_object_new_object();
 	json_object_object_add(jobj, "id", json_object_new_int(start_id+queue.count()));
 
-	if (events.size()>0){
+	size_t skip=0;
+	if (id>start_id)
+		skip=id-start_id;
+	if (queue.count()>skip){
+		std::vector<std::shared_ptr<json_object>> events=queue.read(skip);
+
+		DEBUG("Skip %ld elements on the circular queue (first_id on queue is %d). Want from id %d. Got %ld elements.", skip, start_id,id, events.size());
+
 		json_object *jarray = json_object_new_array();
 		
 		for (auto &i: events){

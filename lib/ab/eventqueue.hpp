@@ -20,16 +20,18 @@
 #define _EVENT_QUEUE_H_
 
 #include <iostream>
-#include <json/json.h>
 #include "circularbuffer.hpp"
 #include <memory>
 #include <mutex>
+
+typedef struct json_object json_object;
 
 namespace AB{
 	class EventQueue{
 		public:
 			EventQueue();
 			void pushEvent(const std::string &, json_object *);
+			void pushEvent(const std::string &type, const std::string &key, const std::string &value);
 			json_object* getEvents(int start_id);
 			std::string getJSONString(int count);
 			std::string test(int start_id);
