@@ -21,7 +21,7 @@ var python_configure = function(){
 	var state=main.behaviour.state
 	var b= $('<div class="buttonsPanel">').css({'margin-left': 'auto','margin-right': 'auto','width':'200px'})
 
-    b.append("<button style='margin-left:30px' id= 'Up'>Up</button>").append("<br/>").append("<button id='Left'>Left</button>").append("<button id='Right'>Right</button>").append("<br/>").append("<button style='margin-left:20px'  id='Down'>Down</button>")
+    b.append("<button onclick='clickButton(this.id)' style='margin-left:30px' id= 'Up'>Up</button>").append("<br/>").append("<button onclick='clickButton(this.id)' id='Left'>Left</button>").append("<button onclick='clickButton(this.id)' id='Right'>Right</button>").append("<br/>").append("<button onclick='clickButton(this.id)' style='margin-left:20px'  id='Down'>Down</button>")
 	cheat_sheet.append(b)
   /*for (var s in state){
     cheat_sheet.append($('<li>').html(s+'<a class="type" onclick="loadHelp(\''+state[s].type+'\')" href="#">'+state[s].type+'</span>'))
@@ -72,5 +72,9 @@ PythonEvent.prototype.acceptConfigure=python_accept_configure
 
 main.behaviour.nodeFactory.add('python2action',PythonAction)
 main.behaviour.nodeFactory.add('python2event',PythonEvent)
-})()
 
+
+})()
+function clickButton(id){
+	alert(id)
+}
