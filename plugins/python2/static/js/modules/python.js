@@ -19,16 +19,20 @@ var python_configure = function(){
     
   var cheat_sheet=$('<ul>')
 	var state=main.behaviour.state
-  for (var s in state){
+	var b= $('<div class="buttonsPanel">').css({'margin-left': 'auto','margin-right': 'auto','width':'200px'})
+
+    b.append("<button style='margin-left:30px' id= 'Up'>Up</button>").append("<br/>").append("<button id='Left'>Left</button>").append("<button id='Right'>Right</button>").append("<br/>").append("<button style='margin-left:20px'  id='Down'>Down</button>")
+	cheat_sheet.append(b)
+  /*for (var s in state){
     cheat_sheet.append($('<li>').html(s+'<a class="type" onclick="loadHelp(\''+state[s].type+'\')" href="#">'+state[s].type+'</span>'))
-  }
+  }*/
   
-  tr.append($('<td style="vertical-align: top;">').append(code))
-  tr.append($('<td class="cheatsheet">').append("<h3>"+current_language.current_objects+"</h3>").append(cheat_sheet))
+  //tr.append($('<td style="vertical-align: top;">').append(code))
+  tr.append($('<td class="cheatsheet">').append("<h3>Movimientos ruedas</h3>").append(cheat_sheet)).attr('width: 500px;')
   
   $('#dialog #content').html(table)
  	
-	var editor
+		var editor
 	this.editor = CodeMirror.fromTextArea(code[0], {
 		tabMode: "indent",
 		matchBrackets: true,
@@ -69,3 +73,4 @@ PythonEvent.prototype.acceptConfigure=python_accept_configure
 main.behaviour.nodeFactory.add('python2action',PythonAction)
 main.behaviour.nodeFactory.add('python2event',PythonEvent)
 })()
+
