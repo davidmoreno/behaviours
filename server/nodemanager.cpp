@@ -370,7 +370,6 @@ onion_connection_status NodeManager::lua(Onion::Request& req, Onion::Response& r
   Onion::Dict post=req.post();
   if (post.count()){
       std::string luacode=post.get("exec");
-      luaOutput="";
 
       std::string boton = post.get("button");
       if(boton != ""){
