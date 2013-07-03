@@ -59,13 +59,6 @@ static void node_notify_exit(AB::Node *n) {
   nodeManager->deactivateNode(n);
 }
 
-static void lua_output_update(const std::string &str) {
-  if(!str.empty()) {
-    WARNING("got: %s from Lua",str.c_str());
-    nodeManager->updateLuaOutput(str);
-  }
-}
-
 static void on_SIGINT(int){
 	static bool twice=false;
 	if (twice){
@@ -98,7 +91,6 @@ int main(void){
 	ABServer::init();
 	//DIA::init(&manager);
 
-	AB::lua_ab_print_real = lua_output_update;
 	AB::manager_notify_node_enter = node_notify_enter;
 	AB::manager_notify_node_exit = node_notify_exit;
 	
@@ -118,12 +110,12 @@ int main(void){
 	url.add("^node/", nodeManager.get(), &NodeManager::node);
 	url.add("^connections/", nodeManager.get(), &NodeManager::connections);
 	url.add("^lua/", nodeManager.get(), &NodeManager::lua);
-	url.add("^update/", nodeManager.get(), &NodeManager::update);
 	url.add("^upload/", nodeManager.get(), &NodeManager::uploadXML);
 	url.add("^wavload/", nodeManager.get(), &NodeManager::uploadWAV);
 	url.add("^static/lua/", nodeManager.get(), &NodeManager::lua); // esta cutrez es porque, al pulsar un botón en DIA, hace la llamada POST a "/static/[direccion]"
 	url.add("^static/", new StaticHandler(static_dir));
 	url.add("^data/", nodeManager.get(), &NodeManager::save);
+	url.add("^events", nodeManager.get(), &NodeManager::events);
 	
 //  onion_handler *w=onion_handler_webdav("data/files",NULL);
 //  onion_url_add_handler(url.c_ptr(), "^webdav/", w);
