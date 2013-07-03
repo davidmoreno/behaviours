@@ -66,7 +66,7 @@ json_object* EventQueue::getEvents(int from_id){
 	if (queue.count()>skip){
 		std::vector<std::shared_ptr<json_object>> events=queue.read(skip);
 
-		DEBUG("Skip %ld elements on the circular queue (first_id on queue is %d). Want from id %d. Got %ld elements.", skip, start_id,from_id, events.size());
+		DEBUG("Skip %d elements on the circular queue (first_id on queue is %d). Want from id %d. Got %d elements.", (int)skip, start_id,from_id, (int)events.size());
 
 		json_object *jarray = json_object_new_array();
 		
@@ -91,7 +91,7 @@ std::string EventQueue::getJSONStringBlock(int from_id){
 	{
 		std::unique_lock<std::mutex> lock(mutex);
 		while(static_cast<size_t>(from_id)>=(start_id+queue.count())){
-			DEBUG("Wait for events (ask from %d, I'm at %ld)", from_id, (start_id+queue.count()));
+			DEBUG("Wait for events (ask from %d, I'm at %d)", from_id, (int)(start_id+queue.count()));
 			wait_for_event.wait(lock);
 		}
 	}
