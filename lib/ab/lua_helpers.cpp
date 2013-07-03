@@ -355,8 +355,11 @@ void (*AB::lua_ab_print_real)(const std::string &str) = lua_ab_print_real_defaul
 static int lua_ab_print(lua_State *state)
 {
   std::string str=lua_ab_tostring_i(state);
-  DEBUG("LUA PRINT: %s",str.c_str());
-  lua_ab_print_real(str);
+	lua_pushstring(state, LUA::MANAGER_UUID);
+	lua_gettable(state, LUA_REGISTRYINDEX);
+	Manager *m=(Manager*)lua_touserdata(state,-1);
+	
+	m->eventQueue.pushEvent("lua_console", "message", str);
   return 0;
 }
 
