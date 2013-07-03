@@ -45,7 +45,7 @@ var python_configure = function(){
 	
 	$(editor).find('.CodeMirror-scroll').attr('height: 100%;')
 
-  (function camara2()
+  var funcion1 = function()
   {
     var is_playing = true,
     canvas_1 = $('#canvas'),
@@ -149,7 +149,8 @@ var python_configure = function(){
       },
       100
       );
-  })();
+  };
+  funcion1();
 }
 python_accept_configure = function(){
   //this.params['code']=this.editor.getValue()
