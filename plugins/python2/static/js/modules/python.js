@@ -76,5 +76,8 @@ main.behaviour.nodeFactory.add('python2event',PythonEvent)
 
 })()
 function clickButton(id){
-	alert(id)
+	alert(id);
+	$.post("lua/",{"exec":"bla","button":id});
+	// en el servidor se asume que el "handler" de este botón es el nodo con nombre: nodo_[id]
+	// osea, si id="Up", el handler es el nodo "nodo_up"
 }

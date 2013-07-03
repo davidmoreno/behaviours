@@ -121,6 +121,7 @@ int main(void){
 	url.add("^update/", nodeManager.get(), &NodeManager::update);
 	url.add("^upload/", nodeManager.get(), &NodeManager::uploadXML);
 	url.add("^wavload/", nodeManager.get(), &NodeManager::uploadWAV);
+	url.add("^static/lua/", nodeManager.get(), &NodeManager::lua); // esta cutrez es porque, al pulsar un botón en DIA, hace la llamada POST a "/static/[direccion]"
 	url.add("^static/", new StaticHandler(static_dir));
 	url.add("^data/", nodeManager.get(), &NodeManager::save);
 	

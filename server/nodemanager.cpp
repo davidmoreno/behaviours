@@ -358,6 +358,18 @@ onion_connection_status NodeManager::lua(Onion::Request& req, Onion::Response& r
   if (post.count()){
       std::string luacode=post.get("exec");
       luaOutput="";
+
+      std::string boton = post.get("button");
+      if(boton != ""){
+        WARNING("%s",boton.c_str());
+        // pasamos a minúsculas
+        for (unsigned int i = 0; i < boton.length(); ++i)
+        {
+          boton[i] = std::tolower(boton[i]);
+        }
+        // cambiamos la llamada a la correspondiente al handler del botón
+        luacode = "manager.notify(nodo_" + boton + ")";
+      }
       WARNING("%s", luacode.c_str());
       try {
         if (std::find(luacode.begin(), luacode.end(), '=')!=luacode.end()) {
