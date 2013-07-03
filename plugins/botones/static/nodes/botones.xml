@@ -4,11 +4,6 @@
 	
 	<type>action</type>
 	<icon>test</icon>
-	<params>
-			<param id="code">
-				<type>text</type>
-				<description lang="en">Code to be executed on action</description>
-			</param>
-		</params>
+
 	<js>modules/botones.js</js>
 </node-description>

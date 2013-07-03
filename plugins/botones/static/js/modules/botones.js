@@ -7,10 +7,9 @@ var python_configure = function(){
 
   var tr=$('<tr>')
   var table=$('<table>').append(tr)
-  var code=$('<textarea rows="20" id="code">')
+
   
-  if (this.params.code)
-    code.val(this.params.code)
+
     
 //   if (this.params.exec)
 //     code.val(this.params.exec)
@@ -33,21 +32,7 @@ var python_configure = function(){
   $('#dialog #content').html(table)
  	
 		var editor
-	this.editor = CodeMirror.fromTextArea(code[0], {
-		tabMode: "indent",
-		matchBrackets: true,
-		theme: "lesser-dark",
-		extraKeys: {
-				"F10": function() {
-					$('.CodeMirror').toggleClass('CodeMirror-fullscreen')
-					editor.refresh()
-				},
-				"Esc": function() {
-					$('.CodeMirror').removeClass('CodeMirror-fullscreen')
-					editor.refresh()
-				}
-		}
-	});
+
 	
 	var editor=this.editor
 	$(editor).focus()
@@ -56,11 +41,11 @@ var python_configure = function(){
 }
 
 python_accept_configure = function(){
-  this.params['code']=this.editor.getValue()
+  //this.params['code']=this.editor.getValue()
   this.update()
 }
 
-var PythonAction=extend(Action, {paramOptions: [{type:Text,text:current_language.python_action_msg,name:'code'}]})
+var PythonAction=extend(Action)
 
 PythonAction.prototype.configure=python_configure
 PythonAction.prototype.acceptConfigure=python_accept_configure
@@ -74,7 +59,6 @@ main.behaviour.nodeFactory.add('botones',PythonAction)
 
 })()
 function clickButton(id){
-	alert(id);
 	$.post("lua/",{"exec":"bla","button":id});
 	// en el servidor se asume que el "handler" de este botón es el nodo con nombre: nodo_[id]
 	// osea, si id="Up", el handler es el nodo "nodo_up"
