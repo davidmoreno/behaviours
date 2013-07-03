@@ -9,3 +9,6 @@ install(TARGETS botones
 install(DIRECTORY static/nodes
 	DESTINATION shared/ab/static/botones
 	)
+install(DIRECTORY static/nodes static/js
+	DESTINATION shared/ab/static/botones
+	)
