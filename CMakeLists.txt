@@ -47,7 +47,12 @@ ENDIF (${CMAKE_BUILD_TYPE} MATCHES "Debug")
 
 add_definitions(-DAB_PREFIX=\"${CMAKE_INSTALL_PREFIX}\")
 
-find_library(LIBAISOY1 NAMES aisoy1 PATH /usr/lib /usr/local/lib )
+find_library(LIBAISOY1 NAMES aisoy1 PATHS /usr/lib /usr/local/lib )
+
+
+IF(${SYSTEM} MATCHES "ArchLinux")
+  SET(CMAKE_EXE_LINKER_FLAGS "-ljson-c")
+ENDIF(${SYSTEM} MATCHES "ArchLinux")
 
 add_subdirectory(lib)
 add_subdirectory(plugins)
