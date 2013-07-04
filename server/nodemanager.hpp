@@ -49,9 +49,6 @@ namespace ABServer{
 		std::shared_ptr<std::thread> abthread;
 		bool running;
 
-		std::queue<AB::Node *> activeNodes;
-		std::queue<AB::Node *> inactiveNodes;
-		std::string luaOutput;
 		std::string current_ab_file;
 
 		std::string downloaded;
@@ -72,12 +69,12 @@ namespace ABServer{
 		onion_connection_status uploadXML(Onion::Request &req, Onion::Response &res);
 		onion_connection_status uploadWAV(Onion::Request &req, Onion::Response &res);
 		onion_connection_status save(Onion::Request &req, Onion::Response &res);
+		onion_connection_status events(Onion::Request &req, Onion::Response &res);
 
 		void exec_behaviour();
 		
 		void activateNode(AB::Node *n);
 		void deactivateNode(AB::Node *n);
-		void updateLuaOutput(const std::string & str);
 	private:
 		onion_connection_status list_xml_files(Onion::Request &req, Onion::Response &res);
 		

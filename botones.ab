@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ab>
+  <event id="node_0000000000000006" type="start" x="165.873413" y="-258.336029"/>
+  <action id="A" type="python2action" x="77.959396" y="-88.276688">
+    <param name="code">#A
+self.isSending = True
+self.command="a"
+t = threading.Thread(target=self._record)
+t.start()</param>
+  </action>
+  <action id="W" type="python2action" x="226.745026" y="-94.541344">
+    <param name="code">#W
+self.isSending = True
+self.command="w"
+t = threading.Thread(target=self._record)
+t.start()</param>
+  </action>
+  <action id="D" type="python2action" x="461.669647" y="47.979599">
+    <param name="code">#D
+self.isSending = True
+self.command="d"
+t = threading.Thread(target=self._record)
+t.start()</param>
+  </action>
+  <action id="S" type="python2action" x="140.605988" y="96.530663">
+    <param name="code">#S
+self.isSending = True
+self.command="s"
+t = threading.Thread(target=self._record)
+t.start()</param>
+  </action>
+  <meta>
+    <viewpoint>matrix(1.5661641359329223633,0,0,1.5661641359329223633,-315.04339599609375,-304.877197265625)</viewpoint>
+    <name>asf</name>
+    <description>asf</description>
+  </meta>
+</ab>

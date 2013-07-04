@@ -20,6 +20,7 @@
 #define AB_MANAGER
 
 #include "object.h"
+#include "eventqueue.hpp"
 
 #include <thread>
 #include <mutex>
@@ -261,6 +262,8 @@ namespace AB {
      */
     const std::vector<double> &viewpoint() const { return metadata.viewpoint; }
     
+    /// Queue of events from server to client. Its a circular buffer so some events may get lost.
+    EventQueue eventQueue;
   private:
     void sync();
     Node *notifyOne(Node *);
@@ -273,7 +276,6 @@ namespace AB {
     std::queue<Node *> pendingNotifications;
     std::mutex pendingNotificationsMutex;
     Meta metadata;
-    
 
     std::map<Node*, std::vector<Connection*> > nodeConnections;
 

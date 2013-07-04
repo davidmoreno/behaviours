@@ -40,6 +40,7 @@ extern "C"{
 #include "utils.hpp"
 #include "nodemanager.hpp"
 #include "../lib/ab/manager.h"
+#include "../lib/ab/node.h"
 
 using namespace ABServer;
 using namespace AB;
@@ -57,7 +58,6 @@ NodeManager::NodeManager(std::shared_ptr<AB::Manager> &ab) : ab(ab)
 {
 	running=false;
   abthread=NULL;
-  luaOutput = "";
   downloaded = "";
   needsAutosave = false;
   forceUpdate = false;
@@ -293,6 +293,19 @@ onion_connection_status NodeManager::node(Onion::Request& req, Onion::Response& 
 }
 
 
+onion_connection_status NodeManager::events(Onion::Request& req, Onion::Response& res){
+	int start=0;
+	if(req.query().has("start"))
+		start=atoi(req.query().get("start").c_str());
+	
+	res.setHeader("Content-Type","text/json");
+	res<<ab->eventQueue.getJSONStringBlock(start);
+
+	return OCS_PROCESSED;
+}
+
+
+
 /// Lists the XML files at nodes on static subdirs. FIXME use some JSON library.
 onion_connection_status NodeManager::list_xml_files(Onion::Request& req, Onion::Response& res)
 {
@@ -357,7 +370,6 @@ onion_connection_status NodeManager::lua(Onion::Request& req, Onion::Response& r
   Onion::Dict post=req.post();
   if (post.count()){
       std::string luacode=post.get("exec");
-      luaOutput="";
 
       std::string boton = post.get("button");
       if(boton != ""){
@@ -375,7 +387,6 @@ onion_connection_status NodeManager::lua(Onion::Request& req, Onion::Response& r
         if (std::find(luacode.begin(), luacode.end(), '=')!=luacode.end()) {
             ab->eval(luacode);
             std::cout<<"--LUA "<<luacode<<std::endl;
-            luaOutput = luaOutput + "\n " + luacode;
 
           } else {
             ab->eval(std::string("print(")+luacode+")");
@@ -383,11 +394,12 @@ onion_connection_status NodeManager::lua(Onion::Request& req, Onion::Response& r
       } catch(const std::exception &e) {
         WARNING("%s",e.what());
         std::cout<<"--LUA "<<e.what()<<std::endl;
-        luaOutput = luaOutput + "\n " + e.what();
+				ab->eventQueue.pushEvent("lua_exception", "what", e.what() );
       }
-      res<<luaOutput;
+      res<<"OK";
       return OCS_PROCESSED;
     }
+	res<<"Need exec parameter with lua code to execute at server.";
   return OCS_INTERNAL_ERROR;
 }
 
@@ -441,86 +453,13 @@ onion_connection_status NodeManager::uploadWAV(Onion::Request &req, Onion::Respo
   return OCS_INTERNAL_ERROR;
 }
 
-onion_connection_status NodeManager::update(Onion::Request &req, Onion::Response &res)
-{
-
-  if(req.query().has("state")) {
-      DEBUG("got /update/state query");
-      Onion::Dict d;
-      //    struct timeval now;
-      bool empty = true;
-      while(empty) {
-          //      gettimeofday(&now, NULL);
-          //      float dt=(now.tv_sec-lastAutosave.tv_sec) + float(now.tv_usec - lastAutosave.tv_usec)/10000000.0;
-          //      if (forceUpdate || (needsAutosave && dt>60.0)) {
-          //        if(abthread!=NULL)
-          //          d.add("startStop","on");
-          //        else
-          //          d.add("startStop","off");
-          //        // autosaves each minute, if needed
-          //        ab->saveBehaviour(current_ab_file);
-          //        lastAutosave = now;
-          //        needsAutosave = false;
-          //        forceUpdate = false;
-          //        WARNING("autosaving");
-          //        empty = false;
-          //      }
-          if (!activeNodes.empty()) {
-              Onion::Dict active;
-              do {
-                  active.add(activeNodes.front()->name(),"on");
-                  activeNodes.pop();
-                } while (!activeNodes.empty());
-              active.setAutodelete(false);
-              d.add("active", active);
-              empty = false;
-            }
-          if (!inactiveNodes.empty()) {
-              Onion::Dict inactive;
-              do {
-                  inactive.add(inactiveNodes.front()->name(),"off");
-                  inactiveNodes.pop();
-                } while (!activeNodes.empty());
-              inactive.setAutodelete(false);
-              d.add("inactive", inactive);
-              empty = false;
-            }
-          if (!luaOutput.empty()) {
-              d.add("luaOutput",std::string(" ")+luaOutput);
-              luaOutput.clear();
-              empty = false;
-            }
-          if(empty)
-            usleep(100000);
-        }
-      d.setAutodelete(false); // Will be removed at return
-      return onion_shortcut_response_json(d.c_handler(), req.c_handler(), res.c_handler());
-    }
-  return OCS_NOT_PROCESSED;
-}
-
 void NodeManager::activateNode(AB::Node *n)
 {
-  // std::mutex::scoped_lock lock(NodeManager::activeNodes_mutex);
-  if (n->name().substr(0,2) != "__" )
-    activeNodes.push(n);
-  if(activeNodes.size() > max_queue_size)
-    activeNodes.pop();
-  
+	ab->eventQueue.pushEvent("node_enter_exit", "enter", n->name());
 }
 
 void NodeManager::deactivateNode(AB::Node *n)
 {
-  //std::mutex::scoped_lock lock(NodeManager::inactiveNodes_mutex);
-  if (n->name().substr(0,2) != "__" )
-    inactiveNodes.push(n);
-  if(inactiveNodes.size() > max_queue_size)
-    inactiveNodes.pop();
-
-}
-
-void NodeManager::updateLuaOutput(const std::string & str) 
-{
-  luaOutput.append("\n "+str);
+	ab->eventQueue.pushEvent("node_enter_exit", "exit", n->name());
 }
 
