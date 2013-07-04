@@ -3,7 +3,7 @@
 
 (function()
 {
-var python_configure = function(){
+var showInterface = function(){
   this.configureDialogSetup()
 
   var tr=$('<tr>')
@@ -88,20 +88,23 @@ var python_configure = function(){
   }
   camara();
 }
-python_accept_configure = function(){
-  //this.params['code']=this.editor.getValue()
+var botones_accept_configure = function(){
   this.update()
 }
 
-var PythonAction=extend(Action)
+var botones_deactivate = function(){}
 
-PythonAction.prototype.configure=python_configure
-PythonAction.prototype.acceptConfigure=python_accept_configure
+var BotonesAction=extend(Action)
+
+BotonesAction.prototype.configure=showInterface
+BotonesAction.prototype.acceptConfigure=botones_accept_configure
+BotonesAction.prototype.activate=showInterface
+BotonesAction.prototype.deactivate=botones_deactivate
 
 
 
 
-main.behaviour.nodeFactory.add('botones',PythonAction)
+main.behaviour.nodeFactory.add('botones',BotonesAction)
 
 
 
