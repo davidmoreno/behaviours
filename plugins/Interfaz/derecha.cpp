@@ -26,6 +26,12 @@
 
 
 namespace AB{
+	class Botones : public AB::Action{
+	public:
+		Botones(const char* type);
+	
+		virtual void exec();
+	};
 	class InterfazAction : public Action{
 		std::string code;
 		PyObject *compiled_code;
@@ -103,7 +109,9 @@ void ab_init(void){
 	AB::Factory::registerClass<AB::InterfazAction>("derecha");
 	AB::Factory::registerClass<AB::InterfazEvent>("izquierda");
 	AB::Factory::registerClass<AB::Up>("arriba");
-	AB::Factory::registerClass<AB::Down>("abajoDown");
+	AB::Factory::registerClass<AB::Down>("abajo");
+	AB::Factory::registerClass<AB::Botones>("botones");
+
 
 	AB::Interfaz::python2_init();
 	
@@ -178,12 +186,13 @@ AttrList InterfazAction::attrList()
 {
 	auto attr=AB::Node::attrList();
 	attr.push_back("code");
+	attr.push_back("name");
 	return attr;
 }
 
 Object InterfazAction::attr(const std::string& name)
 {
-	return to_object(code);
+	return to_object(name);
 }
 
 void InterfazAction::setAttr(const std::string& name, Object obj)
@@ -195,6 +204,7 @@ void InterfazAction::setAttr(const std::string& name, Object obj)
 		if (!compiled_code)
 			PyErr_Print();
 	}
+	else if(name=="name"){}
 	else
 		return Action::setAttr(name, obj);
 }
@@ -242,12 +252,13 @@ AttrList Up::attrList()
 {
 	auto attr=AB::Node::attrList();
 	attr.push_back("code");
+	attr.push_back("name");
 	return attr;
 }
 
 Object Up::attr(const std::string& name)
 {
-	return to_object(code);
+	return to_object(name);
 }
 
 void Up::setAttr(const std::string& name, Object obj)
@@ -259,6 +270,7 @@ void Up::setAttr(const std::string& name, Object obj)
 		if (!compiled_code)
 			PyErr_Print();
 	}
+	else if(name=="name"){}
 	else
 		return Action::setAttr(name, obj);
 }
@@ -308,12 +320,13 @@ AttrList Down::attrList()
 {
 	auto attr=AB::Node::attrList();
 	attr.push_back("code");
+	attr.push_back("name");
 	return attr;
 }
 
 Object Down::attr(const std::string& name)
 {
-	return to_object(code);
+	return to_object(name);
 }
 
 void Down::setAttr(const std::string& name, Object obj)
@@ -325,6 +338,7 @@ void Down::setAttr(const std::string& name, Object obj)
 		if (!compiled_code)
 			PyErr_Print();
 	}
+	else if(name=="name"){}
 	else
 		return Action::setAttr(name, obj);
 }
@@ -337,7 +351,7 @@ void Down::setManager(Manager* manager)
 /************/
 InterfazEvent::InterfazEvent(const char* type): Action(type)
 {
-	code="";
+	code="print(\"hola\")";
 
 	compiled_code=NULL;
 }
@@ -373,12 +387,13 @@ AttrList InterfazEvent::attrList()
 {
 	auto attr=AB::Node::attrList();
 	attr.push_back("code");
+	attr.push_back("name");
 	return attr;
 }
 
 Object InterfazEvent::attr(const std::string& name)
 {
-	return to_object(code);
+	return to_object(name);
 }
 
 void InterfazEvent::setAttr(const std::string& name, Object obj)
@@ -390,6 +405,7 @@ void InterfazEvent::setAttr(const std::string& name, Object obj)
 		if (!compiled_code)
 			PyErr_Print();
 	}
+	else if(name == "name"){}
 	else
 		return Action::setAttr(name, obj);
 }
@@ -398,4 +414,14 @@ void InterfazEvent::setManager(Manager* manager)
 {
 	AB::Node::setManager(manager);
 	AB::Interfaz::ab_module_manager=manager;
+}
+/****Interfaz***/
+Botones::Botones(const char* type): Action(type)
+{
+
+}
+
+void Botones::exec()
+{
+	INFO("Exec botones %p",this);
 }

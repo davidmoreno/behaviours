@@ -13,6 +13,10 @@
 				<type>text</type>
 				<description lang="en">Code to be executed on action</description>
 			</param>
+			<param id="name">
+				<type>text</type>
+				<description lang="en">name</description>
+			</param>
 		</params>
 
 		<js>modules/Interfaz.js</js>
@@ -33,6 +37,10 @@
 			<param id="code">
 				<type>text</type>
 				<description lang="en">Code to be executed on action</description>
+			</param>
+			<param id="name">
+				<type>text</type>
+				<description lang="en">name</description>
 			</param>
 		</params>
 
@@ -55,6 +63,10 @@
 				<type>text</type>
 				<description lang="en">Code to be executed on action</description>
 			</param>
+			<param id="name">
+				<type>text</type>
+				<description lang="en">name</description>
+			</param>
 		</params>
 
 		<js>modules/Interfaz.js</js>
@@ -76,11 +88,28 @@
 				<type>text</type>
 				<description lang="en">Code to be executed on action</description>
 			</param>
+			<param id="name">
+				<type>text</type>
+				<description lang="en">name</description>
+			</param>
 		</params>
 
 		<js>modules/Interfaz.js</js>
 		<js>extra/codemirror.js</js>
 		<js>extra/codemirror_python.js</js>
 
+	</node-description>
+	<node-description id="botones">
+		<name>BOTONES</name>
+		<description lang="en">Shows four buttons to control movement and the camera image</description>
+		<description lang="es">Muestra cuatro botones para controlar el movimiento y la imagen de la cámara</description>
+		
+		<type>action</type>
+		<icon>test</icon>
+		<param id="name">
+				<type>text</type>
+				<description lang="en">name</description>
+			</param>
+		<js>modules/botones.js</js>
 	</node-description>
 </node-descriptions>
