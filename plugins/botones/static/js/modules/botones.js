@@ -101,12 +101,20 @@ BotonesAction.prototype.acceptConfigure=botones_accept_configure
 BotonesAction.prototype.activate=showInterface
 BotonesAction.prototype.deactivate=botones_deactivate
 
+//BotonesAction.prototype.setName("HOLA");
+/*
+BotonesAction.prototype.paint=function(options){
+  Node.prototype.paint.call(this, options)
+  
+  $('#'+this.id+' text#param').text("HOLA")
+  //alert('#'+this.id+' text#param')
+  
+  return this.svggroup
+}*/
 
 
 
 main.behaviour.nodeFactory.add('botones',BotonesAction)
-
-
 
 })();
 function clickButton(id){
