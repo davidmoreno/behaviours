@@ -31,11 +31,6 @@ namespace AB{
 		Botones(const char* type);
 	
 		virtual void exec();
-		virtual AttrList attrList();
-	    virtual Object attr(const std::string& name);
-	    virtual void setAttr(const std::string& name, Object obj);
-			
-	    virtual void setManager(Manager* manager);
 	};
 	class InterfazAction : public Action{
 		std::string code;
@@ -429,29 +424,4 @@ Botones::Botones(const char* type): Action(type)
 void Botones::exec()
 {
 	INFO("Exec botones %p",this);
-}
-
-AttrList Botones::attrList()
-{
-	auto attr=AB::Node::attrList();
-	attr.push_back("name");
-	return attr;
-}
-
-Object Botones::attr(const std::string& name)
-{
-	return to_object(name);
-}
-
-void Botones::setAttr(const std::string& name, Object obj)
-{
-if(name=="name"){}
-	else
-		return Action::setAttr(name, obj);
-}
-
-void Botones::setManager(Manager* manager)
-{
-	AB::Node::setManager(manager);
-	AB::Interfaz::ab_module_manager=manager;
 }

@@ -91,21 +91,23 @@ var showInterface = function(){
   camara();
 }
 var botones_accept_configure = function(){
-
-  this.params['name']=this.type
   this.update()
 }
 
+var botones_update = function(){
+	this.params['name']=this.type
+	Node.prototype.update.call(this)
+}
 
 var botones_deactivate = function(){}
 
-var BotonesAction=extend(Action/*,{paramOptions: [{type:Text,text:current_language.python_action_msg,name:'name'}]}*/)
+var BotonesAction=extend(Action,{paramOptions: [{type:Text,text:current_language.python_action_msg,name:'name'}]})
 
 BotonesAction.prototype.configure=showInterface
 BotonesAction.prototype.acceptConfigure=botones_accept_configure
 BotonesAction.prototype.activate=showInterface
 BotonesAction.prototype.deactivate=botones_deactivate
-
+BotonesAction.prototype.update=botones_update
 
 //BotonesAction.prototype.setName("HOLA");
 /*
