@@ -22,7 +22,7 @@ var showInterface = function(){
   var b= $('<div class="buttonsPanel">').css({'margin-left': 'auto','margin-right': 'auto','width':'200px'})
 
     b.append("<button onclick='clickButton(this.id)' style='margin-left:30px' id= 'Up'>Up</button>").append("<br/>").append("<button onclick='clickButton(this.id)' id='Left'>Left</button>").append("<button onclick='clickButton(this.id)' id='Right'>Right</button>").append("<br/>").append("<button onclick='clickButton(this.id)' style='margin-left:20px'  id='Down'>Down</button>")
-  var video= $('<img src="http://192.168.0.107:8082/"/>')
+  var video= $('<img src="http://' + window.location.host.split(":")[0] + ':8082/"/>')
         
         
   cheat_sheet.append(b).append(video)
