@@ -103,7 +103,7 @@ void ab_init(void){
 	AB::Factory::registerClass<AB::InterfazAction>("derecha");
 	AB::Factory::registerClass<AB::InterfazEvent>("izquierda");
 	AB::Factory::registerClass<AB::Up>("arriba");
-	AB::Factory::registerClass<AB::Down>("abajoDown");
+	AB::Factory::registerClass<AB::Down>("abajo");
 
 	AB::Interfaz::python2_init();
 	

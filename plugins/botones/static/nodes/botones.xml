@@ -9,12 +9,4 @@
 
 		<js>modules/botones.js</js>
 	</node-description>
-	<node-description id="mov_derecha">
-		<name>DERECHA</name>
-		<description lang="en">Just shows a message on console</description>
-		
-		<type>action</type>
-		<icon>test</icon>
-
-	</node-description>
 </node-descriptions>
