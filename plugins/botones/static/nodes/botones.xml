@@ -8,5 +8,6 @@
 		<icon>test</icon>
 
 		<js>modules/botones.js</js>
+		<js>modules/jwplayer.js</js>
 	</node-description>
 </node-descriptions>

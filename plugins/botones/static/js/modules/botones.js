@@ -22,7 +22,7 @@ var showInterface = function(){
   var b= $('<div class="buttonsPanel">').css({'margin-left': 'auto','margin-right': 'auto','width':'200px'})
 
     b.append("<button onclick='clickButton(this.id)' style='margin-left:30px' id= 'Up'>Up</button>").append("<br/>").append("<button onclick='clickButton(this.id)' id='Left'>Left</button>").append("<button onclick='clickButton(this.id)' id='Right'>Right</button>").append("<br/>").append("<button onclick='clickButton(this.id)' style='margin-left:20px'  id='Down'>Down</button>")
-  var video= $('<video id="video" width="450" height="368" autoplay="autoplay"></video>')
+  var video= $('<img src="http://192.168.0.107:8082/"/>')
         
         
   cheat_sheet.append(b).append(video)
@@ -43,50 +43,7 @@ var showInterface = function(){
 	
 	$(editor).find('.CodeMirror-scroll').attr('height: 100%;')
 
-  var camara = function()
-  {
-    var is_playing = true,
-    video = $('#video'),
-    video = video[0],
-    red = 1,
-    green = 2,
-    blue = 3;
-    if (navigator.getUserMedia) {
-      navigator.getUserMedia(
-        { 'video': true },
-        function(stream)
-        {
-          video.src = stream;
-          video.play();
-        }
-        );
-    } else if (navigator.webkitGetUserMedia) {
-      navigator.webkitGetUserMedia
-      (
-        { 'video': true },
-        function(stream)
-        {
-          video.src = window.webkitURL.createObjectURL(stream);
-          video.play();
-        }
-        );
-    } else if (navigator.mozGetUserMedia) {
-      navigator.mozGetUserMedia
-      (
-        { 'video': true },
-        function(stream)
-        {
-          video.mozSrcObject = stream;
-          video.play();
-        },
-        function(err)
-        {
-          alert('An error occured! '+err);
-        }
-        );
-    }
-  }
-  camara();
+ 
 }
 var botones_accept_configure = function(){
   this.update()
