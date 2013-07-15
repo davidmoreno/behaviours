@@ -21,7 +21,8 @@
 #include <ab/event.h>
 #include <ab/factory.h>
 #include <ab/manager.h>
-#include "derecha.hpp"
+#include "movimientos.hpp"
+#include "botones.hpp"
 
 
 
@@ -104,6 +105,7 @@ void ab_init(void){
 	AB::Factory::registerClass<AB::InterfazEvent>("izquierda");
 	AB::Factory::registerClass<AB::Up>("arriba");
 	AB::Factory::registerClass<AB::Down>("abajo");
+	AB::Factory::registerClass<Botones>("botones");
 
 	AB::Interfaz::python2_init();
 	

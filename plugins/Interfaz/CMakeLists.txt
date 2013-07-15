@@ -1,4 +1,4 @@
-SET(SOURCES derecha.cpp ab_module.cpp)
+SET(SOURCES botones.cpp movimientos.cpp ab_module.cpp)
 
 find_library(PYTHON2_LIB NAMES python2.7 PATH ${LIBPATH})
 find_path(PYTHON2_HEADER Python.h ${CMAKE_INCLUDE_PATH} /usr/include/python2.7)

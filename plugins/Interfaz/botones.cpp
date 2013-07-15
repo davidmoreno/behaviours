@@ -21,11 +21,6 @@
 #include <ab/factory.h>
 #include <ab/log.h>
 
-void ab_init(void){
-	DEBUG("Loaded ab init at basic example");
-	AB::Factory::registerClass<Botones>("botones");
-}
-
 Botones::Botones(const char* type): Action(type)
 {
 
