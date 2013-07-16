@@ -27,7 +27,7 @@ find_library(CURL_LIB NAMES curl PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf
 find_library(GNUTLS_LIB NAMES gnutls PATHS ${LIBPATH}  ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
 find_library(GCRYPT_LIB NAMES gcrypt PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
 find_library(Z_LIB NAMES z PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
-find_library(JSON_LIB NAMES json json-c PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
+find_library(JSON_LIB NAMES json-c json PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
 find_library(XML2_LIB NAMES xml2 PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
 message("-- Search for XML2 headers")
 find_path(XML2_HEADERS libxml/xmlwriter.h ${INCLUDEDIR}/libxml2)
