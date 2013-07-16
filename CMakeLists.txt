@@ -4,7 +4,14 @@ project(behaviours)
 
 if (${ARM})
 	message(STATUS "Compiling for ARM")
+	
 	SET(EXTRALIBS pthread)
+	SET(INCLUDEDIR ${CMAKE_FIND_ROOT_PATH}/usr/include)
+	SET(INCLUDEMULTIARCH ${CMAKE_FIND_ROOT_PATH}/usr/include/arm-linux-gnueabihf)
+	SET(LIBPATH ${CMAKE_FIND_ROOT_PATH}/usr/lib)
+	SET(CMAKE_INCLUDE_PATH ${CMAKE_FIND_ROOT_PATH}/usr/include)
+	find_path(ONION_HEADERS onion/log.h ${INCLUDEDIR} ${CMAKE_FIND_ROOT_PATH}/usr/local/include)
+	message(STATUS "ONION: ${ONION_HEADERS}")
 else (${ARM})
 	SET(EXTRALIBS pthread)
   SET(INCLUDEDIR /usr/include)
@@ -14,18 +21,32 @@ endif (${ARM})
 SET(ONION_LIBS onioncpp onion_handlers_static onion_static)
 SET(OPENCV_LIBS opencv_legacy opencv_ml opencv_core opencv_imgproc opencv_features2d opencv_calib3d opencv_highgui opencv_video opencv_flann opencv_objdetect)
 
-#find_library(XML2_LIB NAMES xml2 PATH ${LIBPATH})
+message(${LIBPATH})
+find_library(ONIONCPP_LIB NAMES onioncpp PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
+find_library(ONIONHANDLERS_STATIC_LIB NAMES onion_handlers_static PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
+find_library(ONION_STATIC_LIB NAMES onion_static PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
+find_library(CURL_LIB NAMES curl PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
+find_library(GNUTLS_LIB NAMES gnutls PATHS ${LIBPATH}  ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
+find_library(GCRYPT_LIB NAMES gcrypt PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
+find_library(Z_LIB NAMES z PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
+find_library(JSON_LIB NAMES json json-c PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
+find_library(XML2_LIB NAMES xml2 PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
 message("-- Search for XML2 headers")
-find_path(XML2_HEADERS libxml/xmlwriter.h ${INCLUDEDIR}/libxml2 ${GCCPATH}/arm-none-linux-gnueabi/libc/usr/include/libxml2/  ${GCCPATH}/* ${GCCPATH}/arm-none-linux-gnueabi/include/libxml2 )
+find_path(XML2_HEADERS libxml/xmlwriter.h ${INCLUDEDIR}/libxml2)
 message("-- Search for LUA headers")
-find_path(LUA_HEADERS lua.h ${GCCPATH}/arm-none-linux-gnueabi/libc/usr/include/lua5.2 ${INCLUDEDIR}/lua5.2 ${GCCPATH}/* ${GCCPATH}/arm-none-linux-gnueabi/include/ ${GCCPATH}/arm-unknown-linux-gnueabi/sysroot/usr/include)
+find_path(LUA_HEADERS lua.h ${INCLUDEDIR}/lua5.2)
+find_path(LUA_MULTIARCH_HEADERS lua5.2-deb-multiarch.h ${INCLUDEMULTIARCH})
 message("-- Search for LUA lib")
 include_directories(${LUA_HEADERS})
-if (${ARM})
-  SET(LUA_LIB lua)
-else (${ARM})
-  find_library(LUA_LIB NAMES lua5.2 lua liblua PATH ${LIBPATH})
-endif (${ARM})
+include_directories(${LUA_MULTIARCH_HEADERS})
+find_path(JSON_HEADERS json/json.h  ${INCLUDEDIR}/json)
+include_directories(${JSON_HEADERS})
+message(${CMAKE_MODULE_LINKER_FLAGS})
+#if (${ARM})
+#  SET(LUA_LIB lua)
+#else (${ARM})
+  find_library(LUA_LIB NAMES lua5.2 lua liblua PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
+#endif (${ARM})
 
 
 ##
@@ -49,11 +70,14 @@ add_definitions(-DAB_PREFIX=\"${CMAKE_INSTALL_PREFIX}\")
 
 find_library(LIBAISOY1 NAMES aisoy1 PATH /usr/lib /usr/local/lib )
 
+
+
+
 add_subdirectory(lib)
 add_subdirectory(plugins)
 add_subdirectory(server)
 add_subdirectory(ab)
-add_subdirectory(test)
+# add_subdirectory(test)
 
 # uninstall target
 configure_file(
