@@ -21,10 +21,48 @@
 #include <ab/factory.h>
 #include <ab/log.h>
 
+using namespace AB;
+
 Botones::Botones(const char* type): Action(type)
 {
-
+	arriba = "";
+	nombre = "Botones";
 }
+
+
+void Botones::setAttr(const std::string &k, AB::Object s)
+{
+	if(k == "arriba"){
+	  arriba=object2string(s);
+	}
+	else if (k == "nombre")
+	{
+		nombre=object2string(s);
+	}
+	else Action::setAttr(k,s);
+}
+
+AB::Object Botones::attr(const std::string &k)
+{
+	if (k == "arriba")
+	{
+		return to_object(arriba);
+	}
+	else if (k == "nombre")
+	{
+		return to_object(nombre);
+	}
+   	else return Action::attr(k);
+}
+
+AB::AttrList Botones::attrList()
+{
+  AB::AttrList l;
+  l.push_back("arriba");
+  l.push_back("nombre");
+  return l;
+}
+
 
 void Botones::exec()
 {

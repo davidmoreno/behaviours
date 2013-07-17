@@ -7,7 +7,19 @@
 		<type>action</type>
 		<icon>test</icon>
 
+		<params>
+			<param id="arriba">
+				<type>text</type>
+				<description lang="en">up</description>
+			</param>
+			<param id="nombre">
+				<type>text</type>
+				<description lang="en">name</description>
+			</param>
+		</params>
+
 		<js>modules/botones.js</js>
 		<js>modules/jwplayer.js</js>
 	</node-description>
 </node-descriptions>
+

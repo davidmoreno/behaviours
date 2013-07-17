@@ -21,9 +21,18 @@
 
 #include <ab/action.h>
 
-class Botones : public AB::Action{
-public:
-	Botones(const char* type);
-	
-	virtual void exec();
+namespace AB {
+	class Botones : public AB::Action{
+	public:
+		Botones(const char* type);
+
+		virtual void setAttr(const std::string& name, AB::Object obj);
+	    virtual AB::Object attr(const std::string& name);
+	    virtual AB::AttrList attrList();
+
+		virtual void exec();
+	private:
+		std::string arriba;
+		std::string nombre;
+	};
 };

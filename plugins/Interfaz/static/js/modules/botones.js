@@ -4,7 +4,17 @@
 (function()
 {
 var showInterface = function(){
-  this.configureDialogSetup()
+  // Esto es como llamar a this.configureDialogSetup pero sin showDefaultButtons, con lo que no asigna el acceptConfig al close
+  main.showDialog()
+  $('#dialog #content').html('')
+  var tt=$('#dialog #title').html(current_language.configuration_of)
+  var name=$('<a href="#" id="name">'+this.id+'</span>')
+  var that=this
+  name.click(function(){
+    var name=prompt(current_language.set_node_id, that.id)
+    that.setName(name)
+  })
+  tt.append(name).append('</span> <div class="type">('+this.type+')</div>')
 
   var tr=$('<tr>')
   var table=$('<table>').append(tr)
@@ -45,18 +55,21 @@ var showInterface = function(){
 
  
 }
-var botones_accept_configure = function(){
-  this.update()
-}
+// var botones_accept_configure = function(){
+//   this.params=this.getParams()
+//   this.update()
+// }
 
-var botones_deactivate = function(){}
+//var botones_deactivate = function(){}
 
-var BotonesAction=extend(Action)
+var BotonesAction=extend(Action, {paramOptions:[{type:String,text:'arriba',name:'arriba'},{type:String,text:'nombre',name:'nombre',show:true}]})
 
-BotonesAction.prototype.configure=showInterface
-BotonesAction.prototype.acceptConfigure=botones_accept_configure
+// BotonesAction.prototype.configure=function(){
+//   Node.prototype.configure.call(this);
+// }
+//BotonesAction.prototype.acceptConfigure=botones_accept_configure
 BotonesAction.prototype.activate=showInterface
-BotonesAction.prototype.deactivate=botones_deactivate
+//BotonesAction.prototype.deactivate=botones_deactivate
 
 //BotonesAction.prototype.setName("HOLA");
 /*
@@ -75,7 +88,8 @@ main.behaviour.nodeFactory.add('botones',BotonesAction)
 
 })();
 function clickButton(id){
-	$.post("lua/",{"exec":"bla","button":id});
+	//$.post("lua/",{"exec":"bla","button":id});
+  main.lua_exec('manager.notify('+this+')')
 	// en el servidor se asume que el "handler" de este botón es el nodo con nombre: nodo_[id]
 	// osea, si id="Up", el handler es el nodo "nodo_up"
 }
