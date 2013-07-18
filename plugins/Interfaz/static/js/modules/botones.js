@@ -31,7 +31,7 @@ var showInterface = function(){
 	var state=main.behaviour.state
   var b= $('<div class="buttonsPanel">').css({'margin-left': 'auto','margin-right': 'auto','width':'200px'})
 
-    b.append("<button onclick='clickButton(this.id)' style='margin-left:30px' id= 'Up'>Up</button>").append("<br/>").append("<button onclick='clickButton(this.id)' id='Left'>Left</button>").append("<button onclick='clickButton(this.id)' id='Right'>Right</button>").append("<br/>").append("<button onclick='clickButton(this.id)' style='margin-left:20px'  id='Down'>Down</button>")
+    b.append("<button onclick='clickButton(\"" + this.params['arriba'] + "\")' style='margin-left:30px' id= 'Up'>Up</button>").append("<br/>").append("<button onclick='clickButton(\"" + this.params['izquierda'] + "\")' id='Left'>Left</button>").append("<button onclick='clickButton(\"" + this.params['derecha'] + "\")' id='Right'>Right</button>").append("<br/>").append("<button onclick='clickButton(\"" + this.params['abajo'] + "\")' style='margin-left:20px'  id='Down'>Down</button>")
   var video= $('<img src="http://' + window.location.host.split(":")[0] + ':8082/"/>')
         
         
@@ -62,7 +62,13 @@ var showInterface = function(){
 
 //var botones_deactivate = function(){}
 
-var BotonesAction=extend(Action, {paramOptions:[{type:String,text:'arriba',name:'arriba'},{type:String,text:'nombre',name:'nombre',show:true}]})
+var BotonesAction=extend(Action, {paramOptions:[
+    {type:String,text:'arriba',name:'arriba'},
+    {type:String,text:'abajo',name:'abajo'},
+    {type:String,text:'izquierda',name:'izquierda'},
+    {type:String,text:'derecha',name:'derecha'},
+    {type:String,text:'nombre',name:'nombre',show:true}
+  ]})
 
 // BotonesAction.prototype.configure=function(){
 //   Node.prototype.configure.call(this);
@@ -88,8 +94,5 @@ main.behaviour.nodeFactory.add('botones',BotonesAction)
 
 })();
 function clickButton(id){
-	//$.post("lua/",{"exec":"bla","button":id});
-  main.lua_exec('manager.notify('+this+')')
-	// en el servidor se asume que el "handler" de este botón es el nodo con nombre: nodo_[id]
-	// osea, si id="Up", el handler es el nodo "nodo_up"
+  main.lua_exec('manager.notify('+id+')')
 }

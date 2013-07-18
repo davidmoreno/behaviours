@@ -33,6 +33,9 @@ namespace AB {
 		virtual void exec();
 	private:
 		std::string arriba;
+		std::string abajo;
+		std::string izquierda;
+		std::string derecha;
 		std::string nombre;
 	};
 };

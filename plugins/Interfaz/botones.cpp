@@ -26,6 +26,9 @@ using namespace AB;
 Botones::Botones(const char* type): Action(type)
 {
 	arriba = "";
+	abajo = "";
+	izquierda = "";
+	derecha = "";
 	nombre = "Botones";
 }
 
@@ -35,7 +38,16 @@ void Botones::setAttr(const std::string &k, AB::Object s)
 	if(k == "arriba"){
 	  arriba=object2string(s);
 	}
-	else if (k == "nombre")
+	else if (k == "abajo")
+	{
+		abajo=object2string(s);
+	}else if (k == "izquierda")
+	{
+		izquierda=object2string(s);
+	}else if (k == "derecha")
+	{
+		derecha=object2string(s);
+	}else if (k == "nombre")
 	{
 		nombre=object2string(s);
 	}
@@ -48,17 +60,31 @@ AB::Object Botones::attr(const std::string &k)
 	{
 		return to_object(arriba);
 	}
-	else if (k == "nombre")
+	else if (k == "abajo")
+	{
+		return to_object(abajo);
+	}
+	else if (k == "izquierda")
+	{
+		return to_object(izquierda);
+	}
+   	else if (k == "derecha")
+	{
+		return to_object(derecha);
+	}else if (k == "nombre")
 	{
 		return to_object(nombre);
 	}
-   	else return Action::attr(k);
+	else return Action::attr(k);
 }
 
 AB::AttrList Botones::attrList()
 {
   AB::AttrList l;
   l.push_back("arriba");
+  l.push_back("abajo");
+  l.push_back("izquierda");
+  l.push_back("derecha");
   l.push_back("nombre");
   return l;
 }
