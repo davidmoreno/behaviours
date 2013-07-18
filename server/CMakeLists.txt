@@ -1,10 +1,11 @@
-include_directories(${XML2_HEADERS})
+# ${Z_LIB} ${XML2_LIB} ${GCRYPT_LIB}
+include_directories(${XML2_HEADERS} ${ONION_HEADERS})
 
 add_library(abserver_static STATIC utils.cpp nodemanager.cpp statichandler.cpp)
 add_executable(abserver main.cpp)
 
-target_link_libraries(abserver abserver_static onioncpp_static onion_handlers_static
-	onion_static ab_static xml2 z ${LUA_LIB} dl gcrypt pthread rt gnutls)
+target_link_libraries(abserver abserver_static ${ONIONCPP_LIB} ${ONIONHANDLERS_STATIC_LIB} 
+	${ONION_STATIC_LIB} ab_static ${XML2_LIB}  ${Z_LIB} ${LUA_LIB} dl ${GCRYPT_LIB} pthread rt ${GNUTLS_LIB})
 
 install(TARGETS abserver 
 	RUNTIME DESTINATION bin
