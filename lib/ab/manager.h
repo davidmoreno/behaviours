@@ -264,6 +264,10 @@ namespace AB {
     
     /// Queue of events from server to client. Its a circular buffer so some events may get lost.
     EventQueue eventQueue;
+
+    void notifystart(Node *node);
+    void doNotify(Node *node);
+
   private:
     void sync();
     Node *notifyOne(Node *);
@@ -283,6 +287,7 @@ namespace AB {
     bool syncOnNextCycle; ///< Whenever some part of the graph changes, new event, new action, new connection.. or removal, next cycle must sync.
 
     std::thread::id execThreadId;
+    std::mutex mutex_lastNode;
   };
 
   /// Overwrite to get a notification on each node notify enter

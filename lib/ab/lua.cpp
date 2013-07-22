@@ -97,6 +97,9 @@ void LUA::setManager(Manager *m)
   lua_pushstring(state, "notify");
   lua_pushcfunction(state, lua_notify_manager);
   lua_settable(state,-3);
+  lua_pushstring(state, "notifystart");
+  lua_pushcfunction(state, lua_notifystart_manager);
+  lua_settable(state,-3);
   lua_setglobal(state, "manager");
 
   /// Add the metatable for Nodes

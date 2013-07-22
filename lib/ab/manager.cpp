@@ -23,6 +23,7 @@
 #include "lua.h"
 #include "event.h"
 #include "action.h"
+ #include "blockingaction.h"
 #include "connection.h"
 #include "pluginloader.h"
 
@@ -307,6 +308,25 @@ void Manager::exec()
   DEBUG("Finished execution of behaviour");
 }
 
+
+void Manager::doNotify(Node* node){
+  Node * thread_lastNode;
+  try {
+      thread_lastNode=node;
+      while(thread_lastNode) {
+        thread_lastNode=notifyOne(thread_lastNode);
+        
+      }
+    } catch(const std::exception &e) {
+      ERROR("Catched unhandled exception: %s! Stoping this chain.", e.what());
+    } catch(...) {
+      ERROR("Catched unhandled exception! Stoping this chain.");
+    }
+  mutex_lastNode.lock();
+  lastNode = thread_lastNode;
+  mutex_lastNode.unlock();
+}
+
 /**
  * The pendingNotifications queue is checked for integrity before launching the new node notification to check its still
  * valid.
@@ -318,17 +338,15 @@ void Manager::notify(Node *node)
     std::lock_guard<std::mutex> l(pendingNotificationsMutex);
     pendingNotifications.push(node);
   } else {
-    try {
-      lastNode=node;
-      while(lastNode) {
-        lastNode=notifyOne(lastNode);
-      }
-    } catch(const std::exception &e) {
-      ERROR("Catched unhandled exception: %s! Stoping this chain.", e.what());
-    } catch(...) {
-      ERROR("Catched unhandled exception! Stoping this chain.");
-    }
+    std::thread t(&Manager::doNotify,this,node);
+    t.detach();
   }
+}
+
+void Manager::notifystart(Node *node)
+{ BlockingAction *ac=dynamic_cast<BlockingAction*>(node);
+  ac->continuar = true;
+  ac->cv.notify_one();
 }
 
 /// Callback to know when a node is notified on enter.
@@ -360,12 +378,14 @@ public:
  * @param node The node to exec.
  * @returns The next node to execute.
  */
+
 Node *Manager::notifyOne(Node *node)
 {
   RAII_enter_exit_node een(manager_notify_node_enter, manager_notify_node_exit, node);
   Action *ac=dynamic_cast<Action*>(node);
   if (ac) {
     ac->exec();
+  
   }
   if (nodeConnections.count(node)>0) {
     DEBUG("Notify node %s", node->name().c_str());
