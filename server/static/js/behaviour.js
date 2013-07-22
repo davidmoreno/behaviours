@@ -81,7 +81,10 @@ Behaviour.prototype.addNode = function(type, id, params, position, only_client) 
 	  $('#loading').show()
 	  $.post('/node/',create_params, function(name){
 		  // I got a name, and confirmation of creation.
+		  delete that.state[node.id]
 		  node.id=name
+		  that.state[name] = node
+
 		  if (!params && node.paramOptions){
 			  node.configure()
 			  $('#dialog #content').attr('nodeId', node.id)
