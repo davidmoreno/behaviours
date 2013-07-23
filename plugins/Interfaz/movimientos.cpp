@@ -27,12 +27,13 @@
 
 
 namespace AB{
-	class InterfazAction : public Action{
+	class Derecha : public Action{
 		std::string code;
+		std::string nombre;
 		PyObject *compiled_code;
 	public:
-		InterfazAction(const char* type);
-    virtual ~InterfazAction();
+		Derecha(const char* type);
+    virtual ~Derecha();
 		virtual void exec();
 		
     virtual AttrList attrList();
@@ -42,12 +43,13 @@ namespace AB{
     virtual void setManager(Manager* manager);
 	};
 	
-	class InterfazEvent : public Action{
+	class Izquierda : public Action{
 		std::string code;
+		std::string nombre;
 		PyObject *compiled_code;
 	public:
-		InterfazEvent(const char* type);
-    virtual ~InterfazEvent();
+		Izquierda(const char* type);
+    virtual ~Izquierda();
     virtual void exec();
 		
     virtual AttrList attrList();
@@ -56,12 +58,13 @@ namespace AB{
 		
     virtual void setManager(Manager* manager);
 	};
-	class Up : public Action{
+	class Arriba : public Action{
 		std::string code;
+		std::string nombre;
 		PyObject *compiled_code;
 	public:
-		Up(const char* type);
-    virtual ~Up();
+		Arriba(const char* type);
+    virtual ~Arriba();
 		virtual void exec();
 		
     virtual AttrList attrList();
@@ -70,12 +73,13 @@ namespace AB{
 		
     virtual void setManager(Manager* manager);
 	};
-	class Down : public Action{
+	class Abajo : public Action{
 		std::string code;
+		std::string nombre;
 		PyObject *compiled_code;
 	public:
-		Down(const char* type);
-    virtual ~Down();
+		Abajo(const char* type);
+    virtual ~Abajo();
 		virtual void exec();
 		
     virtual AttrList attrList();
@@ -101,10 +105,10 @@ void python2_interpreter(FILE *fd){
 
 void ab_init(void){
 	DEBUG("Loaded python2 plugin");
-	AB::Factory::registerClass<AB::InterfazAction>("derecha");
-	AB::Factory::registerClass<AB::InterfazEvent>("izquierda");
-	AB::Factory::registerClass<AB::Up>("arriba");
-	AB::Factory::registerClass<AB::Down>("abajo");
+	AB::Factory::registerClass<AB::Derecha>("derecha");
+	AB::Factory::registerClass<AB::Izquierda>("izquierda");
+	AB::Factory::registerClass<AB::Arriba>("arriba");
+	AB::Factory::registerClass<AB::Abajo>("abajo");
 	AB::Factory::registerClass<AB::Botones>("botones");
 
 	AB::Interfaz::python2_init();
@@ -143,18 +147,19 @@ void AB::Interfaz::python2_init(){
 	}
 }
 
-InterfazAction::InterfazAction(const char* type): Action(type)
+Derecha::Derecha(const char* type): Action(type)
 {
-	code="";
+	code="import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_W(self):\n        self.command='w'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_W()\ntime.sleep(1)\na.stopSerialSend()\na.close()";
 	compiled_code=NULL;
+	nombre = "Derecha";
 }
 
-InterfazAction::~InterfazAction()
+Derecha::~Derecha()
 {
 	Py_XDECREF(compiled_code);
 }
 
-void InterfazAction::exec()
+void Derecha::exec()
 {
 	if (code.size()==0)
 		return;
@@ -176,19 +181,27 @@ void InterfazAction::exec()
 	Py_DECREF(locals);
 }
 
-AttrList InterfazAction::attrList()
+AttrList Derecha::attrList()
 {
 	auto attr=AB::Node::attrList();
 	attr.push_back("code");
+	attr.push_back("nombre");
 	return attr;
 }
 
-Object InterfazAction::attr(const std::string& name)
+Object Derecha::attr(const std::string& name)
 {
-	return to_object(code);
+	if (name == "nombre")
+	{
+		return to_object(nombre);
+	}
+	else// if(name=="code"){
+		return to_object(code);
+	
+	
 }
 
-void InterfazAction::setAttr(const std::string& name, Object obj)
+void Derecha::setAttr(const std::string& name, Object obj)
 {
 	if (name=="code"){
 		code=object2string(obj);
@@ -197,28 +210,33 @@ void InterfazAction::setAttr(const std::string& name, Object obj)
 		if (!compiled_code)
 			PyErr_Print();
 	}
+	else if (name == "nombre")
+	{
+		nombre=object2string(obj);
+	}
 	else
 		return Action::setAttr(name, obj);
 }
 
-void InterfazAction::setManager(Manager* manager)
+void Derecha::setManager(Manager* manager)
 {
 	AB::Node::setManager(manager);
 	AB::Interfaz::ab_module_manager=manager;
 }
-/********************************************************UP*/
-Up::Up(const char* type): Action(type)
+/********************************************************Arriba*/
+Arriba::Arriba(const char* type): Action(type)
 {
-	code="";
+	code="import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_W(self):\n        self.command='w'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_W()\ntime.sleep(1)\na.stopSerialSend()\na.close()";
 	compiled_code=NULL;
+	nombre = "Arriba";
 }
 
-Up::~Up()
+Arriba::~Arriba()
 {
 	Py_XDECREF(compiled_code);
 }
 
-void Up::exec()
+void Arriba::exec()
 {
 	if (code.size()==0)
 		return;
@@ -240,19 +258,26 @@ void Up::exec()
 	Py_DECREF(locals);
 }
 
-AttrList Up::attrList()
+AttrList Arriba::attrList()
 {
 	auto attr=AB::Node::attrList();
 	attr.push_back("code");
+	attr.push_back("nombre");
 	return attr;
 }
 
-Object Up::attr(const std::string& name)
+Object Arriba::attr(const std::string& name)
 {
-	return to_object(code);
+	if (name == "nombre")
+	{
+		return to_object(nombre);
+	}
+	else //if(name=="code"){
+		return to_object(code);
+	
 }
 
-void Up::setAttr(const std::string& name, Object obj)
+void Arriba::setAttr(const std::string& name, Object obj)
 {
 	if (name=="code"){
 		code=object2string(obj);
@@ -261,95 +286,35 @@ void Up::setAttr(const std::string& name, Object obj)
 		if (!compiled_code)
 			PyErr_Print();
 	}
-	else
-		return Action::setAttr(name, obj);
-}
-
-void Up::setManager(Manager* manager)
-{
-	AB::Node::setManager(manager);
-	AB::Interfaz::ab_module_manager=manager;
-}
-/************/
-
-/********************************************************Down*/
-Down::Down(const char* type): Action(type)
-{
-	code="";
-	compiled_code=NULL;
-}
-
-Down::~Down()
-{
-	Py_XDECREF(compiled_code);
-}
-
-void Down::exec()
-{
-	if (code.size()==0)
-		return;
-	
-	PyObject *locals=PyDict_New();
-	Py_INCREF(globals);
-	
-	auto o=to_object(this) ;
-	PyDict_SetItemString(locals, "self", object2pyobject( o ));
-	
-	PyObject *obj=PyEval_EvalCode( (PyCodeObject*)compiled_code, globals, locals);
-	if (!obj)
-		PyErr_Print();
-	else{
-		PyObject_Print(obj, stdout, Py_PRINT_RAW);
-		Py_DECREF(obj);
-	}
-	Py_DECREF(globals);
-	Py_DECREF(locals);
-}
-
-AttrList Down::attrList()
-{
-	auto attr=AB::Node::attrList();
-	attr.push_back("code");
-	return attr;
-}
-
-Object Down::attr(const std::string& name)
-{
-	return to_object(code);
-}
-
-void Down::setAttr(const std::string& name, Object obj)
-{
-	if (name=="code"){
-		code=object2string(obj);
-		Py_XDECREF(compiled_code);
-		compiled_code=Py_CompileString(code.c_str(), this->name().c_str(), Py_file_input);
-		if (!compiled_code)
-			PyErr_Print();
+	else if (name == "nombre")
+	{
+		nombre=object2string(obj);
 	}
 	else
 		return Action::setAttr(name, obj);
 }
 
-void Down::setManager(Manager* manager)
+void Arriba::setManager(Manager* manager)
 {
 	AB::Node::setManager(manager);
 	AB::Interfaz::ab_module_manager=manager;
 }
 /************/
-InterfazEvent::InterfazEvent(const char* type): Action(type)
-{
-	code="";
 
+/********************************************************Abajo*/
+Abajo::Abajo(const char* type): Action(type)
+{
+	code="import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_W(self):\n        self.command='w'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_W()\ntime.sleep(1)\na.stopSerialSend()\na.close()";
 	compiled_code=NULL;
+	nombre = "Abajo";
 }
 
-InterfazEvent::~InterfazEvent()
+Abajo::~Abajo()
 {
 	Py_XDECREF(compiled_code);
 }
 
-void InterfazEvent::exec()
+void Abajo::exec()
 {
 	if (code.size()==0)
 		return;
@@ -371,19 +336,26 @@ void InterfazEvent::exec()
 	Py_DECREF(locals);
 }
 
-AttrList InterfazEvent::attrList()
+AttrList Abajo::attrList()
 {
 	auto attr=AB::Node::attrList();
 	attr.push_back("code");
+	attr.push_back("nombre");
 	return attr;
 }
 
-Object InterfazEvent::attr(const std::string& name)
+Object Abajo::attr(const std::string& name)
 {
-	return to_object(code);
+	if (name == "nombre")
+	{
+		return to_object(nombre);
+	}
+	else// if(name=="code"){
+		return to_object(code);
+	
 }
 
-void InterfazEvent::setAttr(const std::string& name, Object obj)
+void Abajo::setAttr(const std::string& name, Object obj)
 {
 	if (name=="code"){
 		code=object2string(obj);
@@ -392,11 +364,91 @@ void InterfazEvent::setAttr(const std::string& name, Object obj)
 		if (!compiled_code)
 			PyErr_Print();
 	}
+	else if (name == "nombre")
+	{
+		nombre=object2string(obj);
+	}
 	else
 		return Action::setAttr(name, obj);
 }
 
-void InterfazEvent::setManager(Manager* manager)
+void Abajo::setManager(Manager* manager)
+{
+	AB::Node::setManager(manager);
+	AB::Interfaz::ab_module_manager=manager;
+}
+/************/
+Izquierda::Izquierda(const char* type): Action(type)
+{
+	code="import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_A(self):\n        self.command='a'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_A()\ntime.sleep(1)\na.stopSerialSend()\na.close()";
+	nombre = "Izquierda";
+	compiled_code=NULL;
+}
+
+Izquierda::~Izquierda()
+{
+	Py_XDECREF(compiled_code);
+}
+
+void Izquierda::exec()
+{
+	if (code.size()==0)
+		return;
+	
+	PyObject *locals=PyDict_New();
+	Py_INCREF(globals);
+	
+	auto o=to_object(this) ;
+	PyDict_SetItemString(locals, "self", object2pyobject( o ));
+	
+	PyObject *obj=PyEval_EvalCode( (PyCodeObject*)compiled_code, globals, locals);
+	if (!obj)
+		PyErr_Print();
+	else{
+		PyObject_Print(obj, stdout, Py_PRINT_RAW);
+		Py_DECREF(obj);
+	}
+	Py_DECREF(globals);
+	Py_DECREF(locals);
+}
+
+AttrList Izquierda::attrList()
+{
+	auto attr=AB::Node::attrList();
+	attr.push_back("code");
+	attr.push_back("nombre");
+	return attr;
+}
+
+Object Izquierda::attr(const std::string& name)
+{
+	if (name == "nombre")
+	{
+		return to_object(nombre);
+	}
+	else //if(name=="code"){
+		return to_object(code);
+	
+}
+
+void Izquierda::setAttr(const std::string& name, Object obj)
+{
+	if (name=="code"){
+		code=object2string(obj);
+		Py_XDECREF(compiled_code);
+		compiled_code=Py_CompileString(code.c_str(), this->name().c_str(), Py_file_input);
+		if (!compiled_code)
+			PyErr_Print();
+	}
+	else if (name == "nombre")
+	{
+		nombre=object2string(obj);
+	}
+	else
+		return Action::setAttr(name, obj);
+}
+
+void Izquierda::setManager(Manager* manager)
 {
 	AB::Node::setManager(manager);
 	AB::Interfaz::ab_module_manager=manager;

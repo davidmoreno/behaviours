@@ -56,27 +56,27 @@ python_accept_configure = function(){
   this.update()
 }
 
-var PythonAction=extend(Action, {paramOptions: [{type:Text,text:current_language.python_action_msg,name:'code'}]})
-var PythonEvent=extend(Action, {paramOptions: [{type:Text,text:current_language.python_event_msg,name:'code'}]})
-var PythonActionArriba=extend(Action, {paramOptions: [{type:Text,text:current_language.python_action_msg,name:'code'}]})
-var PythonActionAbajo=extend(Action, {paramOptions: [{type:Text,text:current_language.python_action_msg,name:'code'}]})
+var Derecha=extend(Action, {paramOptions: [{type:Text,text:current_language.python_action_msg,default:"import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_D(self):\n        self.command='d'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+'\\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_D()\ntime.sleep(1)\na.stopSerialSend()\na.close()",name:'code'},{type:String,text:'nombre',name:'nombre',show:true,default:"Derecha"}]})
+var Izquierda=extend(Action, {paramOptions: [{type:Text,text:current_language.python_event_msg,default:	"import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_A(self):\n        self.command='a'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_A()\ntime.sleep(1)\na.stopSerialSend()\na.close()",name:'code'},{type:String,text:'nombre',name:'nombre',show:true,default:"Izquierda"}]})
+var Arriba=extend(Action, {paramOptions: [{type:Text,text:current_language.python_action_msg,default:"import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_W(self):\n        self.command='w'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_W()\ntime.sleep(1)\na.stopSerialSend()\na.close()",name:'code'},{type:String,text:'nombre',name:'nombre',show:true,default:"Arriba"}]})
+var Abajo=extend(Action, {paramOptions: [{type:Text,text:current_language.python_action_msg,default:"import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_S(self):\n        self.command='s'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_S()\ntime.sleep(1)\na.stopSerialSend()\na.close()",name:'code'},{type:String,text:'nombre',name:'nombre',show:true,default:"Abajo"}]})
 
-PythonAction.prototype.configure=python_configure
-PythonAction.prototype.acceptConfigure=python_accept_configure
-
-
-PythonEvent.prototype.configure=python_configure
-PythonEvent.prototype.acceptConfigure=python_accept_configure
+Derecha.prototype.configure=python_configure
+Derecha.prototype.acceptConfigure=python_accept_configure
 
 
-PythonActionArriba.prototype.configure=python_configure
-PythonActionArriba.prototype.acceptConfigure=python_accept_configure
+Izquierda.prototype.configure=python_configure
+Izquierda.prototype.acceptConfigure=python_accept_configure
 
-PythonActionAbajo.prototype.configure=python_configure
-PythonActionAbajo.prototype.acceptConfigure=python_accept_configure
 
-main.behaviour.nodeFactory.add('derecha',PythonAction)
-main.behaviour.nodeFactory.add('izquierda',PythonEvent)
-main.behaviour.nodeFactory.add('arriba',PythonActionArriba)
-main.behaviour.nodeFactory.add('abajo',PythonActionAbajo)
+Arriba.prototype.configure=python_configure
+Arriba.prototype.acceptConfigure=python_accept_configure
+
+Abajo.prototype.configure=python_configure
+Abajo.prototype.acceptConfigure=python_accept_configure
+
+main.behaviour.nodeFactory.add('derecha',Derecha)
+main.behaviour.nodeFactory.add('izquierda',Izquierda)
+main.behaviour.nodeFactory.add('arriba',Arriba)
+main.behaviour.nodeFactory.add('abajo',Abajo)
 })()

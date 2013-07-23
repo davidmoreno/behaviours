@@ -67,7 +67,7 @@ var BotonesAction=extend(Action, {paramOptions:[
     {type:String,text:'abajo',name:'abajo'},
     {type:String,text:'izquierda',name:'izquierda'},
     {type:String,text:'derecha',name:'derecha'},
-    {type:String,text:'nombre',name:'nombre',show:true}
+    {type:String,text:'nombre',name:'nombre',show:true,default:"Botones"}
   ]})
 
 // BotonesAction.prototype.configure=function(){
