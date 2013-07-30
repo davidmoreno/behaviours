@@ -30,6 +30,7 @@ namespace AB{
 	class Derecha : public Action{
 		std::string code;
 		std::string nombre;
+		std::string code_default;
 		PyObject *compiled_code;
 	public:
 		Derecha(const char* type);
@@ -46,6 +47,7 @@ namespace AB{
 	class Izquierda : public Action{
 		std::string code;
 		std::string nombre;
+		std::string code_default;
 		PyObject *compiled_code;
 	public:
 		Izquierda(const char* type);
@@ -61,6 +63,7 @@ namespace AB{
 	class Arriba : public Action{
 		std::string code;
 		std::string nombre;
+		std::string code_default;
 		PyObject *compiled_code;
 	public:
 		Arriba(const char* type);
@@ -76,6 +79,7 @@ namespace AB{
 	class Abajo : public Action{
 		std::string code;
 		std::string nombre;
+		std::string code_default;
 		PyObject *compiled_code;
 	public:
 		Abajo(const char* type);
@@ -151,6 +155,7 @@ Derecha::Derecha(const char* type): Action(type)
 {
 	code="import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_W(self):\n        self.command='w'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_W()\ntime.sleep(1)\na.stopSerialSend()\na.close()";
 	compiled_code=NULL;
+	code_default="import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_W(self):\n        self.command='w'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_W()\ntime.sleep(1)\na.stopSerialSend()\na.close()";
 	nombre = "Derecha";
 }
 
@@ -186,6 +191,7 @@ AttrList Derecha::attrList()
 	auto attr=AB::Node::attrList();
 	attr.push_back("code");
 	attr.push_back("nombre");
+	attr.push_back("code_default");
 	return attr;
 }
 
@@ -194,6 +200,9 @@ Object Derecha::attr(const std::string& name)
 	if (name == "nombre")
 	{
 		return to_object(nombre);
+	}
+	else if(name == "code_default"){
+		return to_object(code_default);
 	}
 	else// if(name=="code"){
 		return to_object(code);
@@ -214,6 +223,9 @@ void Derecha::setAttr(const std::string& name, Object obj)
 	{
 		nombre=object2string(obj);
 	}
+	else if( name =="code_default"){
+		code_default=object2string(obj);
+	}
 	else
 		return Action::setAttr(name, obj);
 }
@@ -229,6 +241,8 @@ Arriba::Arriba(const char* type): Action(type)
 	code="import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_W(self):\n        self.command='w'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_W()\ntime.sleep(1)\na.stopSerialSend()\na.close()";
 	compiled_code=NULL;
 	nombre = "Arriba";
+	code_default="import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_W(self):\n        self.command='w'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_W()\ntime.sleep(1)\na.stopSerialSend()\na.close()";
+
 }
 
 Arriba::~Arriba()
@@ -263,6 +277,7 @@ AttrList Arriba::attrList()
 	auto attr=AB::Node::attrList();
 	attr.push_back("code");
 	attr.push_back("nombre");
+	attr.push_back("code_default");
 	return attr;
 }
 
@@ -271,6 +286,9 @@ Object Arriba::attr(const std::string& name)
 	if (name == "nombre")
 	{
 		return to_object(nombre);
+	}
+	else if(name == "code_default"){
+		return to_object(code_default);
 	}
 	else //if(name=="code"){
 		return to_object(code);
@@ -290,6 +308,9 @@ void Arriba::setAttr(const std::string& name, Object obj)
 	{
 		nombre=object2string(obj);
 	}
+	else if( name =="code_default"){
+		code_default=object2string(obj);
+	}
 	else
 		return Action::setAttr(name, obj);
 }
@@ -307,6 +328,7 @@ Abajo::Abajo(const char* type): Action(type)
 	code="import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_W(self):\n        self.command='w'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_W()\ntime.sleep(1)\na.stopSerialSend()\na.close()";
 	compiled_code=NULL;
 	nombre = "Abajo";
+	code_default="import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_W(self):\n        self.command='w'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_W()\ntime.sleep(1)\na.stopSerialSend()\na.close()";
 }
 
 Abajo::~Abajo()
@@ -341,6 +363,7 @@ AttrList Abajo::attrList()
 	auto attr=AB::Node::attrList();
 	attr.push_back("code");
 	attr.push_back("nombre");
+	attr.push_back("code_default");
 	return attr;
 }
 
@@ -349,6 +372,9 @@ Object Abajo::attr(const std::string& name)
 	if (name == "nombre")
 	{
 		return to_object(nombre);
+	}
+	else if(name == "code_default"){
+		return to_object(code_default);
 	}
 	else// if(name=="code"){
 		return to_object(code);
@@ -368,6 +394,9 @@ void Abajo::setAttr(const std::string& name, Object obj)
 	{
 		nombre=object2string(obj);
 	}
+	else if( name =="code_default"){
+		code_default=object2string(obj);
+	}
 	else
 		return Action::setAttr(name, obj);
 }
@@ -383,6 +412,7 @@ Izquierda::Izquierda(const char* type): Action(type)
 	code="import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_A(self):\n        self.command='a'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_A()\ntime.sleep(1)\na.stopSerialSend()\na.close()";
 	nombre = "Izquierda";
 	compiled_code=NULL;
+	code_default="import time\nclass mov:\n    def __init__(self):\n        import serial\n        self.freedom=serial.Serial('/dev/ttyACM0', 9600)\n        self.freedom.open()\n        self.command='p' #Stop\n\n    def startSerialSend_W(self):\n        self.command='w'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n\n    def stopSerialSend(self):\n        self.command='p'\n        print 'Sending %s' % self.command\n        self.freedom.write(self.command+' \\r\\n')\n        \n    def close(self):\n        self.freedom.close()\n\na = mov()\na.startSerialSend_W()\ntime.sleep(1)\na.stopSerialSend()\na.close()";
 }
 
 Izquierda::~Izquierda()
@@ -417,6 +447,7 @@ AttrList Izquierda::attrList()
 	auto attr=AB::Node::attrList();
 	attr.push_back("code");
 	attr.push_back("nombre");
+	attr.push_back("code_default");
 	return attr;
 }
 
@@ -425,6 +456,9 @@ Object Izquierda::attr(const std::string& name)
 	if (name == "nombre")
 	{
 		return to_object(nombre);
+	}
+	else if(name == "code_default"){
+		return to_object(code_default);
 	}
 	else //if(name=="code"){
 		return to_object(code);
@@ -443,6 +477,9 @@ void Izquierda::setAttr(const std::string& name, Object obj)
 	else if (name == "nombre")
 	{
 		nombre=object2string(obj);
+	}
+	else if( name =="code_default"){
+		code_default=object2string(obj);
 	}
 	else
 		return Action::setAttr(name, obj);
