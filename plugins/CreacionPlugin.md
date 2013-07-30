@@ -7,7 +7,7 @@ Introducción
 En behaviours, un nodo es cada uno de los elementos que podemos utilizar en la interfaz, que pueden interconectarse entre sí. Los nodos pueden ser Action o Event (o BlockingAction).
 * Event → Inicio de la cadena de ejecución, puede conectarse a acciones, pero no puede recibir ninguna conexión.
 * Action → Acción dentro de la cadena de ejecución, puede conectarse a otras acciones y recibir conexiones de acciones o eventos.
-* BlockingAction → Subclase de Action, que bloquea la ejecución en el seervidor, y la continúa cuando se le da la señal desde la interfaz.
+* BlockingAction → Subclase de Action, que bloquea la ejecución en el servidor, y la continúa cuando se le da la señal desde la interfaz.
 
 Las conexiones entre nodos pueden llevar una guarda, es decir, una condición que hace que se ejecute un nodo u otro. Si un nodo tiene varias conexiones sin guarda, se elige una aleatoriamente, si alguna de ellas no es vacía y se evalúa a cierto, se elige esa conexión.
 
@@ -18,7 +18,7 @@ Crear un nuevo plugin
 
 Para crear un plugin en behaviours, hay que seguir una estructura de directorios concreta:
 
-En el directorio plugins creamos uno con el nombre que llevará nuestro plugin. En este directorio crearemos los archivos de código C++ y una carpeta static con tres subcarpetas:
+En el directorio `plugins` creamos uno con el nombre que llevará nuestro plugin. En este directorio crearemos los archivos de código C++ y una carpeta `static` con tres subcarpetas:
 
 * nodes: Contendrá ficheros xml con los parámetros de los nodos de nuestro plugin.
 * js: Contendrá ficheros javascript que definirán el comportamiento en la parte cliente de nuestro plugin.
@@ -39,40 +39,44 @@ Los ficheros XML definen los datos necesarios para mostrar el nodo en la interfa
 		<js>ejemplo.js</js>
 	</node-description>
 
-Donde el parámetro id, dentro de la etiqueta node-description, será el identificador de nuestro nuevo plugin, necesitamos tenerlo localizado ya que en el resto del plugin utilizaremos este id para referenciarlo.
-<name> indica el nombre que aparecerá en la interfaz, según el idioma seleccionado para el navegador.
-En <type> debemos poner action o event según si el nodo es una acción o un evento.
-Al final de <node-description> pueden aparecer etiquetas <js> que enlazarán a los archivos de javascript, que deben estar en la carpeta js.
+Donde el parámetro `id`, dentro de la etiqueta `node-description`, será el identificador del nodo, necesitamos tenerlo localizado ya que en el resto del plugin utilizaremos este id para referenciarlo.
+
+`<name>` indica el nombre que aparecerá en la interfaz, según el idioma seleccionado para el navegador.
+
+En `<type>` debemos poner action o event según si el nodo es una acción o un evento.
+
+Al final de `<node-description>` pueden aparecer etiquetas `<js>` que enlazarán a los archivos de javascript, que deben estar en la carpeta `js`.
 
 ### Javascript ###
 
 Todos los nodos (tanto acciones como eventos) heredan de una misma clase Node, esta clase tiene una serie de funciones predefinidas, que pueden sobrescribirse en el nodo de nuestro plugin:
 
-* configure
+* `configure`
 Esta función es la encargada de mostrar la interfaz de configuración que se lanza al crear un nuevo nodo. Por defecto se visualizan los parámetros , pero se podrá cambiar consiguiendo mostrar lo que queramos.
-* acceptConfigure
+* `acceptConfigure`
 Es la encargada de actualizar los parámetros de configuración que utilicemos en configure.
-* activate
+* `activate`
 Cuando el nodo es activado por la interfaz, se realiza lo que se haya especificado en la función.
-* deactivate
+* `deactivate`
 Cuando el nodo se haya desactivado se ejecutará el contenido de la función.
-* setName
-Se utiliza para cambiar el nombre del nodo, por defecto tendrá la posición en la lista de nodos que le haya tocado.
-* paint
-La función paint crea el aspecto visual del botón que se creará del plugin en la interfaz.
-* update
-* getParams
-* realtime_update
-* paramOptions
-* params
-* t
-* remove
+* `setName`
+Se utiliza para cambiar el nombre del nodo, el nombre por defecto es "node_" seguido de su número de nodo.
+* `paint`
+La función paint crea el aspecto visual del nodo en la interfaz.
+* `update`
+* `getParams`
+* `realtime_update`
+* `paramOptions`
+* `params`
+* `t`
+* `remove`
 
 Si dejamos el fichero javascript en blanco, o no lo enlazamos desde el XML, al crear un nuevo nodo nos saldrá una ventana de configuración con únicamente tres botones, ya que no hemos puesto ningún parámetro.
 
 ![Ventana configuración predefinida](https://github.com/fawques/behaviours/raw/62b5115a883e2fc14c340696823a305458edaa6c/plugins/Interfaz/static/img/plugin2.png)  
 
 Si queremos dar a nuestro nodo un comportamiento más personalizado, tendremos que escribir código javascript sobrescribiendo las funciones anteriores.
+
 Por cada parámetro que queramos que tenga nuestro nodo debemos  colocarle los parámetros que consideremos oportunos. Si cogemos como referencia el plugin webservice, vemos que tiene dos parámetros de configuración. 
 
 ![Ventana configuración custom](https://github.com/fawques/behaviours/raw/62b5115a883e2fc14c340696823a305458edaa6c/plugins/Interfaz/static/img/plugin3.png)
@@ -84,9 +88,9 @@ En el archivo de javascript de webservice, el objeto está creado de la siguient
 
 Donde paramOptions es una lista de los parámetros que queremos poner y cada parámetro tiene:
 
-* Type: puede ser Array, Number, Text u otra cosa. Si es uno de los tipos predefinidos, el menú de configuración por defecto mostrará una representación concreta (si es Array, un desplegable; si es Number, un slider; y si es Text, un textarea). Si el tipo no es uno de los predefinidos, aparecerá un textbox sencillo.
-* Text: nombre del parámetro que se mostrará en el menú de configuración.
-* Default: el valor por defecto del parámetro.
+* `type`: puede ser Array, Number, Text u otra cosa. Si es uno de los tipos predefinidos, el menú de configuración por defecto mostrará una representación concreta (si es Array, un desplegable; si es Number, un slider; y si es Text, un textarea). Si el tipo no es uno de los predefinidos, aparecerá un textbox sencillo.
+* `text`: nombre del parámetro que se mostrará en el menú de configuración.
+* `default`: el valor por defecto del parámetro.
 
 Una vez establecidos los parámetros que tendrá nuestro nodo, podemos interactuar con ellos con las funciones anteriores. Para no utilizar la versión por defecto, necesitamos sobreescribirlas.
 
@@ -127,11 +131,11 @@ Y en el .hpp encontramos la declaración de la clase y las funciones implementad
 		virtual void exec();
 	};
 
-La función ab_init se encarga de enlazar las clases de C++ con los nodos definidos en el XML. Así, la función AB::Factory::registerClass<Basic>("testbasic") enlaza un nodo del tipo Basic (en nuestro caso el nombre que le hayamos dado a nuestra clase), con el id del nodo en el xml. Solo debe aparecer una vez en todo el plugin.
+La función `ab_init` se encarga de enlazar las clases de C++ con los nodos definidos en el XML. Así, la función AB::Factory::registerClass<Basic>("testbasic") enlaza un nodo del tipo Basic (en nuestro caso el nombre que le hayamos dado a nuestra clase), con el id del nodo en el xml. `ab_init` solo debe aparecer una vez en todo el plugin.
 
 En el constructor de la clase debemos llamar al constructor de la clase base (Action o Event), e inicializar los parámetros que pueda guardar el objeto.
 
-Otra función importante es la función exec. Esta función se ejecutará cuando la cadena de ejecución en el servidor llegue al nodo. Si el nodo es de tipo BlockingAction, esta función debería llamar al método exec de la clase padre si queremos que la ejecución en el servidor se pare hasta que se le notifique que continúe. Por ejemplo:
+Otra función importante es la función `exec`. Esta función se ejecutará cuando la cadena de ejecución en el servidor llegue al nodo. Si el nodo es de tipo BlockingAction, esta función debería llamar al método exec de la clase padre si queremos que la ejecución en el servidor se pare hasta que se le notifique que continúe. Por ejemplo:
 
 	void Ejemplo::exec()
 	{
@@ -164,7 +168,7 @@ La función attr debe devolver el atributo que se haya almacenado en el nodo, se
 	    if (k == "param1")
 	    {
 	   	 return to_object(this.param1);
-	    }
+	    }
 	    else if (k == "param2")
 	    {
 	   	 return to_object(this.param2);
@@ -212,25 +216,21 @@ Un ejemplo de CMakeLists.txt puede ser:
 	    DESTINATION shared/ab/static/Ejemplo
 	    )
 
-La instrucción SET(SOURCES ejemplo.cpp otro_fuente_ejemplo.cpp) guarda los ficheros de código C++ que utilizará el plugin.
+La instrucción `SET(SOURCES ejemplo.cpp otro_fuente_ejemplo.cpp)` guarda los ficheros de código C++ que utilizará el plugin.
 Después se busca la librería de python y los archivos de cabecera de la misma.
 
 Por último, se crea la librería que contendrá el plugin, además de añadir las opciones de enlazado para el compilador, y se indica las rutas de instalación de los binarios (en lib/ab) y de los tres elementos de la carpeta static (en shared/ab/static/Ejemplo).
 
 ### Órdenes de compilación y ejecución ###
 
-Cada vez que cambiemos nuestro código debemos dirigirnos a la carpeta build de nuestro behaviours y ejecutar los siguientes comandos:
+Cada vez que cambiemos nuestro código deberíamos compilarlo desde la carpeta `build` (la creamos si no existe) y ejecutar los siguientes comandos:
 
-	Creamos la carpeta build en el directorio de behaviours: 
-	$ mkdir build
-	$cd build		
+	# si queremos instalar en un lugar distinto del predeterminado, añadimos la opción -DCMAKE_INSTALL_PREFIX
 	$cmake -DCMAKE_INSTALL_PREFIX=/tmp/  ..
 	$make 
 	$sudo make install
-	$abserver
 
-Además refrescamos nuestro navegador para actualizar los cambios realizados en nuestro plugin.
-
+Tras esto, ejecutar `abserver` y refrescar nuestro navegador mostrará los cambios realizados en nuestro plugin.
 
 
 
