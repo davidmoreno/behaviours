@@ -14,9 +14,9 @@ install(TARGETS python3
 	)
 	
 install(DIRECTORY static/nodes static/img static/js
-	DESTINATION shared/ab/static/python3
+	DESTINATION share/ab/static/python3
 	)
 
 install(FILES __init__.py
-	DESTINATION shared/ab/python3
+	DESTINATION share/ab/python3
 	)
