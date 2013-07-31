@@ -11,8 +11,8 @@ install(TARGETS abserver
 	)
 	
 install(DIRECTORY static/js static/css static/doc static/img static/nodes
-	DESTINATION shared/ab/static/00-base
+	DESTINATION share/ab/static/00-base
 	)
 install(FILES static/favicon.ico static/index.html
-	DESTINATION shared/ab/static/00-base
+	DESTINATION share/ab/static/00-base
 	)

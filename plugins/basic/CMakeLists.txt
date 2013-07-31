@@ -7,5 +7,5 @@ install(TARGETS testbasic
 	)
 	
 install(DIRECTORY static/nodes
-	DESTINATION shared/ab/static/basictest
+	DESTINATION share/ab/static/basictest
 	)
