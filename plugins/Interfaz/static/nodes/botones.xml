@@ -6,6 +6,7 @@
 		
 		<type>action</type>
 		<icon>test</icon>
+		<pluginname>AisoyMov</pluginname>
 
 		<js>modules/botones.js</js>
 		<js>modules/jwplayer.js</js>

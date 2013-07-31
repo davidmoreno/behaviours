@@ -15,7 +15,7 @@ NodeFactory.prototype.updateAvailableNodes = function(){
 		$.get('/node/?list_files', function(filelist){ 
 		  var files = filelist.files.split(" ");
 		  for(var n in files) {
-
+		  	var para=files[n]
 		    $.get('nodes/'+files[n], function(xml){ 
 		      that.parseNodeDescription(xml); 
 		    }, 'xml')
@@ -38,6 +38,7 @@ NodeFactory.prototype.getTranslatedField = function(xml, tag){
 NodeFactory.prototype.paramTypes={ string:String, float:Number, array:Array, text:Text }
 
 NodeFactory.prototype.parseNodeDescription = function(xml){
+
 	var that=this
 	var x=$(xml).children('node-descriptions').children('node-description')
 	if (!x.length)
@@ -49,8 +50,24 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		if (id in this.known_types)
 			continue;
 		var name=this.getTranslatedField(xml, 'name')
+
 		var type=xml.children('type').text()
 		var icon=xml.children('icon').attr('src')
+		var pluginname= xml.children('pluginname').text();
+
+		//Crear barra del plugin si no está creada
+		if(pluginname ){
+			
+			if($('#classes ul').find('#'+pluginname+'b').length==0){
+				var lis=pluginname+"list"
+				var idname= pluginname+"b"
+				$('#classes ul').append('<li><a href="#" onclick="main.canvas.changeTool(\''+pluginname+'\')" id='+idname+' lid='+idname+'>'+pluginname+'</a></li>')
+				$('#extension').append('<div id ='+pluginname+'> <ul id='+lis+' class="toolbuttons"></ul></div>')
+				
+			}
+			
+		}
+		
 		if (!icon)
 			icon=id+'.png'
 		icon='img/'+icon
@@ -86,14 +103,27 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		a.append(d).append(img).append(br).append(name)
 		li.append(a)
 		a.click(function(){ that.behaviour.addNode($(this).attr('node-type')) })
-		if (type=="action"){
+
+		if(pluginname){
+
+			$('#'+pluginname+"list").append(li)
+			if (type=="action"){			
+				klass=Action
+			}
+			else {			
+				klass=Event
+			}
+
+		}
+		else if (type=="action"){
 			$('#actionlist').append(li)
 			klass=Action
 		}
-		else{
+		else {
 			$('#eventlist').append(li)
 			klass=Event
 		}
+
 		
 		var hasArray=false;
 		var paramOptions=[]
