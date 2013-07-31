@@ -73,7 +73,14 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		icon='img/'+icon
 
 		var klass
-		var li=$('<li>').attr('node-type',id)
+		var li
+		if (type=="action"){			
+				li=$('<li class="action">').attr('node-type',id)
+		}
+		else {			
+				li=$('<li class="event">').attr('node-type',id)
+		}
+		
 		var a=$('<a href="#">').attr('node-type',id).attr('title',this.getTranslatedField(xml, 'description'))
 		var d=$('<div class="buttoncover">')
 		var img=$('<img src="'+icon+'">')

@@ -30,7 +30,7 @@ a.button, .buttons a{
 
 a.toolbutton, .toolbuttons a{
   text-decoration: none;
-  color: #444444;
+  color: black;
   background: none;
 
 }
@@ -57,13 +57,13 @@ a.loading:hover{
 a.main_button:hover, .main_buttons a:hover{
 	color: #aaa;
 	cursor: pointer;
-	text-shadow: 1px 1px 1px white;
+	/*text-shadow: 1px 1px 1px white;*/
 }
 
 a.main_button, .main_buttons a{
   text-decoration: none;
   color: #333;
-  text-shadow: 0 1px 0 #AAA;
+ /* text-shadow: 0 1px 0 #AAA;*/
   background: none;
   padding-right: 20px;
   padding-left: 20px;
@@ -115,11 +115,11 @@ div.button_left{
   overflow: hidden;
 }
 
-.toolbuttons li{
+.toolbuttons li.action{
 	text-decoration: none;
 	color: #444444;
 	border: 1px solid #888888;
-	background: #B3B3B3;
+	background: #00aad4;
 	border-radius: 10px;
 	margin-left: 5px;
 	margin-right:5px;
@@ -129,6 +129,22 @@ div.button_left{
 	height: 100px;
 	box-shadow: 0 3px 3px rgba(0,0,0,0.5);
 	line-height: 2em;
+  
+}
+.toolbuttons li.event{
+  text-decoration: none;
+  color: #444444;
+  border: 1px solid #888888;
+  background: #aad400;
+  border-radius: 10px;
+  margin-left: 5px;
+  margin-right:5px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  width: 80px;
+  height: 100px;
+  box-shadow: 0 3px 3px rgba(0,0,0,0.5);
+  line-height: 2em;
   
 }
 
@@ -190,8 +206,9 @@ div#viewtools img:hover{
 }
 
 div#tools{
+  color:black;
   	background: #CCCCCC;
-	text-shadow: 0 1px 0 #EEE;
+	/*text-shadow: 0 1px 0 #EEE;*/
 	text-align: center;
 	padding: 0;
 	margin: 0;
@@ -223,7 +240,7 @@ div#tools ul{
 
 div#tools #selector{
 	background: white;
-	text-shadow: 0 1px 0 #EEE;
+	/*text-shadow: 0 1px 0 #EEE;*/
 	padding: 0;
 	margin: 0;
 	border: 0;
@@ -500,14 +517,14 @@ textarea#code{
 .right_panel #buttons > div a{
   text-decoration: none;
   color: #444444;
-  text-shadow: 0 1px 0 #EEE;
+  /*text-shadow: 0 1px 0 #EEE;*/
   height: 100%;
   padding: 0 0.5em 0 0.5em;
 }
 
 .right_panel #buttons > div a:hover{
   color: #aaa;
-	text-shadow: 1px 1px 1px white;
+/*	text-shadow: 1px 1px 1px white;*/
 }
 
 .right_panel #buttons a{
