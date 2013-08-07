@@ -62,7 +62,7 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 				var lis=pluginname+"list"
 				var idname= pluginname+"b"
 				$('#classes ul').append('<li><a href="#" onclick="main.canvas.changeTool(\''+pluginname+'\')" id='+idname+' lid='+idname+'>'+pluginname+'</a></li>')
-				$('#extension').append('<div id ='+pluginname+'> <ul id='+lis+' class="toolbuttons"></ul></div>')
+				$('#extension').append('<div id ='+pluginname+' style="display: none"> <ul id='+lis+' class="toolbuttons"></ul></div>')
 				
 			}
 			
