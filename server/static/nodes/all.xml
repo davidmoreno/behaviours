@@ -74,7 +74,7 @@
 	
 		<type>event</type>
 		<icon>click</icon>
-	
+		<pluginname>Control</pluginname>
 		<js>modules/click.js</js>
 	</node-description>
 	<node-description id="stop">

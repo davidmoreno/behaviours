@@ -102,10 +102,9 @@ Node.prototype.paint = function(options){
 		this.height=50
 	this.fill=fill
 	var r=svg.rect(svggroup, 0,0, this.width, this.height, 5, 5, {fill:fill,stroke:'none',filter:"url(#dropshadow)",id:'node'})
-	svg.text(svggroup, 10,this.height-8, this.type, {'font-family':'Sans','font-size':8,'cursor':'text','stroke-width':0.1,'id':'legend'})
+	svg.text(svggroup, 10,this.height-8, this.type, {'font-family':'Sans','font-size':8,'cursor':'text','stroke-width':0.1})
 	svg.text(svggroup, 40,this.height-10, "", {'font-family':'Sans','font-size':this.height-10,'cursor':'text','id':'param','stroke-width':0.1})
 	svg.image(svggroup, 4,4, 32,32,"img/"+this.type+".png")
-	
 	return this.svggroup
 }
 
@@ -455,9 +454,12 @@ Event.prototype.paint = function(options){
 	svg.rect(r, 0,0, this.width, this.height, 5, 5,{stroke:'none',id:'node'})
 	
 	svg.path(r, path,{stroke:'none'})
-	svg.text(svggroup, 10,this.height-8, this.type, {'font-family':'Sans','font-size':8,'cursor':'text','stroke-width':0.1})
-	svg.text(svggroup, 40,this.height-10, "", {'font-family':'Sans','font-size':this.height-10,'cursor':'text','id':'param','stroke-width':0.1})
-	svg.image(svggroup, 4,4, 32,32,"img/"+this.type+".png")
+
+	svg.text(svggroup, 18,this.height-8, this.type, {'font-family':'Sans','font-size':8,'cursor':'text','stroke-width':0.1,'id':'legend'})
+	svg.text(svggroup, 4,this.height-8, "N", {'font-family':'Sans','font-size':8,'cursor':'text','stroke-width':0.1,'id':'legend'})
+	svg.text(svggroup, 50,this.height-10, "", {'font-family':'Sans','font-size':this.height-10,'cursor':'text','id':'param','stroke-width':0.1})
+	svg.image(svggroup, 14,4, 32,32,"img/"+this.type+".png")
+	svg.image(svggroup, 0,1, 16,16,"img/ok.png")
 
 	return this.svggroup
 }
