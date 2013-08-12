@@ -6,6 +6,6 @@
 	
 	<type>event</type>
 	<icon>start</icon>
-	
+	<pluginname>Control</pluginname>
 	<js>modules/start.js</js>
 </node-description>

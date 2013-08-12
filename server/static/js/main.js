@@ -441,7 +441,7 @@ $(document).ready(function(){
     if(main.behaviour.ready && main.canvas.ready) { 
       clearInterval(timerId)
       main.refresh();
-      main.canvas.changeTool('events')
+      main.canvas.changeTool('Control')
       document.body.style.cursor = 'default'
     }
   },500);
