@@ -459,7 +459,7 @@ Event.prototype.paint = function(options){
 	svg.text(svggroup, 4,this.height-8, "N", {'font-family':'Sans','font-size':8,'cursor':'text','stroke-width':0.1,'id':'legend'})
 	svg.text(svggroup, 50,this.height-10, "", {'font-family':'Sans','font-size':this.height-10,'cursor':'text','id':'param','stroke-width':0.1})
 	svg.image(svggroup, 14,4, 32,32,"img/"+this.type+".png")
-	svg.image(svggroup, 0,1, 16,16,"img/ok.png")
+	svg.image(svggroup, 0,1, 16,16,"img/ok.png",{'id':'nodeonoff'})
 
 	return this.svggroup
 }

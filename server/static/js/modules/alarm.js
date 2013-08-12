@@ -9,8 +9,10 @@
 			       {type:Array,values:[2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035,2036,2037,2038,2039,2040,2041],name:'year'},
 			       {type:Array,values:['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23'],name:'hour'},
 			       {type:Array,values:['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59'],name:'minute'},
-			       {type:Array,text:current_language.repeat,values:[current_language.never,current_language.always,current_language.weekdays,current_language.weekend,current_language.mon,current_language.tue,current_language.wed,current_language.thu,current_language.fri,current_language.sat,current_language.sun],name:'repeat'}
-			      ]})
+             {type:Array,text:current_language.repeat,values:[current_language.never,current_language.always,current_language.weekdays,current_language.weekend,current_language.mon,current_language.tue,current_language.wed,current_language.thu,current_language.fri,current_language.sat,current_language.sun],name:'repeat'},
+			       {type:Array,values:['00','01'],name:'nodeon'}
+            ]})
+
 
   Alarm.prototype.configure = function(){
     var that = this
@@ -95,6 +97,24 @@
     cb.attr('id',i)
     cb.val(this.params[p[i].name])
     li.append(cb)
+
+    var li=$('<li>')
+    ul.append(li)
+    li.text(current_language.repeat)
+    var i=6
+    var cb=$('<select>')
+    for (var j in p[i].values){
+      var opt=$('<option>')
+      opt.append(p[i].values[j])
+      opt.attr('value',j)
+      cb.append(opt)
+    }
+    cb.change(function(){
+    that.realtime_update_base()
+    })
+    cb.attr('id',i)
+    cb.val(this.params[p[i].name])
+    li.append(cb)
     
     $('#dialog #title').html(current_language.configuration_of+this.type+' <span class="name">(object id '+this.id+')</span>')
     $('#dialog #content').html(ul)
@@ -138,6 +158,16 @@
 	  params[p[i].name]=val
 	
       }
+    if(p[i].name=="nodeon"){
+      if(val==0){
+
+        $('image#nodeonoff').attr('href','img/on.png')
+      }
+      else{
+        $('image#nodeonoff').attr('href','img/off.png')
+      }
+
+    }
       return params;
     }
     return {}

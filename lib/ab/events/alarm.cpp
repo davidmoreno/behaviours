@@ -35,6 +35,7 @@ Alarm::Alarm(const char *type) : Event(type)
   hour = 0; //0-23
   minute = 0; // 0-59
   repeatPolicy = Never;
+  nodeon=0;
 }
 
 void Alarm::setAttr(const std::string &k, const AB::Object s)
@@ -64,6 +65,12 @@ void Alarm::setAttr(const std::string &k, const AB::Object s)
     DEBUG("alarm repeat policy requested: %d", (int)repeatPolicy);
     return;
   }
+  else if(k== "nodeon"){
+    nodeon = object2int(s);
+    DEBUG("alarm year requested: %d", nodeon);
+    return;
+
+  }
   Event::setAttr(k,s);
 }
 
@@ -87,6 +94,9 @@ AB::Object Alarm::attr(const std::string &key)
   if (key == "repeat") {
     return to_object((int)repeatPolicy);
   }
+  if (key == "nodeon") {
+    return to_object(nodeon);
+  }
   return Event::attr(key);
 }
 
@@ -99,6 +109,7 @@ AttrList Alarm::attrList()
   l.push_back("month");
   l.push_back("year");
   l.push_back("repeat");
+  l.push_back("nodeon");
   return l;
 }
 
