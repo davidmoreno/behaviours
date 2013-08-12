@@ -176,20 +176,22 @@
 	else
 	  params[p[i].name]=val
 	
-      
-    if(p[i].name=="nodeon"){
-      if(val==0){
+    if(this.id.indexOf(this.type)==-1){ 
+      if(p[i].name=="nodeon"){
 
-        $('image#nodeonoff').attr('href','img/on.png')
+        if(val==0){
+
+          $('image#nodeonoff'+this.id).attr('href','img/on.png')
+        }
+        else{
+          $('image#nodeonoff'+this.id).attr('href','img/off.png')
+        }
+
       }
-      else{
-        $('image#nodeonoff').attr('href','img/off.png')
+      if(p[i].name=="noderepeat"){
+
+        $('text#noderepeat').text(""+val)
       }
-
-    }
-    if(p[i].name=="noderepeat"){
-
-      $('text#noderepeat').text(""+val)
     }
   }
       return params;
@@ -219,13 +221,16 @@
 	txt.push(this.paramOptions[i].values[this.params[this.paramOptions[i].name]])
       }
     }
-        if(this.paramOptions[6].values[this.params[this.paramOptions[6].name]]==0){
-        
+    if(this.id.indexOf(this.type)==-1){
+          if(this.paramOptions[6].values[this.params[this.paramOptions[6].name]]=="NO"){
+           
 
-          $('image#nodeonoff').attr('href','img/on.png')
-     }   
-    else{
-        $('image#nodeonoff').attr('href','img/off.png')
+            $('image#nodeonoff'+this.id).attr('href','img/off.png')
+       }   
+      else{
+         
+          $('image#nodeonoff'+this.id).attr('href','img/on.png')
+      }
     }
     $('text#noderepeat').text(""+this.paramOptions[7].values[this.params[this.paramOptions[7].name]])
     txt=txt.join(' · ')
