@@ -86,7 +86,16 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		var img=$('<img src="'+icon+'">')
 		var br=$('<br>')
 	
-		li.draggable({helper:'clone',stack:'.svgscroll', opacity:0.5})
+		
+		li.draggable({helper:'clone',stack:'.svgscroll', opacity:0.5,drag:function(e){
+			var toolsPosition = $('#tools').position()
+			var dragging = $('.ui-draggable-dragging')
+			if(dragging.position().top+dragging.height() >= toolsPosition.top){
+				dragging.css('background','red');
+			}else{
+				dragging.css('background','');
+			}
+		}})
 		li.bind('dragstop',function(event, ui){
 		
 		// Transform from cursor coordinates to svg coordinates
@@ -94,18 +103,24 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		  var canvas=$('svg').position()
 		  var p = {x:pc.left-canvas.left, y:pc.top-canvas.top}
 		  
-		  var pos = that.behaviour.view.root.createSVGPoint();
-		  pos.x = p.x
-		  pos.y = p.y
-		  var gr
-		  if(!that.behaviour.view.svgRoot)
-		    gr = that.behaviour.view.getRoot(that.behaviour.view.root);
-		  else
-		    gr = that.behaviour.view.svgRoot
+		  var toolsPosition = $('#tools').position()
+		  var dragging = $('.ui-draggable-dragging')
+	      if(dragging.position().top+dragging.height() < toolsPosition.top){
 
-		  pos = pos.matrixTransform(gr.getCTM().inverse());
+			  var pos = that.behaviour.view.root.createSVGPoint();
+			  pos.x = p.x
+			  pos.y = p.y
+			  var gr
+			  if(!that.behaviour.view.svgRoot)
+			    gr = that.behaviour.view.getRoot(that.behaviour.view.root);
+			  else
+			    gr = that.behaviour.view.svgRoot
+
+			  pos = pos.matrixTransform(gr.getCTM().inverse());
 	    
-		  that.behaviour.addNode($(this).attr('node-type'),null,null,{x:pos.x,y:pos.y})
+	      
+			  that.behaviour.addNode($(this).attr('node-type'),null,null,{x:pos.x,y:pos.y})
+		  }
 		})
 		a.append(d).append(img).append(br).append(name)
 		li.append(a)

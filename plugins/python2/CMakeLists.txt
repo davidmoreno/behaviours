@@ -15,9 +15,9 @@ install(TARGETS python2
 	)
 	
 install(DIRECTORY static/nodes static/img static/js
-	DESTINATION shared/ab/static/python2
+	DESTINATION share/ab/static/python2
 	)
 
 install(FILES __init__.py
-	DESTINATION shared/ab/python2
+	DESTINATION share/ab/python2
 	)
