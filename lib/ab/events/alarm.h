@@ -44,6 +44,7 @@ namespace AB {
     int getMinute() { return minute; };
     Repeat getRepeatPolicy() { return repeatPolicy; };
     int getNodeon(){return nodeon;}
+    int getNoderepeat(){return noderepeat;}
 
   private:
     int day;
@@ -53,6 +54,7 @@ namespace AB {
     int minute;
     Repeat repeatPolicy;
     int nodeon;
+    int noderepeat;
   };
 
   class AlarmManager : public AB::Event {

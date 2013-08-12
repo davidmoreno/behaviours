@@ -10,7 +10,8 @@
 			       {type:Array,values:['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23'],name:'hour'},
 			       {type:Array,values:['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59'],name:'minute'},
              {type:Array,text:current_language.repeat,values:[current_language.never,current_language.always,current_language.weekdays,current_language.weekend,current_language.mon,current_language.tue,current_language.wed,current_language.thu,current_language.fri,current_language.sat,current_language.sun],name:'repeat'},
-			       {type:Array,values:['00','01'],name:'nodeon'}
+			       {type:Array,values:['YES','NO'],name:'nodeon'},
+             {type:Array,values:['00','01','02'],name:'noderepeat'}
             ]})
 
 
@@ -115,6 +116,24 @@
     cb.attr('id',i)
     cb.val(this.params[p[i].name])
     li.append(cb)
+
+    var li=$('<li>')
+    ul.append(li)
+    li.text(current_language.repeat)
+    var i=7
+    var cb=$('<select>')
+    for (var j in p[i].values){
+      var opt=$('<option>')
+      opt.append(p[i].values[j])
+      opt.attr('value',j)
+      cb.append(opt)
+    }
+    cb.change(function(){
+    that.realtime_update_base()
+    })
+    cb.attr('id',i)
+    cb.val(this.params[p[i].name])
+    li.append(cb)
     
     $('#dialog #title').html(current_language.configuration_of+this.type+' <span class="name">(object id '+this.id+')</span>')
     $('#dialog #content').html(ul)
@@ -157,7 +176,7 @@
 	else
 	  params[p[i].name]=val
 	
-      }
+      
     if(p[i].name=="nodeon"){
       if(val==0){
 
@@ -168,6 +187,11 @@
       }
 
     }
+    if(p[i].name=="noderepeat"){
+
+      $('text#noderepeat').text(""+val)
+    }
+  }
       return params;
     }
     return {}
@@ -187,11 +211,23 @@
 	else
 	  txt.push(this.paramOptions[i].values[this.params[this.paramOptions[i].name]])
       } 
+          txt.push(this.paramOptions[6].values[this.params[this.paramOptions[6].name]])
+          txt.push(this.paramOptions[7].values[this.params[this.paramOptions[7].name]])
+
     } else {
-      for (var i=3;i<6;i++) {
+      for (var i=3;i<8;i++) {
 	txt.push(this.paramOptions[i].values[this.params[this.paramOptions[i].name]])
       }
     }
+        if(this.paramOptions[6].values[this.params[this.paramOptions[6].name]]==0){
+        
+
+          $('image#nodeonoff').attr('href','img/on.png')
+     }   
+    else{
+        $('image#nodeonoff').attr('href','img/off.png')
+    }
+    $('text#noderepeat').text(""+this.paramOptions[7].values[this.params[this.paramOptions[7].name]])
     txt=txt.join(' · ')
     this.width=txt.length*25
     $('#'+this.id+' text#param').text(txt)
