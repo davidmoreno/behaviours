@@ -67,15 +67,35 @@ void Alarm::setAttr(const std::string &k, const AB::Object s)
     return;
   }
   else if(k== "nodeon"){
-    /*if(manageralarm){
-      manageralarm->removeNode(this->name());
-    }*/
+
     //manager->removeNode(this->name());
     /*printf("%s\n", "El nombre es: ");
     printf("%s\n",this->name().c_str() );
   */
     //listevent.erase(this);
     nodeon = object2int(s);
+    if(nodeon==0){
+      WARNING("NODEON00000000000000000000000000000000000000000000000Xx");
+      if(manageralarm){
+        WARNING("EntraXx");        
+       if(!manageralarm->findNode(this->name())){
+         WARNING("MeteXx");
+          this->setManager(manageralarm);
+       }
+      }
+    }
+    else{
+      if(manageralarm){
+        
+        manageralarm->removeNode(this->name());
+          Event *ev=manageralarm->getEvent("__alarm_manager__");
+          if (ev) {
+            WARNING("HOLAXXXXXXXXXXXXXXXXXXXXXx");
+            manageralarm->removeNode(ev->name());
+          }
+      }
+    }
+    
     DEBUG("alarm year requested: %d", nodeon);
     return;
   }
@@ -132,10 +152,11 @@ AttrList Alarm::attrList()
 
 void Alarm::setManager(Manager *man)
 {
-  //manageralarm=man;
-  //WARNING("HOLAXXXXXXXXXXXXXXXXXXXXXx");
+  manageralarm=man;
+  
   Event *ev=man->getEvent("__alarm_manager__");
   if (!ev) {
+    WARNING("SETMANAGERXXXXXXXXXXXXXXXXXXXXXx");
     ev=new AlarmManager;
       man->addNode(ev);
     ev->setManager(man);

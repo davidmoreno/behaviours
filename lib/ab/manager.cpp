@@ -130,22 +130,35 @@ void Manager::addNode(Node *n)
     n->setName();
   n->setManager(this);
   Event *ev=dynamic_cast<Event*>(n);
-  if (ev) {
-  
+  if (ev) {  
     activeEvents.insert(ev);
+    printf("%s\n","activeEvents lenght" );
+    printf("%d\n", activeEvents.size());
     DEBUG("%s at active events", ev->name().c_str());
   }
   nodes.insert(n);
+   printf("%s\n","nodes lenght" );
+  printf("%d\n", nodes.size());
   syncOnNextCycle=true;
 }
 void Manager::removeNode( std::string id){
     for(Event *ev: activeEvents) {
       if(strcmp(ev->name().c_str(),id.c_str())==0){
         WARNING("SON IGUALES");
+        activeEvents.erase(ev);
       }
 
     }
 
+}
+bool Manager::findNode(std::string id){
+   for(Event *ev: activeEvents) {
+      if(strcmp(ev->name().c_str(),id.c_str())==0){
+        return true;
+      }
+
+    }
+    return false;
 }
 
 void Manager::deleteNode(Node *n, bool also_delete_object){

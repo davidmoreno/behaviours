@@ -57,7 +57,7 @@ namespace AB {
     Repeat repeatPolicy;
     int nodeon;
     int noderepeat;
-   // AB::Manager *manageralarm;
+    AB::Manager *manageralarm;
   };
 
   class AlarmManager : public AB::Event {

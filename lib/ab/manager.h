@@ -92,6 +92,10 @@ namespace AB {
      */
     void removeNode(std::string id);
     /**
+     * @short Find a node to the manager.
+     */
+    bool findNode(std::string id);
+    /**
      * @short Deletes a node from the manager. If also_delete_object is true, it is deleted. 
      */
     void deleteNode(Node *n, bool also_delete_object=true);
