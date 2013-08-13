@@ -48,6 +48,7 @@ namespace AB {
     std::string name;
     std::string description;
     std::vector<double> viewpoint;
+
     
   };
   
@@ -86,6 +87,10 @@ namespace AB {
      * @short Adds a node to the manager.
      */
     void addNode(Node *);
+    /**
+     * @short Remove a node to the manager.
+     */
+    void removeNode(std::string id);
     /**
      * @short Deletes a node from the manager. If also_delete_object is true, it is deleted. 
      */
@@ -276,6 +281,7 @@ namespace AB {
     std::queue<Node *> pendingNotifications;
     std::mutex pendingNotificationsMutex;
     Meta metadata;
+    
 
     std::map<Node*, std::vector<Connection*> > nodeConnections;
 

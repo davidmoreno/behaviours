@@ -26,7 +26,7 @@
 
 
 using namespace AB;
-
+using namespace std;
 Alarm::Alarm(const char *type) : Event(type)
 {
   day = 1; // 1-31
@@ -67,6 +67,14 @@ void Alarm::setAttr(const std::string &k, const AB::Object s)
     return;
   }
   else if(k== "nodeon"){
+    /*if(manageralarm){
+      manageralarm->removeNode(this->name());
+    }*/
+    //manager->removeNode(this->name());
+    /*printf("%s\n", "El nombre es: ");
+    printf("%s\n",this->name().c_str() );
+  */
+    //listevent.erase(this);
     nodeon = object2int(s);
     DEBUG("alarm year requested: %d", nodeon);
     return;
@@ -124,10 +132,12 @@ AttrList Alarm::attrList()
 
 void Alarm::setManager(Manager *man)
 {
+  //manageralarm=man;
+  //WARNING("HOLAXXXXXXXXXXXXXXXXXXXXXx");
   Event *ev=man->getEvent("__alarm_manager__");
   if (!ev) {
     ev=new AlarmManager;
-    man->addNode(ev);
+      man->addNode(ev);
     ev->setManager(man);
   }
 }
@@ -170,7 +180,7 @@ bool AlarmManager::check()
   time_t rawtime;
   time ( &rawtime );
 
-  return checkAlarm(rawtime);
+    return checkAlarm(rawtime);
 
 }
 
@@ -186,84 +196,86 @@ bool AlarmManager::checkAlarm(time_t rawtime)
     triggered = false;
       
   for(Event *ev: manager->getActiveEvents()) {
-    
+
     Alarm *tev=dynamic_cast<Alarm*>(ev);
-    
+   // WARNING(tev->getMonth());
     if (tev && tev->getHour() == timeinfo->tm_hour && tev->getMinute() == timeinfo->tm_min ) {
+      printf("%d\n",tev->getNodeon());
+
+        switch((int)tev->getRepeatPolicy()) {
+        
+  	case Alarm::Never:
+  	  
+  	  if (tev->getDay() == timeinfo->tm_mday && 
+  	      tev->getMonth() == timeinfo->tm_mon && 
+  	      tev->getYear() == timeinfo->tm_year ) {      
+  	    manager->notify(tev);	    
+  	    triggered = true;
+  	  }
+  	  break;
+  	  
+  	case Alarm::Always:
+  	    manager->notify(tev);
+  	    triggered = true;
+  	  break;
+  	  
+  	case Alarm::Weekdays:
+  	  if (timeinfo->tm_wday > 0 && timeinfo->tm_wday < 6) {
+  	    manager->notify(tev);
+  	    triggered = true;
+  	  }
+  	  break;
+  	  
+  	case Alarm::Weekends:
+  	  if (timeinfo->tm_wday == 0 || timeinfo->tm_wday == 6) {
+  	    manager->notify(tev);
+  	    triggered = true;
+  	  }
+  	  break;
+  	case Alarm::Sundays:
+  	  if (timeinfo->tm_wday == 0) {
+  	    manager->notify(tev);
+  	    triggered = true;
+  	  }
+  	  break;
+  	case Alarm::Mondays:
+  	  if (timeinfo->tm_wday == 1) {
+  	    manager->notify(tev);
+  	    triggered = true;
+  	  }
+  	  break;
+  	case Alarm::Tuesdays:
+  	  if (timeinfo->tm_wday == 2) {
+  	    manager->notify(tev);
+  	    triggered = true;
+  	  }
+  	  break;
+  	case Alarm::Wednesdays:
+  	  if (timeinfo->tm_wday == 3) {
+  	    manager->notify(tev);
+  	    triggered = true;
+  	  }
+  	  break;
+  	case Alarm::Thursdays:
+  	  if (timeinfo->tm_wday == 4) {
+  	    manager->notify(tev);
+  	    triggered = true;
+  	  }
+  	  break;
+  	case Alarm::Fridays:
+  	  if (timeinfo->tm_wday == 5) {
+  	    manager->notify(tev);
+  	    triggered = true;
+  	  }
+  	  break;
+  	case Alarm::Saturdays:
+  	  if (timeinfo->tm_wday == 6) {
+  	    manager->notify(tev);
+  	    triggered = true;
+  	  }
+  	  break; 
+        }
       
-      switch((int)tev->getRepeatPolicy()) {
-      
-	case Alarm::Never:
-	  
-	  if (tev->getDay() == timeinfo->tm_mday && 
-	      tev->getMonth() == timeinfo->tm_mon && 
-	      tev->getYear() == timeinfo->tm_year ) {      
-	    manager->notify(tev);	    
-	    triggered = true;
-	  }
-	  break;
-	  
-	case Alarm::Always:
-	    manager->notify(tev);
-	    triggered = true;
-	  break;
-	  
-	case Alarm::Weekdays:
-	  if (timeinfo->tm_wday > 0 && timeinfo->tm_wday < 6) {
-	    manager->notify(tev);
-	    triggered = true;
-	  }
-	  break;
-	  
-	case Alarm::Weekends:
-	  if (timeinfo->tm_wday == 0 || timeinfo->tm_wday == 6) {
-	    manager->notify(tev);
-	    triggered = true;
-	  }
-	  break;
-	case Alarm::Sundays:
-	  if (timeinfo->tm_wday == 0) {
-	    manager->notify(tev);
-	    triggered = true;
-	  }
-	  break;
-	case Alarm::Mondays:
-	  if (timeinfo->tm_wday == 1) {
-	    manager->notify(tev);
-	    triggered = true;
-	  }
-	  break;
-	case Alarm::Tuesdays:
-	  if (timeinfo->tm_wday == 2) {
-	    manager->notify(tev);
-	    triggered = true;
-	  }
-	  break;
-	case Alarm::Wednesdays:
-	  if (timeinfo->tm_wday == 3) {
-	    manager->notify(tev);
-	    triggered = true;
-	  }
-	  break;
-	case Alarm::Thursdays:
-	  if (timeinfo->tm_wday == 4) {
-	    manager->notify(tev);
-	    triggered = true;
-	  }
-	  break;
-	case Alarm::Fridays:
-	  if (timeinfo->tm_wday == 5) {
-	    manager->notify(tev);
-	    triggered = true;
-	  }
-	  break;
-	case Alarm::Saturdays:
-	  if (timeinfo->tm_wday == 6) {
-	    manager->notify(tev);
-	    triggered = true;
-	  }
-	  break; 
-      }
     }      
   } 
   

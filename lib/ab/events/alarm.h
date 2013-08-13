@@ -37,6 +37,8 @@ namespace AB {
 
     void setManager(AB::Manager* manager);
 
+
+
     int getDay() { return day; };
     int getMonth() { return month; };
     int getYear() { return year; };
@@ -55,6 +57,7 @@ namespace AB {
     Repeat repeatPolicy;
     int nodeon;
     int noderepeat;
+   // AB::Manager *manageralarm;
   };
 
   class AlarmManager : public AB::Event {

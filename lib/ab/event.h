@@ -73,6 +73,7 @@ namespace AB {
      * @short Function to be called from time to time, to check if the event happends. Check flags.
      */
     virtual bool check() {  WARNING("::check not implemented at %s",type());  return false; };
+    virtual bool active() {return true;}
     /**
      * @short Function to be called if sync flag exists, to indicate that the graph has changed.
      *

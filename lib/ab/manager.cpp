@@ -131,11 +131,21 @@ void Manager::addNode(Node *n)
   n->setManager(this);
   Event *ev=dynamic_cast<Event*>(n);
   if (ev) {
+  
     activeEvents.insert(ev);
     DEBUG("%s at active events", ev->name().c_str());
   }
   nodes.insert(n);
   syncOnNextCycle=true;
+}
+void Manager::removeNode( std::string id){
+    for(Event *ev: activeEvents) {
+      if(strcmp(ev->name().c_str(),id.c_str())==0){
+        WARNING("SON IGUALES");
+      }
+
+    }
+
 }
 
 void Manager::deleteNode(Node *n, bool also_delete_object){
@@ -286,6 +296,7 @@ void Manager::exec()
       if (ev->flags()&Event::Polling) {
         if (ev->check()) {
           DEBUG("Event %s is triggered!", ev->name().c_str());
+          WARNING("ioahsfioashfuiasfhauisfhasufhasdfasdfasdfasdfasdf");
           notify(ev);
         }
         if (syncOnNextCycle) // It will continue with the list, unless a sync (graph change) is performed.
