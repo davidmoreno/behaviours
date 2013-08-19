@@ -90,7 +90,11 @@ namespace AB {
     /**
      * @short Remove a node to the manager.
      */
-    void removeNode(std::string id);
+    void removeEvent(std::string id);
+    /**
+     * @short Adds a event to the manager.
+     */
+    void addEvent(Event *ev);
     /**
      * @short Find a node to the manager.
      */

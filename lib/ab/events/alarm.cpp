@@ -87,11 +87,11 @@ void Alarm::setAttr(const std::string &k, const AB::Object s)
     else{
       if(manageralarm){
         
-        manageralarm->removeNode(this->name());
+        manageralarm->removeEvent(this->name());
           Event *ev=manageralarm->getEvent("__alarm_manager__");
           if (ev) {
             WARNING("HOLAXXXXXXXXXXXXXXXXXXXXXx");
-            manageralarm->removeNode(ev->name());
+            manageralarm->removeEvent(ev->name());
           }
       }
     }

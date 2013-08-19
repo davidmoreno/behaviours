@@ -46,6 +46,11 @@ Start.prototype.configure = function(){
     $('#dialog #title').html(current_language.configuration_of+this.type+' <span class="name">(object id '+this.id+')</span>')
     $('#dialog #content').html(ul)
 }
+
+Start.prototype.realtime_update = function(){
+    this.params=this.getParams()      
+  }
+
 Start.prototype.getParams = function(){
 	var p=this.paramOptions
     if (p){
@@ -82,7 +87,6 @@ Start.prototype.update=function(){
     var txt=[]
   	for(var i=0;i<2;i++){
     	txt.push(this.paramOptions[i].values[this.params[this.paramOptions[i].name]])
-   		txt.push(this.paramOptions[i].values[this.params[this.paramOptions[i].name]])
    		if(this.id.indexOf(this.type)==-1){
         if(this.paramOptions[i].name=="nodeon") {
 		        if(this.paramOptions[i].values[this.params[this.paramOptions[i].name]]=="NO"){
@@ -100,8 +104,18 @@ Start.prototype.update=function(){
     
 	this.width=this.height
 	txt=txt.join(' · ')
-	$('#'+this.id+' text#param').text(txt)
+	$('#'+this.id+' text#param').remove()
 	$('#'+this.id+' rect').attr('width',this.width)
 }
+  Start.prototype.acceptConfigure=function(){
+    try{
+    this.params=this.getParams()
+    this.update()
+    alert(current_language.alert_bot_time);
+    }
+    catch(e){
+      alert(current_language.alert_accept_configure);
+    }
+  }
 main.behaviour.nodeFactory.add('start',Start)
 }())

@@ -21,55 +21,48 @@
 
 #include <ab/event.h>
 
-namespace AB {
-  class Start : public AB::Event {
-  public:
-    int nodeon;
-    int noderepeat;
-    Start(const char* type = "start") : Event(type) { setFlags(Polling|NeedSync); 
-        nodeon=0;
-        noderepeat=0;
-    }
-    virtual bool sync() {
-      setFlags(Polling|NeedSync);
-      return false;
-    }
-    virtual bool check() {
-      setFlags(NeedSync);
-      return true;
-    }
-    virtual void setAttr(const std::string &k, Object s){
-      if(k== "nodeon"){
+ namespace AB {
+ 	class Start : public AB::Event {
+ 	public:
+ 		int nodeon;
+ 		int noderepeat;
+ 		AB::Manager *manager;
+ 		AB::Event *event;
+ 		Start(const char* type = "start") : Event(type) { setFlags(Polling|NeedSync); 
+ 			nodeon=0;
+ 			noderepeat=0;
 
-             nodeon = object2int(s);        
-        DEBUG("start nodeon requested: %d", nodeon);
-        return;
-      }
-       else if(k== "noderepeat"){
-        noderepeat = object2int(s);
-        DEBUG("start noderepeat requested: %d", noderepeat);
-        return;
-      }
-      Event::setAttr(k,s);
+ 		}
+		virtual	void setManager(Manager* m)
+		{
+		  manager=m;
+		}
+ 		virtual bool sync() {
+ 			setFlags(Polling|NeedSync);
+ 			return false;
+ 		}
+ 		virtual bool check() {
+ 			setFlags(NeedSync);
+ 			return true;
+ 		}
+ 		virtual void setAttr(const std::string &k, Object s);
+ 		virtual Object attr(const std::string &key){
+ 			if (key == "nodeon") {
+ 				return to_object(nodeon);
+ 			}
+ 			if(key =="noderepeat"){
+ 				return to_object(noderepeat);
+ 			}
+ 			return Event::attr(key);
+ 		}
+ 		virtual AttrList attrList(){
+ 			AttrList l=Event::attrList();
+ 			l.push_back("nodeon");
+ 			l.push_back("noderepeat");
+ 			return l;
 
-  }
-  virtual Object attr(const std::string &key){
-      if (key == "nodeon") {
-        return to_object(nodeon);
-      }
-      if(key =="noderepeat"){
-        return to_object(noderepeat);
-      }
-      return Event::attr(key);
-  }
-    virtual AttrList attrList(){
-      AttrList l=Event::attrList();
-        l.push_back("nodeon");
-        l.push_back("noderepeat");
-        return l;
-
-    }
-  };
-}
+ 		}
+ 	};
+ }
 
 #endif

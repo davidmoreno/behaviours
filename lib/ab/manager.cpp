@@ -141,7 +141,7 @@ void Manager::addNode(Node *n)
   printf("%d\n", nodes.size());
   syncOnNextCycle=true;
 }
-void Manager::removeNode( std::string id){
+void Manager::removeEvent( std::string id){
     for(Event *ev: activeEvents) {
       if(strcmp(ev->name().c_str(),id.c_str())==0){
         WARNING("SON IGUALES");
@@ -150,6 +150,15 @@ void Manager::removeNode( std::string id){
 
     }
 
+}
+void Manager::addEvent(Event *ev){
+  if(ev){
+    printf("%s\n","activeEvents lenght" );
+    printf("%d\n", activeEvents.size());
+    activeEvents.insert(ev);
+
+    printf("%d\n", activeEvents.size());
+  }
 }
 bool Manager::findNode(std::string id){
    for(Event *ev: activeEvents) {
