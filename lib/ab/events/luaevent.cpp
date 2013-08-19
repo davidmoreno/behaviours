@@ -38,6 +38,12 @@ Object LUAEvent::attr(const std::string& paramName)
     return to_object(syncCode);
   if (paramName=="flags")
     return to_object(flags());
+  if (paramName == "nodeon") {
+        return to_object(nodeon);
+      }
+      if(paramName =="noderepeat"){
+        return to_object(noderepeat);
+      }
   return Node::attr(paramName);
 }
 
@@ -47,6 +53,8 @@ AttrList LUAEvent::attrList()
   l.push_back("code");
   l.push_back("sync");
   l.push_back("flags");
+  l.push_back("nodeon");
+  l.push_back("noderepeat");
   return l;
 }
 
@@ -74,7 +82,39 @@ void LUAEvent::setAttr(const std::string& paramName, AB::Object value)
   } else if (paramName=="flags") {
     setFlags(object2int(value));
     return;
-  } else
+  } 
+  else if(paramName== "nodeon"){
+        nodeon = object2int(value);  
+        printf("%d\n",nodeon );
+        if(nodeon==0){
+          
+          if(manager){
+            WARNING("Va a introducir el evento");        
+            if(!manager->findNode(this->name())){
+              WARNING("Mete el evento");
+              manager->addEvent(event);
+            }
+          }
+        }
+        else{
+          if(manager){
+            if(manager->findNode(this->name())){
+              WARNING("Borra el evento");
+              event=manager->getEvent(this->name());
+              manager->removeEvent(this->name());
+            }
+          }
+        }
+              
+        DEBUG("start nodeon requested: %d", nodeon);
+        return;
+      }
+      else if(paramName== "noderepeat"){
+        noderepeat = object2int(value);
+        DEBUG("start noderepeat requested: %d", noderepeat);
+        return;
+      } 
+    else
     return Node::setAttr(paramName,value);
 }
 
