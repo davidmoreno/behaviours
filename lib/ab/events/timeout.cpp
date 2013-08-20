@@ -78,39 +78,37 @@ void Timeout::setAttr(const std::string& k, Object v)
   // n=AB::object2int(v);
   // DEBUG("Set timeout count to %f",limit);
   }
-   else if(k== "nodeon"){
-
-    nodeon = object2int(v);
-    if(nodeon==0){
-      WARNING("NODEON00000000000000000000000000000000000000000000000Xx");
-      if(manager){
-        WARNING("EntraXx");        
-       if(!manager->findNode(this->name())){
-         WARNING("MeteXx");
-          this->setManager(manager);
-       }
-      }
-    }
-    else{
-      if(manager){
-        
-        manager->removeEvent(this->name());
-          Event *ev=manager->getEvent("__alarm_manager__");
-          if (ev) {
-            WARNING("HOLAXXXXXXXXXXXXXXXXXXXXXx");
-            manager->removeEvent(ev->name());
+ else if(k== "nodeon"){
+        nodeon = object2int(v);  
+        printf("%d\n",nodeon );
+        if(nodeon==0){
+          
+          if(manager){
+            WARNING("Va a introducir el evento");        
+            if(!manager->findNode(this->name())){
+              WARNING("Mete el evento");
+              manager->addEvent(event);
+            }
           }
+        }
+        else{
+          if(manager){
+            if(manager->findNode(this->name())){
+              WARNING("Borra el evento");
+              event=manager->getEvent(this->name());
+              manager->removeEvent(this->name());
+            }
+          }
+        }
+              
+        DEBUG("timeout nodeon requested: %d", nodeon);
+        return;
       }
-    }
-    
-    DEBUG("timeout year requested: %d", nodeon);
-    return;
-  }
-   else if(k== "noderepeat"){
-    noderepeat = object2int(v);
-    DEBUG("timeout year requested: %d", noderepeat);
-    return;
-  }
+      else if(k== "noderepeat"){
+        noderepeat = object2int(v);
+        DEBUG("timeout noderepeat requested: %d", noderepeat);
+        return;
+      }
    else {
     Node::setAttr(k,v);
   }
@@ -127,6 +125,7 @@ bool Timeout::sync()
 
 bool Timeout::check()
 {
+  INFO("Time entra en check");
   struct timeval now;
   gettimeofday(&now, NULL);
   if (t>=0) {

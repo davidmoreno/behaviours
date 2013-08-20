@@ -66,39 +66,37 @@ void Alarm::setAttr(const std::string &k, const AB::Object s)
     DEBUG("alarm repeat policy requested: %d", (int)repeatPolicy);
     return;
   }
-  else if(k== "nodeon"){
-
-    nodeon = object2int(s);
-    if(nodeon==0){
-      WARNING("NODEON00000000000000000000000000000000000000000000000Xx");
-      if(manageralarm){
-        WARNING("EntraXx");        
-       if(!manageralarm->findNode(this->name())){
-         WARNING("MeteXx");
-          this->setManager(manageralarm);
-       }
-      }
-    }
-    else{
-      if(manageralarm){
-        
-        manageralarm->removeEvent(this->name());
-          Event *ev=manageralarm->getEvent("__alarm_manager__");
-          if (ev) {
-            WARNING("HOLAXXXXXXXXXXXXXXXXXXXXXx");
-            manageralarm->removeEvent(ev->name());
+ else if(k== "nodeon"){
+        nodeon = object2int(s);  
+        printf("%d\n",nodeon );
+        if(nodeon==0){
+          
+          if(manageralarm){
+            WARNING("Va a introducir el evento");        
+            if(!manageralarm->findNode(this->name())){
+              WARNING("Mete el evento");
+              manageralarm->addEvent(event);
+            }
           }
+        }
+        else{
+          if(manageralarm){
+            if(manageralarm->findNode(this->name())){
+              WARNING("Borra el evento");
+              event=manageralarm->getEvent(this->name());
+              manageralarm->removeEvent(this->name());
+            }
+          }
+        }
+              
+        DEBUG("start nodeon requested: %d", nodeon);
+        return;
       }
-    }
-    
-    DEBUG("alarm year requested: %d", nodeon);
-    return;
-  }
-   else if(k== "noderepeat"){
-    noderepeat = object2int(s);
-    DEBUG("alarm year requested: %d", noderepeat);
-    return;
-  }
+      else if(k== "noderepeat"){
+        noderepeat = object2int(s);
+        DEBUG("start noderepeat requested: %d", noderepeat);
+        return;
+      }
   Event::setAttr(k,s);
 }
 

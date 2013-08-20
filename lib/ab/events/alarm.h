@@ -58,6 +58,7 @@ namespace AB {
     int nodeon;
     int noderepeat;
     AB::Manager *manageralarm;
+    AB::Event * event;
   };
 
   class AlarmManager : public AB::Event {
