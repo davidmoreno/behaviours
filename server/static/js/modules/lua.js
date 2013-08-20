@@ -144,6 +144,8 @@ $(editor).find('.CodeMirror-scroll').attr('height: 100%;')
 }
 
 lua_accept_configure = function(){
+  
+  this.params=this.getParams()
   this.params['code']=this.editor.getValue()
   this.update()
 }

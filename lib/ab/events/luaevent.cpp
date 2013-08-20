@@ -106,12 +106,12 @@ void LUAEvent::setAttr(const std::string& paramName, AB::Object value)
           }
         }
               
-        DEBUG("start nodeon requested: %d", nodeon);
+        DEBUG("luaevent nodeon requested: %d", nodeon);
         return;
       }
       else if(paramName== "noderepeat"){
         noderepeat = object2int(value);
-        DEBUG("start noderepeat requested: %d", noderepeat);
+        DEBUG("luaevent noderepeat requested: %d", noderepeat);
         return;
       } 
     else

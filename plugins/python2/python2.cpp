@@ -44,6 +44,10 @@ namespace AB{
 	class Python2Event : public Event{
 		std::string code;
 		PyObject *compiled_code;
+		int nodeon;
+    	int noderepeat;
+    	Event * event;
+    	Manager *manager;
 	public:
 		Python2Event(const char* type);
     virtual ~Python2Event();
@@ -51,9 +55,9 @@ namespace AB{
 		
     virtual AttrList attrList();
     virtual Object attr(const std::string& name);
-    virtual void setAttr(const std::string& name, Object obj);
-		
+    virtual void setAttr(const std::string& name, Object obj);		
     virtual void setManager(Manager* manager);
+
 	};
 	namespace Python2{
 		PyObject *globals;
@@ -205,7 +209,8 @@ bool Python2Event::check()
 	else{
 		PyObject_Print(obj, stdout, Py_PRINT_RAW);
 		Py_DECREF(obj);
-	}
+	} 
+
 	Py_DECREF(globals);
 	Py_DECREF(locals);
 	return false;
@@ -215,12 +220,21 @@ AttrList Python2Event::attrList()
 {
 	auto attr=AB::Node::attrList();
 	attr.push_back("code");
+	attr.push_back("nodeon");
+  	attr.push_back("noderepeat");
 	return attr;
 }
 
 Object Python2Event::attr(const std::string& name)
 {
-	return to_object(code);
+	
+	if (name == "nodeon") {
+        return to_object(nodeon);
+    }
+    if(name =="noderepeat"){
+        return to_object(noderepeat);
+    }
+    return to_object(code);
 }
 
 void Python2Event::setAttr(const std::string& name, Object obj)
@@ -232,6 +246,37 @@ void Python2Event::setAttr(const std::string& name, Object obj)
 		if (!compiled_code)
 			PyErr_Print();
 	}
+	else if(name== "nodeon"){
+        nodeon = object2int(obj);  
+        printf("%d\n",nodeon );
+        if(nodeon==0){
+          
+          if(manager){
+            WARNING("Va a introducir el evento");        
+            if(!manager->findNode(this->name())){
+              WARNING("Mete el evento");
+              manager->addEvent(event);
+            }
+          }
+        }
+        else{
+          if(manager){
+            if(manager->findNode(this->name())){
+              WARNING("Borra el evento");
+              event=manager->getEvent(this->name());
+              manager->removeEvent(this->name());
+            }
+          }
+        }
+              
+        DEBUG("python2 nodeon requested: %d", nodeon);
+        return;
+      }
+      else if(name== "noderepeat"){
+        noderepeat = object2int(obj);
+        DEBUG("python2 noderepeat requested: %d", noderepeat);
+        return;
+      } 
 	else
 		return Event::setAttr(name, obj);
 }
@@ -239,5 +284,6 @@ void Python2Event::setAttr(const std::string& name, Object obj)
 void Python2Event::setManager(Manager* manager)
 {
 	AB::Node::setManager(manager);
+	this->manager=manager;
 	AB::Python2::ab_module_manager=manager;
 }
