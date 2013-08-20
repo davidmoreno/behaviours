@@ -68,11 +68,6 @@ void Alarm::setAttr(const std::string &k, const AB::Object s)
   }
   else if(k== "nodeon"){
 
-    //manager->removeNode(this->name());
-    /*printf("%s\n", "El nombre es: ");
-    printf("%s\n",this->name().c_str() );
-  */
-    //listevent.erase(this);
     nodeon = object2int(s);
     if(nodeon==0){
       WARNING("NODEON00000000000000000000000000000000000000000000000Xx");

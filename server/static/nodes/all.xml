@@ -42,7 +42,7 @@
 		<type>event</type>
 		<icon src="timeout.png"/>
 		<pluginname>Control</pluginname>
-		<params>
+		<!--<params>
 			<param id="timeout">
 				<type>float</type>
 				<description lang="en">Seconds between event each event activation </description>
@@ -51,8 +51,8 @@
 				<min>0.1</min>
 				<default>0.5</default>
 			</param>
-		</params>
-		
+		</params>-->
+		<js>modules/timeout.js</js>
 	</node-description>
 	
 	<node-description id="alarm">

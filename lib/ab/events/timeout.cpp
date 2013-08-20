@@ -30,6 +30,8 @@ Timeout::Timeout(const char* type) : Event(type)
   limit=-1;
   t=-1;
   n=0;
+  nodeon=0;
+  noderepeat=0;
 }
 
 Object Timeout::attr(const std::string& k)
@@ -40,6 +42,12 @@ Object Timeout::attr(const std::string& k)
     return to_object(limit);
   else if (k=="elapsed" || k=="t")
     return to_object(t);
+  else if (k == "nodeon") {
+    return to_object(nodeon);
+  }
+  else if(k =="noderepeat"){
+    return to_object(noderepeat);
+  }
   return Node::attr(k);
 }
 
@@ -50,6 +58,8 @@ AttrList Timeout::attrList()
   l.push_back("timeout");
   l.push_back("count");
   l.push_back("elapsed");
+  l.push_back("nodeon");
+  l.push_back("noderepeat");
   return l;
 }
 
@@ -67,7 +77,41 @@ void Timeout::setAttr(const std::string& k, Object v)
   // read_only attribute
   // n=AB::object2int(v);
   // DEBUG("Set timeout count to %f",limit);
-  } else {
+  }
+   else if(k== "nodeon"){
+
+    nodeon = object2int(v);
+    if(nodeon==0){
+      WARNING("NODEON00000000000000000000000000000000000000000000000Xx");
+      if(manager){
+        WARNING("EntraXx");        
+       if(!manager->findNode(this->name())){
+         WARNING("MeteXx");
+          this->setManager(manager);
+       }
+      }
+    }
+    else{
+      if(manager){
+        
+        manager->removeEvent(this->name());
+          Event *ev=manager->getEvent("__alarm_manager__");
+          if (ev) {
+            WARNING("HOLAXXXXXXXXXXXXXXXXXXXXXx");
+            manager->removeEvent(ev->name());
+          }
+      }
+    }
+    
+    DEBUG("timeout year requested: %d", nodeon);
+    return;
+  }
+   else if(k== "noderepeat"){
+    noderepeat = object2int(v);
+    DEBUG("timeout year requested: %d", noderepeat);
+    return;
+  }
+   else {
     Node::setAttr(k,v);
   }
     
@@ -98,4 +142,9 @@ bool Timeout::check()
     t=0;
   lastT=now;
   return false;
+}
+void Timeout::setManager(Manager *man)
+{
+  manager=man;
+
 }
