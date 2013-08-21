@@ -55,8 +55,6 @@ namespace AB {
     int hour;
     int minute;
     Repeat repeatPolicy;
-    int nodeon;
-    int noderepeat;
     AB::Manager *manageralarm;
     AB::Event * event;
   };

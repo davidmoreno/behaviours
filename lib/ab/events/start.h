@@ -24,8 +24,6 @@
  namespace AB {
  	class Start : public AB::Event {
  	public:
- 		int nodeon;
- 		int noderepeat;
  		AB::Manager *manager;
  		AB::Event *event;
  		Start(const char* type = "start") : Event(type) { setFlags(Polling|NeedSync); 

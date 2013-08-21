@@ -54,6 +54,8 @@ namespace AB {
    */
   class Event : public Node {
   public:
+    int nodeon;
+    int noderepeat;
     /**
      * @short Extra flags for AB::Event
      */

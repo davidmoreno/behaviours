@@ -423,11 +423,14 @@ Action.prototype.t='action'
 Event = function(id, options, behaviour){
 	Node.call(this, id, options, behaviour)
 	this.t='event'
+	this.changeactivityas=false
+	this.changevalor=0
 //	this.x=100
 }
 Event.prototype=new Node;
 Event.prototype.t='event'
-
+Event.prototype.changevalor=0
+Event.prototype.changeactivity=false
 Event.prototype.paint = function(options){
 	var viewpoint=$('g#viewpoint')
 	svggroup=svg.group(viewpoint, this.id, {transform:'translate('+this.x+','+this.y+')', stroke:'#000000'} )

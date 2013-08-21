@@ -28,8 +28,6 @@ namespace AB {
     float t;
     int n;
     struct timeval lastT;
-    int nodeon;
-    int noderepeat;
     AB::Manager *manager;
     AB::Event *event;
   public:

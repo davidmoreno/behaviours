@@ -44,8 +44,6 @@ namespace AB{
 	class Python2Event : public Event{
 		std::string code;
 		PyObject *compiled_code;
-		int nodeon;
-    	int noderepeat;
     	Event * event;
     	Manager *manager;
 	public:

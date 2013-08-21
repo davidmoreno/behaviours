@@ -173,7 +173,12 @@ Behaviour.prototype.connect = function(from, to, color, id){
 	var that=this
 	var c=new Connection(from, to, {color:color})
 	if(!id) {
-	  
+	  if(to.t=="event"){
+	  	to.changeactivity=true
+	  	to.changevalor=1
+	  	to.acceptConfigure()
+	  	to.changeactivity=false
+	  }
 	  if ($('#startstop.stop').length)
 	    main.startStop(true);
       
@@ -208,6 +213,7 @@ Behaviour.prototype.disconnect = function(from, to, only_client){
 			  $.post('/node/'+c.from.id, {disconnect_from:c.to.id},function(){
 				  // Really removes when server acknowledges.
 				  c.remove()
+				 
 				  for (var i in that.connections){
 					  if (that.connections[i]==c)
 						  delete that.connections[i]
@@ -220,6 +226,7 @@ Behaviour.prototype.disconnect = function(from, to, only_client){
 			} else {
 			  
 			  c.remove()
+
 			  for (var i in that.connections){
 			    if (that.connections[i]==c)
 			      delete that.connections[i]
@@ -246,6 +253,12 @@ Behaviour.prototype.disconnect = function(from, to, only_client){
 		// Remove specific connection
 		var connections=this.connections
 		var c=this.getConnection(from, to)
+		 if(to.t=="event"){
+				  	to.changeactivity=true
+				  	to.changevalor=0
+				  	to.acceptConfigure()
+				  	to.changeactivity=false
+	  			}
 		if (c){
 			return this.disconnect(c,null,only_client)
 		}

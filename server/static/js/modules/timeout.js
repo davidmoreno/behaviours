@@ -126,7 +126,11 @@ timeout_getParams = function(){
                $('#dialog #content #'+i+' .ui-slider-handle').css('left',val+'%')
             }
             if(p[i].name=="nodeon"){
-
+              if(this.changeactivity==true){
+                val=this.changevalor
+                params[p[i].name]=val 
+                
+              }
               if(val==0){
 
                 $('image#nodeonoff'+this.id).attr('href','img/on.png')
