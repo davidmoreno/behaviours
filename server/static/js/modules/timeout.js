@@ -141,7 +141,9 @@ timeout_getParams = function(){
 
             }
             if(p[i].name=="noderepeat"){
-
+              if(val==11)                            
+                $('text#noderepeat').text("Always")              
+              else
               $('text#noderepeat').text(""+val)
             }
           }
@@ -168,7 +170,7 @@ timeout_getParams = function(){
 
   
   var timeoutEvent=extend(Event, {paramOptions: [{type:Number,min:0.1,max:100,default:0.5,name:"timeout"},{type:Array,values:['YES','NO'],name:'nodeon'},
-   {type:Array,values:['00','01','02'],name:'noderepeat'}]})
+   {type:Array,values:['Never','01','02','03','04','05','06','07','08','09','10','Always'],name:'noderepeat'}]})
 
 
 

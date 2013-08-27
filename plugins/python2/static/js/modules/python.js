@@ -177,7 +177,9 @@ python_getParams = function(){
 
             }
             if(p[i].name=="noderepeat"){
-
+              if(val==11)                            
+                $('text#noderepeat').text("Always")              
+              else
               $('text#noderepeat').text(""+val)
             }
           }
@@ -222,7 +224,7 @@ python_accept_configure = function(){
 
 var PythonAction=extend(Action, {paramOptions: [{type:Text,text:current_language.python_action_msg,name:'code'}]})
 var PythonEvent=extend(Event, {paramOptions: [{type:Text,text:current_language.python_event_msg,name:'code'},{type:Array,values:['YES','NO'],name:'nodeon'},
-   {type:Array,values:['00','01','02'],name:'noderepeat'}]})
+   {type:Array,values:['Never','01','02','03','04','05','06','07','08','09','10','Always'],name:'noderepeat'}]})
 
 PythonAction.prototype.configure=python_configure
 PythonAction.prototype.acceptConfigure=python_accept_configure

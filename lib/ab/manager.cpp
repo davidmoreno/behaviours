@@ -328,6 +328,7 @@ void Manager::sync()
 
 void Manager::exec()
 {
+  int alwaysExec=11;
   DEBUG("Start execution of behaviour");
   execThreadId=std::this_thread::get_id();
   int t=0;
@@ -340,6 +341,10 @@ void Manager::exec()
     for(Event *ev: activeEvents) {
       //DEBUG("Check %s %d", ev->name().c_str(), ev->flags());
       if (ev->flags()&Event::Polling) {
+        if(ev->noderepeat!=alwaysExec && ev->cont ==ev->noderepeat){
+            Object newob= to_object(1);
+            ev->setAttr("nodeon",newob);
+        }
         if (ev->check()) {
           DEBUG("Event %s is triggered!", ev->name().c_str());
           WARNING("ioahsfioashfuiasfhauisfhasufhasdfasdfasdfasdfasdf");

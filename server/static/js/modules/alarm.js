@@ -11,7 +11,7 @@
 			       {type:Array,values:['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59'],name:'minute'},
              {type:Array,text:current_language.repeat,values:[current_language.never,current_language.always,current_language.weekdays,current_language.weekend,current_language.mon,current_language.tue,current_language.wed,current_language.thu,current_language.fri,current_language.sat,current_language.sun],name:'repeat'},
 			       {type:Array,values:['YES','NO'],name:'nodeon'},
-             {type:Array,values:['00','01','02'],name:'noderepeat'}
+             {type:Array,values:['Never','01','02','03','04','05','06','07','08','09','10','Always'],name:'noderepeat'}
             ]})
 
 
@@ -189,9 +189,11 @@
 
       }
       if(p[i].name=="noderepeat"){
-
-        $('text#noderepeat').text(""+val)
-      }
+              if(val==11)                            
+                $('text#noderepeat').text("Always")              
+              else
+              $('text#noderepeat').text(""+val)
+            }
     }
   }
       return params;

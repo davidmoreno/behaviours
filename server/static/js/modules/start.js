@@ -1,6 +1,6 @@
 (function(){
 var Start=extend(Event,  {paramOptions: [{type:Array,values:['YES','NO'],name:'nodeon'},
-             {type:Array,values:['00','01','02'],name:'noderepeat'}
+             {type:Array,values:['Never','01','02','03','04','05','06','07','08','09','10','Always'],name:'noderepeat'}
             ]})
 Start.prototype.configure = function(){
 	var that = this
@@ -71,9 +71,11 @@ Start.prototype.getParams = function(){
 
 		      }
 		      if(p[i].name=="noderepeat"){
-
-		        $('text#noderepeat').text(""+val)
-		      }
+              if(val==11)                            
+                $('text#noderepeat').text("Always")              
+              else
+              $('text#noderepeat').text(""+val)
+            }
 		    }
     	}
     	return params;

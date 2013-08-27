@@ -56,6 +56,7 @@ namespace AB {
   public:
     int nodeon;
     int noderepeat;
+    int cont;
     /**
      * @short Extra flags for AB::Event
      */

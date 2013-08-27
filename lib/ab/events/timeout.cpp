@@ -32,6 +32,7 @@ Timeout::Timeout(const char* type) : Event(type)
   n=0;
   nodeon=0;
   noderepeat=0;
+  cont=0;
 }
 
 Object Timeout::attr(const std::string& k)
@@ -119,6 +120,7 @@ bool Timeout::sync()
 {
   DEBUG("Sync!");
   n=0;
+  cont=0;
   t=-1;
   return true;
 }
@@ -132,9 +134,11 @@ bool Timeout::check()
     float dt=(now.tv_sec-lastT.tv_sec) + float(now.tv_usec - lastT.tv_usec)/10000000.0;
     t+=dt;
     if (t>limit) {
+      cont++;
       n++;
       INFO("Time limit achieved! (count=%d, %f>%f)", n, t, limit);
       t=-1;
+
       return true;
     }
   } else

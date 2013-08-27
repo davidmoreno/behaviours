@@ -181,7 +181,9 @@ lua_getParams = function(){
 
             }
             if(p[i].name=="noderepeat"){
-
+              if(val==11)                            
+                $('text#noderepeat').text("Always")              
+              else
               $('text#noderepeat').text(""+val)
             }
           }
@@ -217,7 +219,7 @@ lua_getParams = function(){
 
   var LUAAction=extend(Action, {paramOptions: [{type:Text,text:current_language.lua_action_msg,name:'code'}]})
   var LUAEvent=extend(Event, {paramOptions: [{type:Text,text:current_language.lua_event_msg,name:'code'},{type:Array,values:['YES','NO'],name:'nodeon'},
-   {type:Array,values:['00','01','02'],name:'noderepeat'}]})
+   {type:Array,values:['Never','01','02','03','04','05','06','07','08','09','10','Always'],name:'noderepeat'}]})
 
   LUAAction.prototype.configure=lua_configure
   LUAAction.prototype.acceptConfigure=lua_accept_configure
