@@ -201,6 +201,7 @@ Connection *Manager::connect(Node *A, Node *B)
   printf("%s\n","A ver como queda" );
   printf("%d\n", e->nodeon);
  */
+  WARNING("si que llega por aqui");
   if(getEvent(B->name())!=NULL){
     Object newob= to_object(1);
     B->setAttr("nodeon",newob);
@@ -378,6 +379,14 @@ void Manager::notify(Node *node)
       lastNode=node;
       while(lastNode) {
         lastNode=notifyOne(lastNode);
+        if(lastNode){
+            Event *ec=dynamic_cast<Event*>(lastNode);
+            if (ec) {
+              WARNING("El evento es: %s",ec->name().c_str());
+              addEvent(ec);
+              lastNode=NULL;
+            }
+        }
       }
     } catch(const std::exception &e) {
       ERROR("Catched unhandled exception: %s! Stoping this chain.", e.what());
