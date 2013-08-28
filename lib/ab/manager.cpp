@@ -337,6 +337,8 @@ void Manager::exec()
       //DEBUG("Check %s %d", ev->name().c_str(), ev->flags());
       if (ev->flags()&Event::Polling) {
         if(ev->noderepeat!=alwaysExec && ev->cont ==ev->noderepeat){
+          DEBUG("Event %s is removed!", ev->name().c_str());
+          DEBUG("Cont: %d and noderepeat: %d",ev->cont,ev->noderepeat);
             Object newob= to_object(1);
             ev->setAttr("nodeon",newob);
         }

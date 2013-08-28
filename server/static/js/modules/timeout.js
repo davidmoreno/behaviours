@@ -53,12 +53,15 @@ var timeout_configure = function(){
 
 
 
-
-
-    var li=$('<li>')
+for(var i=1;i<4;i++){
+   var li=$('<li>')
     ul.append(li)
-    li.text(current_language.repeat)
-    var i=1
+    if(i==1)
+      li.text(current_language.repeat)
+    else if(i==2)
+      li.text("Times repeat event")
+    else
+      li.text("Activate ways")
     var cb=$('<select>')
     for (var j in p[i].values){
       var opt=$('<option>')
@@ -73,23 +76,9 @@ var timeout_configure = function(){
     cb.val(this.params[p[i].name])
     li.append(cb)
 
-    var li=$('<li>')
-    ul.append(li)
-    li.text(current_language.repeat)
-    var i=2
-    var cb=$('<select>')
-    for (var j in p[i].values){
-      var opt=$('<option>')
-      opt.append(p[i].values[j])
-      opt.attr('value',j)
-      cb.append(opt)
-    }
-    cb.change(function(){
-    that.realtime_update_base()
-    })
-    cb.attr('id',i)
-    cb.val(this.params[p[i].name])
-    li.append(cb)
+}
+
+
 
     $('#dialog #title').html(current_language.configuration_of+this.type+' <span class="name">(object id '+this.id+')</span>')
     $('#dialog #content').html(ul)
@@ -180,7 +169,8 @@ timeout_getParams = function(){
 
   
   var timeoutEvent=extend(Event, {paramOptions: [{type:Number,min:0.1,max:100,default:0.5,name:"timeout"},{type:Array,values:['YES','NO'],name:'nodeon'},
-   {type:Array,values:['Never','01','02','03','04','05','06','07','08','09','10','Always'],name:'noderepeat'}]})
+   {type:Array,values:['Never','01','02','03','04','05','06','07','08','09','10','Always'],name:'noderepeat'},
+  {type:Array,values:['One','All'],name:'activate'}]})
 
 
 

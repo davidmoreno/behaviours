@@ -33,6 +33,7 @@ Timeout::Timeout(const char* type) : Event(type)
   nodeon=0;
   noderepeat=0;
   cont=0;
+  activate=0;
 }
 
 Object Timeout::attr(const std::string& k)
@@ -49,6 +50,9 @@ Object Timeout::attr(const std::string& k)
   else if(k =="noderepeat"){
     return to_object(noderepeat);
   }
+  else if(k =="activate"){
+    return to_object(activate);
+  }
   return Node::attr(k);
 }
 
@@ -61,6 +65,7 @@ AttrList Timeout::attrList()
   l.push_back("elapsed");
   l.push_back("nodeon");
   l.push_back("noderepeat");
+  l.push_back("activate");
   return l;
 }
 
@@ -108,6 +113,11 @@ void Timeout::setAttr(const std::string& k, Object v)
       else if(k== "noderepeat"){
         noderepeat = object2int(v);
         DEBUG("timeout noderepeat requested: %d", noderepeat);
+        return;
+      }
+      else if(k== "activate"){
+        activate = object2int(v);
+        DEBUG("timeout activate requested: %d", noderepeat);
         return;
       }
    else {
