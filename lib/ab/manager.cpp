@@ -186,21 +186,14 @@ void Manager::deleteNode(Node *n, bool also_delete_object){
 
 Connection *Manager::connect(Node *A, Node *B)
 {
+  /* if(A->name().compare(B->name())==0){
+     DEBUG("No connect same node %s -> %s", A->name().c_str(), B->name().c_str());
+    return NULL;
+  }*/
   Connection *conn=getConnection(A,B);
   if (conn) // If exists, return existing one.
     return conn; 
-  /*if (dynamic_cast<AB::Event*>(B))
-    return NULL; // Trying to connect to an event is not allowed 
-  */conn=new Connection(this, A, B);
-  
-  /*Event *ev= getEvent(B->name());
-  printf("%s\n","A ver como queda al principio" );
-  printf("%d\n", ev->nodeon); 
-  ev->nodeon=1;
-  Event *e=getEvent(B->name());
-  printf("%s\n","A ver como queda" );
-  printf("%d\n", e->nodeon);
- */
+ conn=new Connection(this, A, B);
   WARNING("si que llega por aqui");
   if(getEvent(B->name())!=NULL){
     Object newob= to_object(1);
@@ -217,14 +210,16 @@ Connection *Manager::connect(const std::string idA, const std::string idB)
   DEBUG("Connect %s -> %s", idA.c_str(), idB.c_str());
   Node *A=getNode(idA);
 
-  /*if (!A)
+  if (!A)
     return NULL;
-*/
+
   Node *B=getNode(idB);
 
-  /*if (!B)
+  if (!B)
     return NULL;
-  */return connect(A, B);
+
+
+  return connect(A, B);
 }
 
 void Manager::disconnect(Node *A, Node *B){

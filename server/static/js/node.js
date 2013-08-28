@@ -86,8 +86,6 @@ Node.prototype.t=''
 	*/
 Node.prototype.paint = function(options){
 	var viewpoint=$('g#viewpoint')
-	svggroup=svg.group(viewpoint, this.id, {transform:'translate('+this.x+','+this.y+')', stroke:'#000000'} )
-	this.svggroup=$(svggroup)
 	if (options && options.fill)
 		fill=options.fill
 	else{
@@ -96,13 +94,16 @@ Node.prototype.paint = function(options){
 		else
 			fill='#aad400'
 	}
+	svggroup=svg.group(viewpoint, this.id, {transform:'translate('+this.x+','+this.y+')', stroke:'#000000',fill:fill} )
+	this.svggroup=$(svggroup)
+	
 	if (!this.width)
 		this.width=50
 	if (!this.height)
 		this.height=50
 	this.fill=fill
 	var r=svg.rect(svggroup, 0,0, this.width, this.height, 5, 5, {fill:fill,stroke:'none',filter:"url(#dropshadow)",id:'node'})
-	svg.text(svggroup, 10,this.height-8, this.type, {'font-family':'Sans','font-size':8,'cursor':'text','stroke-width':0.1})
+	svg.text(svggroup, 10,this.height-8, this.type, {'font-family':'Sans','font-size':8,'cursor':'text','stroke-width':0.1,fill:'#000000'})
 	svg.text(svggroup, 40,this.height-10, "", {'font-family':'Sans','font-size':this.height-10,'cursor':'text','id':'param','stroke-width':0.1})
 	svg.image(svggroup, 4,4, 32,32,"img/"+this.type+".png")
 	return this.svggroup

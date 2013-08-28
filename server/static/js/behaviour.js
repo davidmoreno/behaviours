@@ -167,6 +167,10 @@ Behaviour.prototype.get = function(id){
 }
 
 Behaviour.prototype.connect = function(from, to, color, id){
+	if(from.id==to.id){
+		alert("Can't connect same node");
+		return null
+	}
 	if (!this.ready)
 	  throw("System busy")
 	  
