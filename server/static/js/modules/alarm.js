@@ -181,18 +181,26 @@
 
         if(val==0){
 
-          $('image#nodeonoff'+this.id).attr('href','img/on.png')
+          $("#"+this.id+" g").attr('fill','#aad400')
+                $("#"+this.id+" #legend").attr('fill','#000000')
+                $("#"+this.id+" #param").attr('fill','#000000')
+                $("#noderepeat"+this.id).attr('fill','#000000')                
+                $('image#nodeonoff'+this.id).attr('href','img/on.png')
         }
         else{
-          $('image#nodeonoff'+this.id).attr('href','img/off.png')
+          $("#"+this.id+" g").attr('fill','#C0C0C0')
+                $("#"+this.id+" #legend").attr('fill','#666666')
+                $("#"+this.id+" #param").attr('fill','#666666')
+                $("#noderepeat"+this.id).attr('fill','#666666')
+                $('image#nodeonoff'+this.id).attr('href','img/off.png')
         }
 
       }
       if(p[i].name=="noderepeat"){
               if(val==11)                            
-                $('text#noderepeat').text("Always")              
+                $('text#noderepeat'+this.id).text("Always")              
               else
-              $('text#noderepeat').text(""+val)
+              $('text#noderepeat'+this.id).text(""+val)
             }
     }
   }
@@ -227,11 +235,19 @@
           if(this.paramOptions[6].values[this.params[this.paramOptions[6].name]]=="NO"){
            
 
-            $('image#nodeonoff'+this.id).attr('href','img/off.png')
+            $("#"+this.id+" g").attr('fill','#C0C0C0')
+                $("#"+this.id+" #legend").attr('fill','#666666')
+                $("#"+this.id+" #param").attr('fill','#666666')
+                $("#noderepeat"+this.id).attr('fill','#666666')
+                $('image#nodeonoff'+this.id).attr('href','img/off.png')
        }   
       else{
          
-          $('image#nodeonoff'+this.id).attr('href','img/on.png')
+          $("#"+this.id+" g").attr('fill','#aad400')
+                $("#"+this.id+" #legend").attr('fill','#000000')
+                $("#"+this.id+" #param").attr('fill','#000000')
+                $("#noderepeat"+this.id).attr('fill','#000000')                
+                $('image#nodeonoff'+this.id).attr('href','img/on.png')
       }
     }
     $('text#noderepeat').text(""+this.paramOptions[7].values[this.params[this.paramOptions[7].name]])
