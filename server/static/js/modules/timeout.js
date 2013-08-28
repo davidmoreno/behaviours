@@ -4,6 +4,7 @@
   var max=100
   var slidervalue=0.5
 var timeout_configure = function(){
+
   var that = this
     this.configureDialogSetup()
     var p=this.paramOptions
@@ -31,7 +32,7 @@ var timeout_configure = function(){
        slider.bind('slide', updateSlide)
        slider.bind('slidechange', updateSlide)
         
-        value_.text(slidervalue)
+        value_.text($("#"+this.id+" #param").text())
 
         inpt.append(value_)
         inpt.val = function(n){
