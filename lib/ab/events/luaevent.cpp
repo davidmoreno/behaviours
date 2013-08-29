@@ -27,7 +27,7 @@ using namespace std;
 
 LUAEvent::LUAEvent(const char* type) : AB::Event(type) 
 {
-  
+  cont=0;
 }
 
 Object LUAEvent::attr(const std::string& paramName)
@@ -121,6 +121,7 @@ void LUAEvent::setAttr(const std::string& paramName, AB::Object value)
 bool LUAEvent::check()
 {
   try {
+    cont++;
     if ( std::find(checkCode.begin(), checkCode.end(), '=') != checkCode.end() )
       return object2int(manager->eval(checkCode,name())) != 0;
     else

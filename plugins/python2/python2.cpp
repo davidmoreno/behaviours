@@ -179,6 +179,7 @@ void Python2Action::setManager(Manager* manager)
 
 Python2Event::Python2Event(const char* type): Event(type)
 {
+	cont=0;
 	code="";
 	setFlags(flags()|AB::Event::Polling);
 	compiled_code=NULL;
@@ -191,6 +192,7 @@ Python2Event::~Python2Event()
 
 bool Python2Event::check()
 {
+	cont++;
 	DEBUG("Check");
 	if (!compiled_code)
 		return false;
