@@ -57,7 +57,7 @@ for(var i=1;i<4;i++){
    var li=$('<li>')
     ul.append(li)
     if(i==1)
-      li.text(current_language.repeat)
+      li.text("Activate event")
     else if(i==2)
       li.text("Times repeat event")
     else

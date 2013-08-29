@@ -101,7 +101,7 @@
 
     var li=$('<li>')
     ul.append(li)
-    li.text(current_language.repeat)
+    li.text("Activate event")
     var i=6
     var cb=$('<select>')
     for (var j in p[i].values){
@@ -119,7 +119,7 @@
 
     var li=$('<li>')
     ul.append(li)
-    li.text(current_language.repeat)
+    li.text("Times repeat event")
     var i=7
     var cb=$('<select>')
     for (var j in p[i].values){

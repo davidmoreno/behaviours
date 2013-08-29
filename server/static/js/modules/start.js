@@ -9,7 +9,7 @@ Start.prototype.configure = function(){
     var ul=$('<ul>')
     var li=$('<li>')
     ul.append(li)
-    li.text(current_language.repeat)
+    li.text("Activate event")
     var i=0
     var cb=$('<select>')
     for (var j in p[i].values){
@@ -27,7 +27,7 @@ Start.prototype.configure = function(){
 
     var li=$('<li>')
     ul.append(li)
-    li.text(current_language.repeat)
+    li.text("Times repeat event")
     var i=1
     var cb=$('<select>')
     for (var j in p[i].values){
