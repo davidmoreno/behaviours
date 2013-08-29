@@ -178,7 +178,11 @@
 	
     if(this.id.indexOf(this.type)==-1){ 
       if(p[i].name=="nodeon"){
-
+       if(this.changeactivity==true){
+                val=this.changevalor
+                params[p[i].name]=val 
+                
+              }
         if(val==0){
 
           $("#"+this.id+" g").attr('fill','#aad400')
@@ -197,6 +201,9 @@
 
       }
       if(p[i].name=="noderepeat"){
+            if(!val){
+              val=$("#"+this.id+" #noderepeat"+this.id).text()
+            }
               if(val==11)                            
                 $('text#noderepeat'+this.id).text("Always")              
               else
