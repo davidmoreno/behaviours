@@ -62,10 +62,10 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 IF (${CMAKE_BUILD_TYPE} MATCHES "Debug")
 	add_definitions(-D__DEBUG__)
-	SET(CMAKE_CXX_FLAGS "-Wall -Werror -O2 -g -fPIC -std=c++0x")
+	SET(CMAKE_CXX_FLAGS "-Wall -Werror -O0 -g -fPIC -std=c++0x")
 	MESSAGE(STATUS "Using debug mode")
 ELSE (${CMAKE_BUILD_TYPE} MATCHES "Debug")
-	SET(CMAKE_CXX_FLAGS "-Wall -Werror -O2 -fPIC -std=c++0x")
+	SET(CMAKE_CXX_FLAGS "-Wall -Werror -O0 -fPIC -std=c++0x")
 ENDIF (${CMAKE_BUILD_TYPE} MATCHES "Debug")
 
 add_definitions(-DAB_PREFIX=\"${CMAKE_INSTALL_PREFIX}\")

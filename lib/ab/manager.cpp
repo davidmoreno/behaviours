@@ -382,14 +382,14 @@ void Manager::notify(Node *node)
       lastNode=node;
       while(lastNode) {
         lastNode=notifyOne(lastNode);
-        if(lastNode){
+        /*if(lastNode){
             Event *ec=dynamic_cast<Event*>(lastNode);
             if (ec) {
               WARNING("El evento es: %s",ec->name().c_str());
               addEvent(ec);
               lastNode=NULL;
             }
-        }
+        }*/
       }
     } catch(const std::exception &e) {
       ERROR("Catched unhandled exception: %s! Stoping this chain.", e.what());
@@ -432,6 +432,7 @@ Node *Manager::notifyOne(Node *node)
 {
   RAII_enter_exit_node een(manager_notify_node_enter, manager_notify_node_exit, node);
   Action *ac=dynamic_cast<Action*>(node);
+  DEBUG("El nombre de la accion es: %s",node->name().c_str());
   if (ac) {
     ac->exec();
   }
@@ -451,6 +452,21 @@ Node *Manager::notifyOne(Node *node)
       }
     }
     if (n>0) {
+      Event *ec=dynamic_cast<Event*>(node);
+      if(ec){
+        for(Connection *conn: p) {
+          Event *ecchild=dynamic_cast<Event*>(conn->to());
+          if (ecchild) {
+            std::string name=ecchild->name();
+              WARNING("El evento es: %s",name.c_str());              
+              addEvent(ecchild);
+            }
+            else{
+              return conn->to();
+            }
+        }
+        return NULL;
+      }
       n=rand()%n;
       for(Connection *conn: p) {
         if (conn->guard()=="") {
