@@ -37,6 +37,7 @@ Alarm::Alarm(const char *type) : Event(type)
   repeatPolicy = Never;
   nodeon=0;
   noderepeat=0;
+  cont=0;
 }
 
 void Alarm::setAttr(const std::string &k, const AB::Object s)
@@ -202,7 +203,7 @@ bool AlarmManager::check()
 
 bool AlarmManager::checkAlarm(time_t rawtime)
 {
-  
+  int alwaysExec=11;
   struct tm * timeinfo = localtime ( &rawtime );
 
   if (!timeinfo || (timeinfo && rawtime == lastAlarm && triggered))
@@ -224,7 +225,14 @@ bool AlarmManager::checkAlarm(time_t rawtime)
   	  
   	  if (tev->getDay() == timeinfo->tm_mday && 
   	      tev->getMonth() == timeinfo->tm_mon && 
-  	      tev->getYear() == timeinfo->tm_year ) {      
+  	      tev->getYear() == timeinfo->tm_year ) {
+          if(tev->noderepeat!=alwaysExec &&  tev->cont ==tev->noderepeat){
+            DEBUG("Event %s is removed!", tev->name().c_str());
+            
+            Object newob= to_object(1);
+            tev->setAttr("nodeon",newob);
+        }
+          tev->cont++;                
   	    manager->notify(tev);	    
   	    triggered = true;
   	  }
