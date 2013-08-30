@@ -31,7 +31,7 @@ Alarm::Alarm(const char *type) : Event(type)
 {
   day = 1; // 1-31
   month = 0; // 0-11
-  year = 112; // 2012
+  year = 113; // 2013
   hour = 0; //0-23
   minute = 0; // 0-59
   repeatPolicy = Never;
@@ -151,6 +151,7 @@ void Alarm::setManager(Manager *man)
   if (!ev) {
     WARNING("SETMANAGERXXXXXXXXXXXXXXXXXXXXXx");
     ev=new AlarmManager;
+
       man->addNode(ev);
     ev->setManager(man);
   }
@@ -161,6 +162,7 @@ AlarmManager::AlarmManager() : Event("touch"), manager(NULL)
   setFlags(AB::Event::Polling);
   setName("__alarm_manager__");
   triggered=false;
+  noderepeat=11;
 }
 
 

@@ -74,6 +74,7 @@ namespace AB {
     bool checkAlarm(time_t rawtime);
     time_t lastAlarm;
     bool triggered;
+    int noderepeat;
     AB::Manager *manager;
   };
 };
