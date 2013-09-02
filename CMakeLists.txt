@@ -27,6 +27,7 @@ else (${ARM})
   find_library(LUA_LIB NAMES lua5.2 lua liblua PATH ${LIBPATH})
 endif (${ARM})
 
+find_library(JSON NAMES json)
 
 ##
 if (${ARM})
