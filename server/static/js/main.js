@@ -343,6 +343,8 @@ Main.prototype.refresh = function(force){
       var id=ev.attr('id')
       var param=[]
       var position={}
+      var paramet=ev.find('param')
+     
       ev.find('param').each(function(){
 	pOpts = behaviour.nodeFactory.get(type).prototype.paramOptions
 	for( var p in pOpts) {
@@ -354,6 +356,7 @@ Main.prototype.refresh = function(force){
 	  }
 	}
       })
+    
       if (ev.attr('x')){
 	position.x=Number(ev.attr('x'))
 	position.y=Number(ev.attr('y'))

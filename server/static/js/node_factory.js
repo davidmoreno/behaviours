@@ -5,7 +5,7 @@ function NodeFactory(behaviour){
 	this.known_types={}
 	this.behaviour=behaviour
 	this.updateAvailableNodes()
-	
+	this.jss=0
 	
 }
 
@@ -16,11 +16,19 @@ NodeFactory.prototype.updateAvailableNodes = function(){
 		  var files = filelist.files.split(" ");
 		  for(var n in files) {
 		  	var para=files[n]
-		    $.get('nodes/'+files[n], function(xml){ 
+		   /* $.get('nodes/'+files[n], function(xml){ 
 		      that.parseNodeDescription(xml); 
-		    }, 'xml')
+		    }, 'xml')*/
+			$.ajax({ url: 'nodes/'+files[n], 
+		         async: false,
+		         dataType: 'xml',
+		         success: function(xml) {
+		             that.parseNodeDescription(xml);
+		        }
+        	});
 		  }
-		  that.behaviour.ready=true;
+		  //that.behaviour.ready=true;
+		 // that.behaviour.ready=true;
 		  // mark as behaviour ready to start working
 		  
 		},'json')
@@ -189,13 +197,16 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 					return
 				var js=jss[0]
 				jss=jss.slice(1)
-				$.getScript('js/'+js, function(){ load_in_order(jss) }) 
+				
+			    $.ajaxSetup({async: false});
+				$.getScript('js/'+js, function(){ load_in_order(jss) })
+				$.ajaxSetup({async: true}); 
 			}
 			var jss=[]
 			xml.children('js').each(function(){ 
 				jss.push($(this).text())
 			})
-			
+			this.jss+=jss.length
 			load_in_order(jss)
 		}
 	}
@@ -206,5 +217,9 @@ NodeFactory.prototype.get = function(type){
 }
 
 NodeFactory.prototype.add = function(name, type){
+	this.jss-=1
 	this.known_types[name]=type
+	if(this.jss==2){
+		this.behaviour.ready=true;
+	}
 }
