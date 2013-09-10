@@ -1,10 +1,9 @@
+require(['node','jquery','main'],function(node, $, main){
 /**
  * @short Click is an event, triggered when the node is clicked by the user
  */
 
-(function(){
-
-  var Click = extend(Event, {})
+  var Click = node.extend(node.Event, {})
 
 
   
@@ -35,4 +34,4 @@
   }
 
   main.behaviour.nodeFactory.add('click',Click)
-}())
+})

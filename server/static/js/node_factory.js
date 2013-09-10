@@ -1,12 +1,12 @@
-function NodeFactory(behaviour){
+define(['jquery','node'],function($,node){
+
+var NodeFactory=function(behaviour){
 	if (! (this instanceof NodeFactory)){
 		throw new Error("NodeFactory is a class, not a function. Use new.")
 	}
 	this.known_types={}
 	this.behaviour=behaviour
 	this.updateAvailableNodes()
-	
-	
 }
 
 NodeFactory.prototype.updateAvailableNodes = function(){
@@ -88,11 +88,11 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		a.click(function(){ that.behaviour.addNode($(this).attr('node-type')) })
 		if (type=="action"){
 			$('#actionlist').append(li)
-			klass=Action
+			klass=node.Action
 		}
 		else{
 			$('#eventlist').append(li)
-			klass=Event
+			klass=node.Event
 		}
 		
 		var hasArray=false;
@@ -121,12 +121,12 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 			
 		})
 
-		this.known_types[id]=extend(klass, {paramOptions:paramOptions})
+		this.known_types[id]=node.extend(klass, {paramOptions:paramOptions})
 		
 		// Add update from array function in case one of the paramOptions is an Array
 		if(hasArray) {
 		  this.known_types[id].prototype.update = function() {
-		    NodeHelper.updateFromArray(this);
+		    node.NodeHelper.updateFromArray(this);
 		  }
 		  
 		}
@@ -156,3 +156,6 @@ NodeFactory.prototype.get = function(type){
 NodeFactory.prototype.add = function(name, type){
 	this.known_types[name]=type
 }
+
+return {NodeFactory:NodeFactory}
+})

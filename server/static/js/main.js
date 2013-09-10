@@ -1,10 +1,20 @@
+require.config({
+	baseUrl : '/static/js/',
+	paths : {
+		'jquery' : 'jquery-2.0.3.min',
+		'lang' : 'lang/lang'
+	}
+})
+
+define('main',['jquery','canvas','behaviour','lang',
+							 'extra/jquery.form.min','extra/jquery-ui.min'],function($,canvas,behaviour){
 Main=function(){
 	if ( ! (this instanceof Main) )
 		throw("Main is a class, not a function")
 	
 	this.server_ready = true
-	this.canvas=new Canvas()
-	this.behaviour=new Behaviour(this.canvas)
+	this.canvas=new canvas.Canvas()
+	this.behaviour=new behaviour.Behaviour(this.canvas)
 	this.connecting_dialog=false
 	this.lua_ready = true
 	this.last_event_id = 0
@@ -432,9 +442,11 @@ Main.prototype.save = function(){
 	} 
 }
 
+  window.main=new Main()
+	return window.main
+})
 
-$(document).ready(function(){
-  main=new Main()
+requirejs(['main','jquery'],function(main, $){
   main.setupGUI();
   
   var timerId=setInterval(function(){
@@ -466,8 +478,6 @@ $(document).ready(function(){
     }
   }
   
-})
-
 
 /// Some fixes, only for debugging
 
@@ -475,7 +485,7 @@ $(document).ready(function(){
 // Replace the normal jQuery getScript function with one that supports
 // debugging and which references the script files as external resources
 // rather than inline.
-jQuery.extend({
+$.extend({
    getScript: function(url, callback) {
       var head = document.getElementsByTagName("head")[0];
       var script = document.createElement("script");
@@ -506,3 +516,4 @@ jQuery.extend({
    },
 });
 
+})
