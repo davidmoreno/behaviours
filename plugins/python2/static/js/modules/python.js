@@ -153,6 +153,8 @@ python_getParams = function(){
   var that= this
   var p=this.paramOptions
   if (p){
+    var dialog=$('#dialog:visible')
+    if (dialog.length==1){
     var params={}
     for(var i in p){
       if(this.id.indexOf(this.type)==-1){
@@ -202,6 +204,8 @@ python_getParams = function(){
       }
       return params;
     }
+    return this.params
+    }
     return {}
 
   }
@@ -232,6 +236,12 @@ python_getParams = function(){
                 $('image#nodeonoff'+this.id).attr('href','img/on.png')
           }
         }
+        if(this.paramOptions[i].name=="noderepeat"){
+        if(this.paramOptions[i].values[this.params[this.paramOptions[i].name]]==11)                            
+          $('text#noderepeat'+this.id).text("Always")              
+        else
+          $('text#noderepeat'+this.id).text(""+this.paramOptions[i].values[this.params[this.paramOptions[i].name]])
+      }
       }
     }
   }

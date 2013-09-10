@@ -157,17 +157,19 @@ lua_getParams = function(){
   var that= this
   var p=this.paramOptions
   if (p){
-    var params={}
-    for(var i in p){
-      if(this.id.indexOf(this.type)==-1){
-      if(i==0){
-        
-        params[p[i].name]=that.editor.getValue()
-      }
-        else{
-          var val=$('#dialog #content #'+i).val()
-          params[p[i].name]=val 
-          
+    var dialog=$('#dialog:visible')
+    if (dialog.length==1){
+      var params={}
+      for(var i in p){
+        if(this.id.indexOf(this.type)==-1){
+          if(i==0){
+            
+            params[p[i].name]=that.editor.getValue()
+          }
+          else{
+            var val=$('#dialog #content #'+i).val()
+            params[p[i].name]=val 
+            
 
             if(p[i].name=="nodeon"){
               if(this.changeactivity==true){
@@ -193,67 +195,75 @@ lua_getParams = function(){
 
             }
             if(p[i].name=="noderepeat"){
-               if(!val){
+             if(!val){
               val=$("#"+this.id+" #noderepeat"+this.id).text()
             }
-              if(val==11)                            
-                $('text#noderepeat'+this.id).text("Always")              
-              else
+            if(val==11)                            
+              $('text#noderepeat'+this.id).text("Always")              
+            else
               $('text#noderepeat'+this.id).text(""+val)
-            }
-          }
-        }
-      }
-      return params;
-    }
-    return {}
-
-  }
-
-  lua_update=function(){
-    if (!this.params)
-      return
-    var txt=[]
-    for(var i=1;i<3;i++){
-      txt.push(this.paramOptions[i].values[this.params[this.paramOptions[i].name]])
-      if(this.id.indexOf(this.type)==-1){
-        if(this.paramOptions[i].name=="nodeon") {
-          if(this.paramOptions[i].values[this.params[this.paramOptions[i].name]]=="NO"){
-
-
-            $("#"+this.id+" g").attr('fill','#C0C0C0')
-                $("#"+this.id+" #legend").attr('fill','#666666')
-                $("#"+this.id+" #param").attr('fill','#666666')
-                $("#noderepeat"+this.id).attr('fill','#666666')
-                $('image#nodeonoff'+this.id).attr('href','img/off.png')
-          }   
-          else{
-
-            $("#"+this.id+" g").attr('fill','#aad400')
-                $("#"+this.id+" #legend").attr('fill','#000000')
-                $("#"+this.id+" #param").attr('fill','#000000')
-                $("#noderepeat"+this.id).attr('fill','#000000')                
-                $('image#nodeonoff'+this.id).attr('href','img/on.png')
           }
         }
       }
     }
+    return params;
   }
+  return this.params
+}
+return {}
 
-  var LUAAction=extend(Action, {paramOptions: [{type:Text,text:current_language.lua_action_msg,name:'code'}]})
-  var LUAEvent=extend(Event, {paramOptions: [{type:Text,text:current_language.lua_event_msg,name:'code'},{type:Array,values:['YES','NO'],name:'nodeon'},
-   {type:Array,values:['Never','01','02','03','04','05','06','07','08','09','10','Always'],name:'noderepeat'}]})
+}
 
-  LUAAction.prototype.configure=lua_configure
-  LUAAction.prototype.acceptConfigure=lua_accept_configure
+lua_update=function(){
+  if (!this.params)
+    return
+  var txt=[]
+  for(var i=1;i<3;i++){
+    txt.push(this.paramOptions[i].values[this.params[this.paramOptions[i].name]])
+    if(this.id.indexOf(this.type)==-1){
+      if(this.paramOptions[i].name=="nodeon") {
+        if(this.paramOptions[i].values[this.params[this.paramOptions[i].name]]=="NO"){
 
 
-  LUAEvent.prototype.configure=lua_configureEvent
-  LUAEvent.prototype.acceptConfigure=lua_accept_configure
-  LUAEvent.prototype.realtime_update=lua_realtime_update
-  LUAEvent.prototype.update=lua_update
-  LUAEvent.prototype.getParams=lua_getParams
+          $("#"+this.id+" g").attr('fill','#C0C0C0')
+          $("#"+this.id+" #legend").attr('fill','#666666')
+          $("#"+this.id+" #param").attr('fill','#666666')
+          $("#noderepeat"+this.id).attr('fill','#666666')
+          $('image#nodeonoff'+this.id).attr('href','img/off.png')
+        }   
+        else{
 
-  main.behaviour.nodeFactory.add('lua_action',LUAAction)
-  main.behaviour.nodeFactory.add('lua_event',LUAEvent)
+          $("#"+this.id+" g").attr('fill','#aad400')
+          $("#"+this.id+" #legend").attr('fill','#000000')
+          $("#"+this.id+" #param").attr('fill','#000000')
+          $("#noderepeat"+this.id).attr('fill','#000000')                
+          $('image#nodeonoff'+this.id).attr('href','img/on.png')
+        }
+      }
+      if(this.paramOptions[i].name=="noderepeat"){
+        if(this.paramOptions[i].values[this.params[this.paramOptions[i].name]]==11)                            
+          $('text#noderepeat'+this.id).text("Always")              
+        else
+          $('text#noderepeat'+this.id).text(""+this.paramOptions[i].values[this.params[this.paramOptions[i].name]])
+      }
+    }
+  }
+}
+
+var LUAAction=extend(Action, {paramOptions: [{type:Text,text:current_language.lua_action_msg,name:'code'}]})
+var LUAEvent=extend(Event, {paramOptions: [{type:Text,text:current_language.lua_event_msg,name:'code'},{type:Array,values:['YES','NO'],name:'nodeon'},
+ {type:Array,values:['Never','01','02','03','04','05','06','07','08','09','10','Always'],name:'noderepeat'}]})
+
+LUAAction.prototype.configure=lua_configure
+LUAAction.prototype.acceptConfigure=lua_accept_configure
+
+
+LUAEvent.prototype.configure=lua_configureEvent
+LUAEvent.prototype.acceptConfigure=lua_accept_configure
+LUAEvent.prototype.realtime_update=lua_realtime_update
+LUAEvent.prototype.update=lua_update
+LUAEvent.prototype.getParams=lua_getParams
+
+main.behaviour.nodeFactory.add('lua_action',LUAAction)
+main.behaviour.nodeFactory.add('lua_event',LUAEvent)
 })()
