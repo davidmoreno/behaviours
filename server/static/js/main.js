@@ -18,6 +18,8 @@ Main=function(){
 	this.connecting_dialog=false
 	this.lua_ready = true
 	this.last_event_id = 0
+	this.readyf=[]
+	this.is_ready=false
 	
 	var main=this
 	this.event_processors={
@@ -442,6 +444,23 @@ Main.prototype.save = function(){
 	} 
 }
 
+/// Adds functions to call when ready, or signals its ready.
+Main.prototype.ready = function(f){
+	if (f){
+		if (this.is_ready)
+			f()
+		else
+			this.readyf.push(f)
+	}
+	else{
+		var i
+		for(i=0;i<this.readyf.length;i++)
+			this.readyf[i]()
+		console.log("Ready!")
+	}
+}
+
+
   window.main=new Main()
 	return window.main
 })
@@ -449,14 +468,13 @@ Main.prototype.save = function(){
 requirejs(['main','jquery'],function(main, $){
   main.setupGUI();
   
-  var timerId=setInterval(function(){
+	main.ready(function(){
     if(main.behaviour.ready && main.canvas.ready) { 
-      clearInterval(timerId)
       main.refresh();
       main.canvas.changeTool('events')
       document.body.style.cursor = 'default'
     }
-  },500);
+  })
   
   // Some sanity to show user if connected to server, or not.
   var loadingDone=function(){ 

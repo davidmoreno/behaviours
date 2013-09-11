@@ -5,6 +5,7 @@ var NodeFactory=function(behaviour){
 		throw new Error("NodeFactory is a class, not a function. Use new.")
 	}
 	this.known_types={}
+	this.javascripts=[]
 	this.behaviour=behaviour
 	this.updateAvailableNodes()
 }
@@ -14,10 +15,17 @@ NodeFactory.prototype.updateAvailableNodes = function(){
 	$.get('/node/?list_types', function(d){
 		$.get('/node/?list_files', function(filelist){ 
 		  var files = filelist.files.split(" ");
+			var count=files.length
 		  for(var n in files) {
-
 		    $.get('nodes/'+files[n], function(xml){ 
 		      that.parseNodeDescription(xml); 
+					count--;
+					if (count==0){
+						console.log('Read extra js: '+that.javascripts)
+						require(['main'].concat(that.javascripts), function(main){
+							main.ready()
+						})
+					}
 		    }, 'xml')
 		  }
 		  that.behaviour.ready=true;
@@ -130,15 +138,9 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		  }
 		  
 		}
-		// Last thing, load JS that can overwrite it all. 
-		{
-			var jss=[]
-			xml.children('js').each(function(){ 
-				jss.push($(this).text().trim().slice(0,a.length-4))
-			})
-			
-			require(jss)
-		}
+		xml.children('js').each(function(){ 
+			that.javascripts.push($(this).text().trim().slice(0,a.length-4))
+		})
 	}
 }
 
