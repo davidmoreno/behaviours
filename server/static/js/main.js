@@ -1,7 +1,7 @@
 require.config({
 	baseUrl : '/static/js/',
 	paths : {
-		'jquery' : 'jquery-2.0.3.min',
+		'jquery' : 'extra/jquery-2.0.3.min',
 		'lang' : 'lang/lang'
 	}
 })

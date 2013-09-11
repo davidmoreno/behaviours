@@ -7,6 +7,10 @@
    Please attribute the author if you use it. */
 (function($) { // Hide scope, no $ conflict
 
+	if ($.browser==undefined)
+		$.browser={} // small fix for old jqueyr plugins.
+
+
 /* SVG manager.
    Use the singleton instance of this class, $.svg, 
    to interact with the SVG functionality. */

@@ -1,3 +1,4 @@
+define(['jquery'],function(){
 /**
  * @short Creates a new connection from "from" to "to".
  * 
@@ -5,7 +6,7 @@
  * 
  * color - color of the node
  */
-Connection = function(from, to, options){
+var Connection = function(from, to, options){
 	if (! (this instanceof Connection)){
 		throw new Error("Connection is a class, not a function. Use new.")
 	}
@@ -195,3 +196,6 @@ Connection.prototype.setGuard = function(guard){
 	this.guard=guard
 	this.update()
 }
+
+return Connection
+})

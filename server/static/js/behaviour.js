@@ -1,5 +1,5 @@
 
-define(['jquery','node_factory'],function($, node_factory){
+define(['jquery','node_factory','connections'],function($, node_factory,Connection){
 var Behaviour = function(view){
 	if ( ! (this instanceof Behaviour) ){
 		throw("Behaviour is a class. Create it with new.")
