@@ -21,7 +21,6 @@ NodeFactory.prototype.updateAvailableNodes = function(){
 		      that.parseNodeDescription(xml); 
 					count--;
 					if (count==0){
-						console.log('Read extra js: '+that.javascripts)
 						require(['main'].concat(that.javascripts), function(main){
 							main.ready()
 						})
