@@ -477,43 +477,4 @@ requirejs(['main','jquery'],function(main, $){
       var btn=$('#startstop').removeClass('stop').removeClass('play').addClass('loading')
     }
   }
-  
-
-/// Some fixes, only for debugging
-
-// From http://stackoverflow.com/questions/690781/debugging-scripts-added-via-jquery-getscript-function
-// Replace the normal jQuery getScript function with one that supports
-// debugging and which references the script files as external resources
-// rather than inline.
-$.extend({
-   getScript: function(url, callback) {
-      var head = document.getElementsByTagName("head")[0];
-      var script = document.createElement("script");
-      script.src = url;
-
-      // Handle Script loading
-      {
-         var done = false;
-
-         // Attach handlers for all browsers
-         script.onload = script.onreadystatechange = function(){
-            if ( !done && (!this.readyState ||
-                  this.readyState == "loaded" || this.readyState == "complete") ) {
-               done = true;
-               if (callback)
-                  callback();
-
-               // Handle memory leak in IE
-               script.onload = script.onreadystatechange = null;
-            }
-         };
-      }
-
-      head.appendChild(script);
-
-      // We handle everything using the script element injection
-      return undefined;
-   },
-});
-
 })

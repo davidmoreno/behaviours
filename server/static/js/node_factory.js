@@ -130,21 +130,14 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		  }
 		  
 		}
-		// Last thing, load JS that can overwrite it all. Load them in order. Slower, but safer.
+		// Last thing, load JS that can overwrite it all. 
 		{
-			var load_in_order = function(jss){
-				if (jss.length==0)
-					return
-				var js=jss[0]
-				jss=jss.slice(1)
-				$.getScript('js/'+js, function(){ load_in_order(jss) }) 
-			}
 			var jss=[]
 			xml.children('js').each(function(){ 
-				jss.push($(this).text())
+				jss.push($(this).text().trim().slice(0,a.length-4))
 			})
 			
-			load_in_order(jss)
+			require(jss)
 		}
 	}
 }

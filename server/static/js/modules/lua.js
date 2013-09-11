@@ -1,4 +1,4 @@
-require(['node','jquery','main','extra/codemirror','extra/codemirror_python'],function(node, $, main){
+require(['node','jquery','main','extra/codemirror','extra/codemirror_python'],function(node, $, main, CodeMirror){
 /**
  */
 var lua_configure = function(){
