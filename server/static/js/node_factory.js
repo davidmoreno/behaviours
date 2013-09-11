@@ -139,7 +139,9 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		  
 		}
 		xml.children('js').each(function(){ 
-			that.javascripts.push($(this).text().trim().slice(0,a.length-4))
+			var name=$(this).text().trim().slice(0,a.length-4)
+			require([name]) // preload
+			that.javascripts.push(name)
 		})
 	}
 }

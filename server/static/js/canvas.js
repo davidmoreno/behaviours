@@ -1,4 +1,4 @@
-define(['jquery','extra/jquery.svg'],function($){
+define(['jquery','connections','extra/jquery.svg'],function($,Connection){
 
 var toolbutton_width = 90;
 
