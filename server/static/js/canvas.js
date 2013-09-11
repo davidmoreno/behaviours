@@ -27,7 +27,6 @@ var Canvas = function(id, options){
 	this.stTarget;
 	this.stOrigin;
 	this.stTf;
-	this.ready=false;
 }
 
 Canvas.prototype.setNodeToConnect = function(node){
@@ -225,8 +224,6 @@ Canvas.prototype.setupViewpoint = function(source){
   that.root = $('#svgcanvas').svg('get').root();  	
   that.setupHandlers(that);
   that.getRoot(that);
-  // mark canvas as ready to work with it
-  that.ready = true;
 }
 
 /**
@@ -633,6 +630,7 @@ Canvas.prototype.updateCanvasSize = function(source){
       var h=$(window).height()-$('#header').height()-$('#tools').height()
       svgs.css('width',''+(w-2)+'px').css('height',''+h+'px')
       $('#tools').width(w)
+			$('svg').attr('width',w).attr('height',h)
 	
       if(that.toolShowedName == 'none') {
 	

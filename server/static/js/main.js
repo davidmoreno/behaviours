@@ -342,7 +342,8 @@ Main.prototype.refresh = function(force){
       
   var behaviour = this.behaviour;
   var canvas = this.canvas;
-  $.get('/manager/?refresh', function(plain_xml){
+	var t=(new Date).getTime()
+  $.get('/manager/?refresh&t='+t, function(plain_xml){
       if(force) {
 	behaviour.clear(true);
       }
@@ -419,7 +420,7 @@ Main.prototype.refresh = function(force){
 	})
       })  
     
-  }, 'text')
+  })
   
 }
 
@@ -469,11 +470,9 @@ requirejs(['main','jquery'],function(main, $){
   main.setupGUI();
   
 	main.ready(function(){
-    if(main.behaviour.ready && main.canvas.ready) { 
-      main.refresh();
-      main.canvas.changeTool('events')
-      document.body.style.cursor = 'default'
-    }
+		main.refresh();
+		main.canvas.changeTool('events')
+		document.body.style.cursor = 'default'
   })
   
   // Some sanity to show user if connected to server, or not.
