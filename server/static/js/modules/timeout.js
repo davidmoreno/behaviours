@@ -162,33 +162,48 @@
     var txt=[]
     for(var i=0;i<this.paramOptions.length;i++){
       if(this.paramOptions[i].name=="timeout"){
-        txt.push(this.params[this.paramOptions[i].name]);
+        var t=this.params[this.paramOptions[i].name];
+        if(!t){
+          t=$("#"+this.id+" #param").text()
+        }
+        txt.push(t);
+
       }
       if(this.id.indexOf(this.type)==-1){
         if(this.paramOptions[i].name=="nodeon") {
-          if(this.params[this.paramOptions[i].name]=="NO" || this.params[this.paramOptions[i].name]=="1"){
-
-
-            $("#"+this.id+" g").attr('fill','#C0C0C0')
-            $("#"+this.id+" #legend").attr('fill','#666666')
-            $("#"+this.id+" #param").attr('fill','#666666')
-            $("#noderepeat"+this.id).attr('fill','#666666')
-            $('image#nodeonoff'+this.id).attr('href','img/off.png')
-          }   
-          else{
-
+          if(this.params[this.paramOptions[i].name]=="YES" || this.params[this.paramOptions[i].name]=="0"){
             $("#"+this.id+" g").attr('fill','#aad400')
             $("#"+this.id+" #legend").attr('fill','#000000')
             $("#"+this.id+" #param").attr('fill','#000000')
             $("#noderepeat"+this.id).attr('fill','#000000')                
             $('image#nodeonoff'+this.id).attr('href','img/on.png')
+
+            
+          }   
+          else{
+              $("#"+this.id+" g").attr('fill','#C0C0C0')
+            $("#"+this.id+" #legend").attr('fill','#666666')
+            $("#"+this.id+" #param").attr('fill','#666666')
+            $("#noderepeat"+this.id).attr('fill','#666666')
+            $('image#nodeonoff'+this.id).attr('href','img/off.png')
+
+
+            
           }
         }
         if(this.paramOptions[i].name=="noderepeat"){
           if(this.params[this.paramOptions[i].name]==11)                            
             $('text#noderepeat'+this.id).text("Always")              
-          else
-            $('text#noderepeat'+this.id).text(""+this.params[this.paramOptions[i].name])
+          else{
+            
+            var text=this.params[this.paramOptions[i].name];
+            if(!text){
+
+            }
+            else{
+              $('text#noderepeat'+this.id).text(""+this.params[this.paramOptions[i].name])
+            }
+          }
         }
       }
 
