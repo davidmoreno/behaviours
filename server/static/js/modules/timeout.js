@@ -154,9 +154,7 @@
 
   timeout_update=function(){
     if (!this.params)
-      return
-
-    
+      return    
       
   
     var txt=[]
@@ -171,6 +169,29 @@
       }
       if(this.id.indexOf(this.type)==-1){
         if(this.paramOptions[i].name=="nodeon") {
+          if(!this.params[this.paramOptions[i].name]){
+             if(this.changeactivity==true){
+               var val=this.changevalor
+              
+                
+              }
+              if(val==0){
+                $("#"+this.id+" g").attr('fill','#aad400')
+                $("#"+this.id+" #legend").attr('fill','#000000')
+                $("#"+this.id+" #param").attr('fill','#000000')
+                $("#noderepeat"+this.id).attr('fill','#000000')                
+                $('image#nodeonoff'+this.id).attr('href','img/on.png')
+              }
+              else{
+                $("#"+this.id+" g").attr('fill','#C0C0C0')
+                $("#"+this.id+" #legend").attr('fill','#666666')
+                $("#"+this.id+" #param").attr('fill','#666666')
+                $("#noderepeat"+this.id).attr('fill','#666666')
+                $('image#nodeonoff'+this.id).attr('href','img/off.png')
+              }
+
+          }
+          else{
           if(this.params[this.paramOptions[i].name]=="YES" || this.params[this.paramOptions[i].name]=="0"){
             $("#"+this.id+" g").attr('fill','#aad400')
             $("#"+this.id+" #legend").attr('fill','#000000')
@@ -190,6 +211,7 @@
 
             
           }
+        }
         }
         if(this.paramOptions[i].name=="noderepeat"){
           if(this.params[this.paramOptions[i].name]==11)                            
