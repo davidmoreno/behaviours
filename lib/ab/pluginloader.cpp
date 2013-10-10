@@ -41,7 +41,7 @@ static bool isdir(const std::string &filename){
 	return S_ISDIR(st.st_mode);
 }
 
-void PluginLoader::loadPath(const std::string& path)
+void PluginLoader::loadPath(const std::string& path, Manager *manager)
 {
 	//DEBUG("Load plugins at %s",path.c_str());
 	DIR *dir=opendir(path.c_str());
@@ -56,17 +56,17 @@ void PluginLoader::loadPath(const std::string& path)
 		//DEBUG("Check %s",st->d_name);
 		std::string fullname=path+"/"+st->d_name;
 		if (endswith(fullname, ".so")){
-			loadPlugin(fullname);
+			loadPlugin(fullname, manager);
 		}
 		if (isdir(fullname)){
-			loadPath(fullname);
+			loadPath(fullname, manager);
 		}
 	}
 	
 	closedir(dir);
 }
 
-bool PluginLoader::loadPlugin(const std::string& filename)
+bool PluginLoader::loadPlugin(const std::string& filename, Manager *manager)
 {
 	void *dl=dlopen(filename.c_str(), RTLD_LAZY | RTLD_GLOBAL);
 	bool inuse=false;
@@ -80,11 +80,19 @@ bool PluginLoader::loadPlugin(const std::string& filename)
 	union{
 		ab_init_f *init;
 		void *init_v;
+		ab_init_w_manager_f *init_wm;
 	};
+	char type='v'; // By default type void.
 	init_v=dlsym(dl, "ab_init");
 	
 	if (!init) // Check also C++ name
 		init_v=dlsym(dl, "_Z7ab_initv");
+	
+	if (!init){
+		init_v=dlsym(dl, "_Z7ab_initPN2AB7ManagerE");
+		if (init)
+			type='m'; // It gets the manager object.
+	}
 	
 	if (!init){
 		WARNING("Plugin file at %s could not be loaded: %s", filename.c_str(), dlerror());
@@ -95,7 +103,10 @@ bool PluginLoader::loadPlugin(const std::string& filename)
 		INFO("Loaded plugin at %s", filename.c_str());
 		inuse=true;
 		try{
-			init();
+			if (type=='m')
+				init_wm(manager);
+			else 
+				init();
 		}
 		catch(const std::exception &e){
 			ERROR("Error loading plugin %s: %s", filename.c_str(), e.what());

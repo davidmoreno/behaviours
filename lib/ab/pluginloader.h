@@ -27,9 +27,11 @@
  * tries to load it looking for the plugin interface markers.
  */
 namespace AB{
+	class Manager;
+	
 	class PluginLoader{
 	public:
-		static void loadPath(const std::string &path);
-		static bool loadPlugin(const std::string &filename);
+		static void loadPath(const std::string &path, Manager *manager);
+		static bool loadPlugin(const std::string &filename, Manager *manager);
 	};
 }

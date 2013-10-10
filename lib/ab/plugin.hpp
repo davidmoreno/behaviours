@@ -23,6 +23,9 @@ namespace Onion{
 }
 
 namespace AB{
+	class Manager;
+	
 	typedef void (ab_init_f)(void);
+	typedef void (ab_init_w_manager_f)(Manager *);
 	typedef Onion::Handler *(ab_urls_f)(void);
 }

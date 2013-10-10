@@ -130,12 +130,12 @@ Main.prototype.startStop = function(silent){
 	var btn=$('#startstop')
 	
 	if ($('#startstop.play').length){
-		btn.find('img').attr('src','img/mainstop.png').attr('title',current_language.stopclick).attr('style','height:auto; width:auto;')
+		btn.find('img').attr('src','img/mainstop.png').attr('title',current_language.stopclick)
 		setTimeout(function(){
 		      $.post("/manager/",{run:1}, function(){
 			    btn.removeClass('play').addClass('stop')
 		      }).error(function(){
-			    btn.find('img').attr('src','img/play.png').attr('title',current_language.playclick).attr('style','height:auto; width:auto;')
+			    btn.find('img').attr('src','img/play.png').attr('title',current_language.playclick)
 			    if(!silent)
 			      alert(current_language.playerror);
 		      })
@@ -144,7 +144,7 @@ Main.prototype.startStop = function(silent){
 	} else if ($('#startstop.stop').length){
 		$.post("/manager/",{stop:1}, function(){
 			btn.removeClass('stop').addClass('play')
-			btn.find('img').attr('src','img/play.png').attr('title',current_language.playclick).attr('style','height:auto; width:auto;')		  
+			btn.find('img').attr('src','img/play.png').attr('title',current_language.playclick)
 		}).error(function(){
 		      if(!silent)
 			alert(current_language.stoperror);

@@ -21,8 +21,8 @@
 #include <ab/factory.h>
 #include <ab/log.h>
 
-void ab_init(void){
-	DEBUG("Loaded ab init at basic example");
+void ab_init(AB::Manager *manager){
+	DEBUG("Loaded ab init at basic example, manager is at %p", manager);
 	AB::Factory::registerClass<TestBasic>("testbasic");
 }
 

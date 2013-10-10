@@ -10,8 +10,10 @@ SET(SOURCES
 
 add_library(ab_static STATIC ${SOURCES})
 
-add_library(ab SHARED ${SOURCES})
-
+#add_library(ab SHARED ${SOURCES})
+<<<<<<< HEAD
+target_link_libraries(ab_static ${LUA_LIB} ${Z_LIB} ${XML2_LIB} ${CURL_LIB} ${JSON_LIB})
+=======
 target_link_libraries(ab_static ${LUA_LIB} z xml2 curl ${JSON})
-
+>>>>>>> 2aec6564e3c2c23e675a79a67b284fe3dbd7db87
 
