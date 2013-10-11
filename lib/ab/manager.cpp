@@ -41,7 +41,7 @@ Manager::Manager() :
   lua=new LUA();
   lua->setManager(this);
   execThreadId=std::this_thread::get_id(); // Can be used directly, if before calling exec.
-  PluginLoader::loadPath(AB_PREFIX "/lib/ab/");
+  PluginLoader::loadPath(AB_PREFIX "/lib/ab/", this);
 }
 
 Manager::~Manager()

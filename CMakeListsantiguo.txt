@@ -36,15 +36,24 @@ find_path(LUA_HEADERS lua.h ${INCLUDEDIR}/lua5.2)
 message("-- Search for LUA lib")
 include_directories(${LUA_HEADERS})
 
-
 if (${ARM})
-  SET(LUA_LIB lua)
-else (${ARM})
-  find_library(LUA_LIB NAMES lua5.2 lua liblua PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
+	find_path(LUA_MULTIARCH_HEADERS lua5.2-deb-multiarch.h ${INCLUDEMULTIARCH})
+	include_directories(${LUA_MULTIARCH_HEADERS})
 endif (${ARM})
 
-find_library(JSON NAMES json)
+<<<<<<< HEAD
+find_path(JSON_HEADERS json/json.h  ${INCLUDEDIR}/json)
+include_directories(${JSON_HEADERS})
+message(${CMAKE_MODULE_LINKER_FLAGS})
+#if (${ARM})
+#  SET(LUA_LIB lua)
+#else (${ARM})
+  find_library(LUA_LIB NAMES lua5.2 lua liblua PATHS ${LIBPATH} ${LIBPATH}/arm-linux-gnueabihf ${CMAKE_FIND_ROOT_PATH}/lib ${CMAKE_FIND_ROOT_PATH}/lib/arm-linux-gnueabihf)
+#endif (${ARM})
 
+=======
+find_library(JSON NAMES json)
+>>>>>>> 2aec6564e3c2c23e675a79a67b284fe3dbd7db87
 
 ##
 if (${ARM})
@@ -57,10 +66,10 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 IF (${CMAKE_BUILD_TYPE} MATCHES "Debug")
 	add_definitions(-D__DEBUG__)
-	SET(CMAKE_CXX_FLAGS "-Wall -Werror -O0 -g -fPIC -std=c++0x")
+	SET(CMAKE_CXX_FLAGS "-Wall -Werror -O2 -g -fPIC -std=c++0x")
 	MESSAGE(STATUS "Using debug mode")
 ELSE (${CMAKE_BUILD_TYPE} MATCHES "Debug")
-	SET(CMAKE_CXX_FLAGS "-Wall -Werror -O0 -fPIC -std=c++0x")
+	SET(CMAKE_CXX_FLAGS "-Wall -Werror -O2 -fPIC -std=c++0x")
 ENDIF (${CMAKE_BUILD_TYPE} MATCHES "Debug")
 
 add_definitions(-DAB_PREFIX=\"${CMAKE_INSTALL_PREFIX}\")
@@ -74,7 +83,7 @@ add_subdirectory(lib)
 add_subdirectory(plugins)
 add_subdirectory(server)
 add_subdirectory(ab)
-#add_subdirectory(test)
+# add_subdirectory(test)
 
 # uninstall target
 configure_file(

@@ -116,9 +116,10 @@ int main(void){
 	url.add("^data/", nodeManager.get(), &NodeManager::save);
 	url.add("^events", nodeManager.get(), &NodeManager::events);
 	
-//  onion_handler *w=onion_handler_webdav("data/files",NULL);
-//  onion_url_add_handler(url.c_ptr(), "^webdav/", w);
-			
+	ONION_DEBUG("Webdav dir at %s", data_dir.c_str());
+	onion_handler *w=onion_handler_webdav(data_dir.c_str(),NULL);
+	onion_url_add_handler(url.c_handler(), "^webdav/?", w);
+	
 	//nodeManager.mimeFill();
 
 	INFO("Listening at 127.0.0.1:8081");
