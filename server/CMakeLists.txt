@@ -1,6 +1,6 @@
 include_directories(${XML2_HEADERS})
 
-add_library(abserver_static STATIC utils.cpp nodemanager.cpp statichandler.cpp)
+add_library(abserver_static STATIC utils.cpp nodemanager.cpp statichandler.cpp browsefiles.cpp)
 add_executable(abserver main.cpp)
 
 target_link_libraries(abserver abserver_static onioncpp_static onion_handlers_static
