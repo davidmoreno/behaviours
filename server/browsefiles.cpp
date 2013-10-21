@@ -33,6 +33,8 @@ BrowseFiles::BrowseFiles(const std::string& basedir) : basedir(basedir)
 onion_connection_status BrowseFiles::operator()(Onion::Request& req, Onion::Response& res)
 {
 	auto path=get_real_dir(req.query().get("path"));
+	ONION_DEBUG("Get data from path %s",path.c_str());
+	
 	json_object *jobj = json_object_new_object();
 	json_object *files = json_object_new_array();
 	json_object_object_add(jobj,"files",files);

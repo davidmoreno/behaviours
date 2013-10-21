@@ -89,7 +89,7 @@ int main(void){
 	
 	manager=make_shared<Manager>();
 	nodeManager=make_shared<NodeManager>(manager);
-	BrowseFiles browser(data_dir);
+	BrowseFiles browser("/");
 	
 	
 	ABServer::init();
