@@ -36,6 +36,8 @@ extern "C"{
 
 #include "nodemanager.hpp"
 #include "statichandler.hpp"
+#include "browsefiles.hpp"
+
 
 namespace AB{
 	std::string static_dir=AB_PREFIX "/share/ab/static/";
@@ -87,6 +89,8 @@ int main(void){
 	
 	manager=make_shared<Manager>();
 	nodeManager=make_shared<NodeManager>(manager);
+	BrowseFiles browser("/");
+	
 	
 	ABServer::init();
 	//DIA::init(&manager);
@@ -114,6 +118,7 @@ int main(void){
 	url.add("^wavload/", nodeManager.get(), &NodeManager::uploadWAV);
 	url.add("^static/lua/", nodeManager.get(), &NodeManager::lua); // esta cutrez es porque, al pulsar un botón en DIA, hace la llamada POST a "/static/[direccion]"
 	url.add("^static/", new StaticHandler(static_dir));
+	url.add("^data/browse", &browser);
 	url.add("^data/", nodeManager.get(), &NodeManager::save);
 	url.add("^events", nodeManager.get(), &NodeManager::events);
 	

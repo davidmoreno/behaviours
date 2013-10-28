@@ -414,7 +414,32 @@ Main.prototype.refresh = function(force){
 
 Main.prototype.save = function(){
 	var that = this;
-	
+	new BrowseFiles({
+		title:"Save to...", 
+		finish: function(){
+			var a=$('<a href="#_">').text('Download').click(function(){ that.download() })
+			$('#dialog #custom_buttons').append(a)
+			
+			var filename=$('<input type="text" placeholder="Filename" id="filename">')
+			
+			$('#dialog #content').append(filename)
+		},
+		open:	function(file, path){
+			alert('open '+path+file.filename)
+		},
+		accept: function(path){
+			var fullname=path+'/'+$('#dialog #filename').val()
+			
+			alert('Send command to server to save at '+fullname)
+			
+			return true // false do not close
+		},
+		show_files:false
+	})
+}
+
+Main.prototype.download = function(){
+	var that = this;
 	this.canvas.updateServer()
 
 	if (this.behaviour.name==""){

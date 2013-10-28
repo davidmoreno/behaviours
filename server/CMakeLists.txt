@@ -1,7 +1,7 @@
 # ${Z_LIB} ${XML2_LIB} ${GCRYPT_LIB}
 include_directories(${XML2_HEADERS} ${ONION_HEADERS})
 
-add_library(abserver_static STATIC utils.cpp nodemanager.cpp statichandler.cpp)
+add_library(abserver_static STATIC utils.cpp nodemanager.cpp statichandler.cpp browsefiles.cpp)
 add_executable(abserver main.cpp)
 
 target_link_libraries(abserver abserver_static ${ONIONCPP_LIB} ${ONIONHANDLERS_STATIC_LIB} 
