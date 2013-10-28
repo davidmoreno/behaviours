@@ -601,3 +601,23 @@ textarea#code{
 #dialog .CodeMirror pre{
 	color: white;
 }
+
+#files{
+	max-height: 200px;
+	overflow: scroll;
+}
+
+table.files{
+	width: 100%;
+}
+
+table.files th{
+	text-align: left;
+	color: white;
+	background: #555;
+	width: 100%;
+}
+
+#dialog #filename{
+	width: 100%;
+}
