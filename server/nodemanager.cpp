@@ -62,6 +62,7 @@ NodeManager::NodeManager(std::shared_ptr<AB::Manager> &ab) : ab(ab)
   needsAutosave = false;
   forceUpdate = false;
 	current_ab_file=data_dir+"/current.ab";
+  save_ab_file="";
 	mkdir(data_dir.c_str(),0777);
   gettimeofday(&lastAutosave, NULL);
 }
@@ -159,7 +160,13 @@ onion_connection_status NodeManager::manager(Onion::Request& req, Onion::Respons
 }
 
 onion_connection_status NodeManager::save(Onion::Request &req, Onion::Response &res){
-	ab->saveBehaviour(current_ab_file);
+ Onion::Dict post=req.post();
+  if (post.count()){
+      save_ab_file=post.get("save");
+      save_ab_file=save_ab_file.substr(1,save_ab_file.size());
+      WARNING("%s", save_ab_file.c_str());
+  }
+  ab->saveBehaviour(save_ab_file);
 	res.setHeader("Content-Disposition", "attachment; filename="+req.path());
 	return onion_shortcut_response_file(current_ab_file.c_str(),req.c_handler(), res.c_handler());
 }

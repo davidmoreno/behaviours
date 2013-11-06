@@ -50,7 +50,7 @@ namespace ABServer{
 		bool running;
 
 		std::string current_ab_file;
-
+		std::string save_ab_file;
 		std::string downloaded;
 		struct timeval lastAutosave;
 		bool needsAutosave, forceUpdate;

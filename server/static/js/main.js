@@ -431,10 +431,14 @@ Main.prototype.save = function(){
 			alert('open '+path+file.filename)
 		},
 		accept: function(path){
-			var fullname=path+'/'+$('#dialog #filename').val()
-			
+			if($('#dialog #filename').val()==""){
+				var fullname=path+'/behaviour.ab';
+			}
+			else{
+				var fullname=path+'/'+$('#dialog #filename').val()+".ab";
+			}
 			alert('Send command to server to save at '+fullname)
-			
+			 $.post("/data/",{save:fullname})
 			return true // false do not close
 		},
 		show_files:false
