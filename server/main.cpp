@@ -41,7 +41,7 @@ extern "C"{
 
 namespace AB{
 	std::string static_dir=AB_PREFIX "/share/ab/static/";
-	std::string data_dir=std::string(getenv("HOME"))+"/behaviours/";
+	std::string data_dir=std::string(getenv("HOME"))+"/DIA/";
 }
 
 using namespace ABServer;
