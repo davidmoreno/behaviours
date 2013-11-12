@@ -163,10 +163,14 @@ onion_connection_status NodeManager::save(Onion::Request &req, Onion::Response &
  Onion::Dict post=req.post();
   if (post.count()){
       save_ab_file=post.get("save");
-      save_ab_file=save_ab_file.substr(1,save_ab_file.size());
-      WARNING("%s", save_ab_file.c_str());
+      if(save_ab_file!="null"){
+        save_ab_file=save_ab_file.substr(1,save_ab_file.size());
+        WARNING("%s", save_ab_file.c_str());
+        ab->saveBehaviour(save_ab_file);
+      }
   }
-  ab->saveBehaviour(save_ab_file);
+  
+  ab->saveBehaviour(current_ab_file);
 	res.setHeader("Content-Disposition", "attachment; filename="+req.path());
 	return onion_shortcut_response_file(current_ab_file.c_str(),req.c_handler(), res.c_handler());
 }
