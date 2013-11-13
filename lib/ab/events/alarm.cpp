@@ -69,7 +69,7 @@ void Alarm::setAttr(const std::string &k, const AB::Object s)
   }
  else if(k== "nodeon"){
         nodeon = object2int(s);  
-        printf("%d\n",nodeon );
+        DEBUG("%d",nodeon );
         if(nodeon==0){
           
           if(manageralarm){
@@ -217,7 +217,7 @@ bool AlarmManager::checkAlarm(time_t rawtime)
     Alarm *tev=dynamic_cast<Alarm*>(ev);
    // WARNING(tev->getMonth());
     if (tev && tev->getHour() == timeinfo->tm_hour && tev->getMinute() == timeinfo->tm_min ) {
-      printf("%d\n",tev->getNodeon());
+      DEBUG("%d",tev->getNodeon());
 
         switch((int)tev->getRepeatPolicy()) {
         
