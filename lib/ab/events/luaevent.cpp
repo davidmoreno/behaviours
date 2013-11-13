@@ -85,7 +85,7 @@ void LUAEvent::setAttr(const std::string& paramName, AB::Object value)
   } 
   else if(paramName== "nodeon"){
         nodeon = object2int(value);  
-        printf("%d\n",nodeon );
+        DEBUG("%d",nodeon );
         if(nodeon==0){
           
           if(manager){

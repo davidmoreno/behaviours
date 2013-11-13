@@ -86,7 +86,7 @@ void Timeout::setAttr(const std::string& k, Object v)
   }
  else if(k== "nodeon"){
         nodeon = object2int(v);  
-        printf("%d\n",nodeon );
+        DEBUG("%d",nodeon );
         if(nodeon==0){
           
           if(manager){

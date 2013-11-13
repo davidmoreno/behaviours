@@ -132,13 +132,13 @@ void Manager::addNode(Node *n)
   Event *ev=dynamic_cast<Event*>(n);
   if (ev) {  
     activeEvents.insert(ev);
-    printf("%s\n","activeEvents lenght" );
-    printf("%d\n", activeEvents.size());
+    DEBUG("%s","activeEvents lenght" );
+    DEBUG("%zd", activeEvents.size());
     DEBUG("%s at active events", ev->name().c_str());
   }
   nodes.insert(n);
-   printf("%s\n","nodes lenght" );
-  printf("%d\n", nodes.size());
+   DEBUG("%s","nodes lenght" );
+  DEBUG("%zd", nodes.size());
   syncOnNextCycle=true;
 }
 void Manager::removeEvent( std::string id){
@@ -153,11 +153,11 @@ void Manager::removeEvent( std::string id){
 }
 void Manager::addEvent(Event *ev){
   if(ev){
-    printf("%s\n","activeEvents lenght" );
-    printf("%d\n", activeEvents.size());
+    DEBUG("%s","activeEvents lenght" );
+    DEBUG("%zd", activeEvents.size());
     activeEvents.insert(ev);
 
-    printf("%d\n", activeEvents.size());
+    DEBUG("%zd", activeEvents.size());
   }
 }
 bool Manager::findNode(std::string id){
@@ -227,8 +227,8 @@ void Manager::disconnect(Node *A, Node *B){
 	std::vector<Connection*>::iterator I=conns.begin(), endI=conns.end();
   Event *ev=dynamic_cast<Event*>(B);
   if(ev){
-        printf("%s\n","A ver como queda desde nodo" );
-        printf("%d\n", ev->nodeon); 
+        DEBUG("%s","A ver como queda desde nodo" );
+        DEBUG("%d", ev->nodeon); 
         Object newob= to_object(0);
         ev->setAttr("nodeon",newob);
   }
