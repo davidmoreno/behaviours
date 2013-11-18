@@ -11,7 +11,7 @@ using namespace std;
 void Start::setAttr(const std::string &k, Object s){
  			if(k== "nodeon"){
  				nodeon = object2int(s);  
- 				printf("%d\n",nodeon );
+ 				DEBUG("%d",nodeon );
  				if(nodeon==0){
  					
  					if(manager){
