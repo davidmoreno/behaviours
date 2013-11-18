@@ -144,7 +144,6 @@ void Manager::addNode(Node *n)
 void Manager::removeEvent( std::string id){
     for(Event *ev: activeEvents) {
       if(strcmp(ev->name().c_str(),id.c_str())==0){
-        WARNING("SON IGUALES");
         activeEvents.erase(ev);
       }
 
@@ -194,7 +193,6 @@ Connection *Manager::connect(Node *A, Node *B)
   if (conn) // If exists, return existing one.
     return conn; 
  conn=new Connection(this, A, B);
-  WARNING("si que llega por aqui");
   if(getEvent(B->name())!=NULL){
     Object newob= to_object(1);
     B->setAttr("nodeon",newob);
@@ -345,7 +343,7 @@ void Manager::exec()
         }
         if (ev->check()) {
           DEBUG("Event %s is triggered!", ev->name().c_str());
-          WARNING("ioahsfioashfuiasfhauisfhasufhasdfasdfasdfasdfasdf");
+         
           notify(ev);
         }
         if (syncOnNextCycle) // It will continue with the list, unless a sync (graph change) is performed.
@@ -432,7 +430,7 @@ Node *Manager::notifyOne(Node *node)
 {
   RAII_enter_exit_node een(manager_notify_node_enter, manager_notify_node_exit, node);
   Action *ac=dynamic_cast<Action*>(node);
-  DEBUG("El nombre de la accion es: %s",node->name().c_str());
+  DEBUG("Name of action is: %s",node->name().c_str());
   if (ac) {
     ac->exec();
   }
@@ -458,7 +456,7 @@ Node *Manager::notifyOne(Node *node)
           Event *ecchild=dynamic_cast<Event*>(conn->to());
           if (ecchild) {
             std::string name=ecchild->name();
-              WARNING("El evento es: %s",name.c_str());              
+              DEBUG("Event : %s",name.c_str());              
               addEvent(ecchild);
             }
             else{

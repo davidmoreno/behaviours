@@ -309,104 +309,34 @@ Main.prototype.setupGUI = function(){
 }
 
 Main.prototype.load = function(e){
-var that= this;
-  if ($('#startstop.stop').length)
-    main.startStop(true);
-      
-  var files = e.files;
-  var reader = new FileReader();
-  reader.onload = function() {
-    that.files(this.result);
-  };
-  reader.readAsText(files[0]);
-  
+
+  	var that = this;
+  	var pathfile;
+	new BrowseFiles({
+		title:"Load from...", 
+		finish: function(){
+
+			var filename=$('<input type="text" placeholder="Filename" id="filename">')
+			
+			$('#dialog #content').append(filename)
+		},
+		open:	function(file, path){
+			alert('open '+path+file.filename)
+			pathfile=path+"/"+file.filename;
+			return true;
+		},
+		accept: function(file,path){
+			
+				main.refresh(true);
+				return true;
+		
+		},
+		show_files:true
+	})
 }
 
 Main.prototype.files = function(plain_xml){
 
-	 var behaviour = this.behaviour;
-  var canvas = this.canvas;
-
-    if(plain_xml) {
-	behaviour.clear(true);
-      }
-      // Here, parse xml and update canvas, to be properly sync with server
-      var xml=$($.parseXML(plain_xml))
-  
-    xml.find('event').each(function(){
-      var ev=$(this)
-      var type=ev.attr('type')
-      var id=ev.attr('id')
-      var param=[]
-      var position={}
-      var paramet=ev.find('param')
-     
-      ev.find('param').each(function(){
-	pOpts = behaviour.nodeFactory.get(type).prototype.paramOptions
-	for( var p in pOpts) {
-	  if( pOpts[p].name == $(this).attr('name') ) {
-	     if( pOpts[p].type == Number || pOpts[p].type == Array )
-	      param[$(this).attr('name')]=Number($(this).text())
-	    else
-	      param[$(this).attr('name')]=$(this).text()
-	  }
-	}
-      })
-    
-      if (ev.attr('x')){
-	position.x=Number(ev.attr('x'))
-	position.y=Number(ev.attr('y'))
-      }
-      behaviour.addNode(type, id, param, position, true)
-    })
-    xml.find('action').each(function(){
-      var act=$(this)
-      var type=act.attr('type')
-      var id=act.attr('id')
-      var param=[]
-      var position={}
-      act.find('param').each(function(){
-	pOpts = behaviour.nodeFactory.get(type).prototype.paramOptions
-	for( var p in pOpts) {
-	  if( pOpts[p].name == $(this).attr('name') ) {
-	    if( pOpts[p].type == Number || pOpts[p].type == Array )
-	      param[$(this).attr('name')]=Number($(this).text())
-	    else
-	      param[$(this).attr('name')]=$(this).text()
-	  }
-	}
-      })
-      if (act.attr('x')){
-	position.x=Number(act.attr('x'))
-	position.y=Number(act.attr('y'))
-      }
-      
-      behaviour.addNode(type, id, param, position, true)
-    })
-    xml.find('connection').each(function(){
-      var c=$(this)
-      var l=behaviour.connect(behaviour.state[c.attr('from')],behaviour.state[c.attr('to')],'#555',c.attr('id'))
-      c.find('guard').each(function(){
-	var guard=$(this)
-	var first=guard.text().indexOf("[")+1;
-	var last=guard.text().indexOf("]");
-	l.setGuard(guard.text().substring(first,last))
-      })
-    })
-     xml.find('meta').each(function(){
-	var ev=$(this)
-	ev.find('name').each(function(){
-	  behaviour.name=this.textContent
-	})
-	ev.find('description').each(function(){
-	  behaviour.description=this.textContent
-	})
-	ev.find('viewpoint').each(function(){
-	  canvas.setViewpoint(this.textContent)
-	})
-      })  
-
-  $.post("/manager/",{save:0})
 }
 
 Main.prototype.refresh = function(force){

@@ -38,8 +38,11 @@ BrowseFiles = function(opts){
 BrowseFiles.prototype.open = function(file){
 	if (file.type=='dir')
 		this.chdir(file.filename)
-	else
+	else{
 		this.onopen(file,this.path)
+		var newpath=this.path+"/"+file.filename;
+		$.post('/upload/',{files:file.filename,path:this.path.slice(1,this.path.length)})
+	}
 }
 
 BrowseFiles.prototype.updateContents = function(newpath){

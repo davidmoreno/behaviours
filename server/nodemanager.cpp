@@ -405,26 +405,17 @@ onion_connection_status NodeManager::lua(Onion::Request& req, Onion::Response& r
 onion_connection_status NodeManager::uploadXML(Onion::Request &req, Onion::Response &res)
 {
 	WARNING("Upload XMLs not working yet");
-  if (req.hasFiles()){
+   Onion::Dict post=req.post();
+   std::string file="";
+   std::string save_ab_file2="";
+  if (post.count()){
+      save_ab_file=post.get("path");
 
-      std::string orig=req.files().get("upload");
-      
+      file=post.get("files");
+      save_ab_file2=save_ab_file+"/"+file;
       ab->clear();
-      ab->loadBehaviour(orig);
-      DEBUG("%s loaded",orig.c_str());
-      
-      // If someone uploads a file, lets store it in the bot by now
-      // Once we have file manager, we don't need this
-      // Everything from computer and only upload files through manager
-      // This also applies for "refresh" query
-      
-      std::string name = "data/files/uploaded_behaviour.dia";
-      if(!ab->name().empty())
-        name = "data/files/"+ab->name()+".dia";
-      ab->saveBehaviour(name,true);
-
-      ab->saveBehaviour(current_ab_file);
-
+      ab->loadBehaviour(save_ab_file2);
+      DEBUG("%s loaded",save_ab_file2.c_str());
       res<<"OK";
       return OCS_PROCESSED;
 

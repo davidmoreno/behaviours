@@ -83,7 +83,8 @@
       <a href="#" id="newb" onclick="main.newBehaviour()" lid="new">Nuevo</a>
       <a href="#" id="metadatab" onclick="main.behaviour.setMetaData()" lid="properties">Propiedades</a>
       <a href="#" id="saveb" onclick="main.save()" lid="save">Guardar</a>
-      <a href="#" id="loadb" onclick="$('#upload').click()" lid="load">Cargar</a><form action="../upload/" method="post" enctype="multipart/form-data" id="upload_xml" target="hiddenDownloader" novalidate><input type="file" name="upload" id="upload" onchange="main.load(this)"></form>
+      <a href="#" id="loadb" onclick="main.load()" lid="load">Guardar</a>
+      <!--<a href="#" id="loadb" onclick="$('#upload').click()" lid="load">Cargar</a><form action="../upload/" method="post" enctype="multipart/form-data" id="upload_xml" target="hiddenDownloader" novalidate><input type="file" name="upload" id="upload" onchange="main.load(this)"></form>-->
       <a href="dav://localhost:8081/webdav/" id="webdav" id="webdav">Webdav</a>
        
       
