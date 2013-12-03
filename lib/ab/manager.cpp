@@ -335,7 +335,7 @@ void Manager::exec()
       //DEBUG("Check %s %d", ev->name().c_str(), ev->flags());
       if (ev->flags()&Event::Polling) {
         DEBUG("Event with name: %s and Cont: %d and noderepeat: %d",ev->name().c_str(),ev->cont,ev->noderepeat);
-        if(ev->noderepeat!=alwaysExec && ev->name().find("manager")<0 && ev->cont ==ev->noderepeat){
+        if(ev->noderepeat!=alwaysExec && ev->name().find("__alarm_manager__")<0 && ev->cont ==ev->noderepeat){
           DEBUG("Event %s is removed!", ev->name().c_str());
             ev->cont=0;
             Object newob= to_object(1);
