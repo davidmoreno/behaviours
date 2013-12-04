@@ -53,11 +53,11 @@ Onion::Onion *o;
 std::shared_ptr<AB::Manager> manager;
 std::shared_ptr<NodeManager> nodeManager;
   
-static void node_notify_enter(AB::Node *n) {
+static void node_notify_enter(AB::Node::p n) {
   nodeManager->activateNode(n);
 }
 
-static void node_notify_exit(AB::Node *n) {
+static void node_notify_exit(AB::Node::p n) {
   nodeManager->deactivateNode(n);
 }
 

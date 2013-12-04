@@ -130,7 +130,7 @@ void Python2Action::exec()
 	PyObject *locals=PyDict_New();
 	Py_INCREF(globals);
 	
-	auto o=to_object(this) ;
+	auto o=to_object(this->shared_from_this()) ;
 	PyDict_SetItemString(locals, "self", object2pyobject( o ));
 	
 	PyObject *obj=PyEval_EvalCode( (PyCodeObject*)compiled_code, globals, locals);
@@ -196,7 +196,7 @@ bool Python2Event::check()
 	PyObject *locals=PyDict_New();
 	Py_INCREF(globals);
 	
-	auto o=to_object(this) ;
+	auto o=to_object(this->shared_from_this());
 	PyDict_SetItemString(locals, "self", object2pyobject( o ));
 	
 	PyObject *obj=PyEval_EvalCode( (PyCodeObject*)compiled_code, globals, locals);

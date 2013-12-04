@@ -65,6 +65,8 @@ public:
 
 class TestNode : public Action {
 public:
+	using p = std::shared_ptr<TestNode>;
+	
   int ntests;
   int lastnargs;
 
@@ -106,7 +108,7 @@ void t01_node_with_methods()
   INIT_LOCAL();
 
   Manager manager;
-  TestNode *node=new TestNode();
+  TestNode::p node=std::make_shared<TestNode>();
 
   manager.addNode(node);
 
@@ -144,7 +146,7 @@ void t02_image_objects()
   INIT_LOCAL();
 
   Manager manager;
-  TestNode *node=new TestNode();
+  TestNode::p node=std::make_shared<TestNode>();
 
   manager.addNode(node);
   manager.eval("testnode.test(); img=testnode.getImage();");
@@ -160,7 +162,7 @@ void t03_return_lua_object()
   INIT_LOCAL();
 
   Manager manager;
-  TestNode *node=new TestNode();
+  TestNode::p node=std::make_shared<TestNode>();
 
   manager.addNode(node);
   manager.eval("testnode.test(); img=testnode.getImage();");

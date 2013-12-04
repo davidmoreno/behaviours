@@ -85,9 +85,10 @@ namespace AB {
    *
    * * __lua__ -- Pushes the data on the LUA stack, with the given lua_State. @see lua.cpp
    */
-  class ObjectBase {
+  class ObjectBase : public std::enable_shared_from_this<ObjectBase>{
     const char *_type;
   public:
+    using p = std::shared_ptr<ObjectBase>;
 
     /// Shortcut to avoid creating it a lot.
     static const AttrList emptyAttrList;

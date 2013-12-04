@@ -114,9 +114,9 @@ static void readNode(xmlNode *node, Manager *manager)
   xmlChar *p=xmlGetProp(node, (const xmlChar*)"type");
   if (!p)
     return;
-  Node *ev=nullptr;
+  Node::p ev;
   try {
-    ev=Factory::createEvent((char*)p);
+    ev=Factory::createEvent((const char*)p);
   } catch(const Factory::type_does_not_exists &e) {
     WARNING("Could not create event: %s", e.what());
     WARNING("Known types: %s", Factory::list_as_string().c_str());
@@ -124,7 +124,7 @@ static void readNode(xmlNode *node, Manager *manager)
     return;
   }
   xmlFree(p);
-	assert(ev != nullptr);
+	assert(bool(ev));
 	
   p=xmlGetProp(node,(const xmlChar*)"id");
   if (p) {
@@ -194,7 +194,7 @@ static void readConnection(xmlNode *node, Manager *manager)
   if (!id || !from || !to)
     return;
 
-  Connection *conn=manager->connect((const char*)from, (const char*)to);
+  Connection::p conn=manager->connect((const char*)from, (const char*)to);
 
   /// Could not create connection
   if (!conn) {

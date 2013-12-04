@@ -29,6 +29,8 @@ namespace AB {
   public:
     enum Repeat { Never = 0, Always = 1, Weekdays = 2, Weekends = 3, Mondays = 4, Tuesdays = 5, Wednesdays = 6, Thursdays = 7, Fridays = 8, Saturdays = 9, Sundays = 10 };
   public:
+		using p = std::shared_ptr<Alarm>;
+		
     Alarm(const char *type = "alarm");
 
     virtual AB::Object attr(const std::string& name);

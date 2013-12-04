@@ -21,6 +21,11 @@
 
 #include "object.h"
 #include "eventqueue.hpp"
+#include "node.h"
+#include "action.h"
+#include "event.h"
+#include "connection.h"
+
 
 #include <thread>
 #include <mutex>
@@ -85,11 +90,11 @@ namespace AB {
     /**
      * @short Adds a node to the manager.
      */
-    void addNode(Node *);
+    void addNode(Node::p node);
     /**
      * @short Deletes a node from the manager. If also_delete_object is true, it is deleted. 
      */
-    void deleteNode(Node *n, bool also_delete_object=true);
+    void deleteNode(Node::p node);
 
     /**
      * @short Notifies that this event is activated, so connected nodes must be notified as appropiate.
@@ -103,25 +108,25 @@ namespace AB {
      * launched at the exec loop. This allows to crete new threads to check conditions, and those will send the events as
      * necesary, not from the main loop, and then properly enqueued.
      */
-    void notify(Node *);
+    void notify(Node::p node);
     /**
      * @short Connects two nodes
      */
-    Connection *connect(Node *, Node *);
+    Connection::p connect(Node::p A, Node::p B);
     /**
      * @short Connects two nodes by id.
      */
-    Connection *connect(const std::string idA, const std::string idB);
+    Connection::p connect(const std::string &idA, const std::string &idB);
 
 		/**
 		 * @short Disconnects two nodes
 		 */
-		void disconnect(Node *A, Node *B);
+		void disconnect(Node::p A, Node::p B);
 		
 		/**
 		 * @short Disconnects all from a node
 		 */
-		void disconnect(Node *A);
+		void disconnect(Node::p A);
 		
 		
 		/**
@@ -129,39 +134,39 @@ namespace AB {
 		 * 
 		 * @return The connection, or NULL if none.
 		 */
-		Connection *getConnection(Node *A, Node *B);
+		Connection::p getConnection(Node::p A, Node::p B);
 
 		/**
 		 * @short Returns all connection objects
 		 */
-		std::vector<Connection *> getConnections();
+		std::vector<Connection::p> getConnections();
 
 		/**
 		 * @short Returns all connection objects from a given node
 		 */
-		const std::vector<Connection *> &getConnections(Node *A);
+		const std::vector<Connection::p> &getConnections(Node::p A);
 
     /**
      * @short Returns the list of nodes
      */
-    const std::set<Node*> &getNodes();
+    const std::set<Node::p> &getNodes();
     /**
      * @short Returns the list of active events, this is events that can happend in any moment.
      */
-    const std::set<Event*> &getActiveEvents();
+    const std::set<Node::p> &getActiveEvents();
 
     /**
      * @short Gets a node by name
      */
-    Node *getNode(const std::string &id);
+    Node::p getNode(const std::string &id);
     /**
      * @short Gets an event by name
      */
-    Event *getEvent(const std::string &id);
+    Event::p getEvent(const std::string &id);
     /**
      * @short Gets an action by name
      */
-    Action *getAction(const std::string &id);
+    Action::p getAction(const std::string &id);
 
     /**
      * @short Checks a LUA expression.
@@ -266,18 +271,18 @@ namespace AB {
     EventQueue eventQueue;
   private:
     void sync();
-    Node *notifyOne(Node *);
+    Node::p notifyOne(Node::p n);
 
   private:
     LUA *lua;
-    std::set<Event *> activeEvents;
-    std::set<Node*> nodes;
-    Node *lastNode;
-    std::queue<Node *> pendingNotifications;
+    std::set<Node::p> activeEvents;
+    std::set<Node::p> nodes;
+    Node::p lastNode;
+    std::queue<Node::p> pendingNotifications;
     std::mutex pendingNotificationsMutex;
     Meta metadata;
 
-    std::map<Node*, std::vector<Connection*> > nodeConnections;
+    std::map<Node::p, std::vector<Connection::p> > nodeConnections;
 
     volatile bool running_;
     bool syncOnNextCycle; ///< Whenever some part of the graph changes, new event, new action, new connection.. or removal, next cycle must sync.
@@ -286,9 +291,9 @@ namespace AB {
   };
 
   /// Overwrite to get a notification on each node notify enter
-  extern void (*manager_notify_node_enter)(AB::Node *node);
+  extern void (*manager_notify_node_enter)(AB::Node::p node);
   /// Overwrite to get a notification on each node notify exit
-  extern void (*manager_notify_node_exit)(AB::Node *node);
+  extern void (*manager_notify_node_exit)(AB::Node::p node);
 }
 
 #endif

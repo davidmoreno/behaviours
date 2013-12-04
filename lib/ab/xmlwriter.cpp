@@ -83,7 +83,7 @@ static void writeNodes(xmlNode *root_element, Manager *manager, bool includeFile
 {
 	xmlNode *cur;
 	
-	for(Node *node: manager->getNodes()) {
+	for(Node::p node: manager->getNodes()) {
 		cur = xmlNewChild(root_element, NULL, BAD_CAST "node", NULL);
 		xmlNewProp(cur, BAD_CAST "id", BAD_CAST node->name().c_str());
 		xmlNewProp(cur, BAD_CAST "type", BAD_CAST node->type());
@@ -117,7 +117,7 @@ static void writeNodes(xmlNode *root_element, Manager *manager, bool includeFile
 void writeConnections(xmlNode *root_element, Manager *manager){
   // second round, connections
 	xmlNode *cur;
-  for(Connection *connection: manager->getConnections()) {
+  for(Connection::p connection: manager->getConnections()) {
     cur = xmlNewChild(root_element, NULL, BAD_CAST "connection", NULL);
     xmlNewProp(cur, BAD_CAST "id", BAD_CAST connection->name().c_str());
     xmlNewProp(cur, BAD_CAST "from", BAD_CAST connection->from()->name().c_str());
