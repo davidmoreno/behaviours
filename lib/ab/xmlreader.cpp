@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+#include <assert.h>
 #include <string.h>
 #include <fstream>
 #include <libxml/tree.h>
@@ -32,8 +33,7 @@
 using namespace AB;
 
 static void readNodes(xmlNode *node, Manager *manager);
-static void readEvent(xmlNode *event, Manager *manager);
-static void readAction(xmlNode *action, Manager *manager);
+static void readNode(xmlNode *node, Manager *manager);
 static void readConnection(xmlNode *action, Manager *manager);
 static void readMetadata(xmlNode *meta, Manager *manager);
 static void readFile(xmlNode *file);
@@ -87,13 +87,12 @@ static void readNodes(xmlNode *node, Manager *manager)
   xmlNode *cur;
   for(cur=node; cur; cur=cur->next) {
     if (cur->type==XML_ELEMENT_NODE) {
-      if (strcmp((char*)cur->name, "event")==0) {
-        readEvent(cur, manager);
-      } else if (strcmp((char*)cur->name, "action")==0) {
-        readAction(cur, manager);
-      } else if (strcmp((char*)cur->name, "meta")==0) {
+			std::string nname{ (const char*)cur->name };
+      if (nname=="node" || nname=="action" || nname=="event") {
+        readNode(cur, manager);
+      } else if (nname == "meta") {
         readMetadata(cur, manager);
-      } else if (strcmp((char*)cur->name, "file")==0) {
+      } else if (nname == "file") {
         readFile(cur);
       }
     }
@@ -110,12 +109,12 @@ static void readNodes(xmlNode *node, Manager *manager)
 }
 
 
-static void readEvent(xmlNode *node, Manager *manager)
+static void readNode(xmlNode *node, Manager *manager)
 {
   xmlChar *p=xmlGetProp(node, (const xmlChar*)"type");
   if (!p)
     return;
-  Event *ev;
+  Node *ev=nullptr;
   try {
     ev=Factory::createEvent((char*)p);
   } catch(const Factory::type_does_not_exists &e) {
@@ -125,7 +124,8 @@ static void readEvent(xmlNode *node, Manager *manager)
     return;
   }
   xmlFree(p);
-
+	assert(ev != nullptr);
+	
   p=xmlGetProp(node,(const xmlChar*)"id");
   if (p) {
     ev->setName((char *)p);
@@ -160,57 +160,6 @@ static void readEvent(xmlNode *node, Manager *manager)
     }
   }
   manager->addNode(ev);
-}
-
-static void readAction(xmlNode *node, Manager *manager)
-{
-  xmlChar *p=xmlGetProp(node, (const xmlChar*)"type");
-  if (!p)
-    return;
-  Action *act;
-  
-  try {
-    act=Factory::createAction((char*)p);
-  } catch(const Factory::type_does_not_exists &e) {
-    WARNING("Could not create action %s", e.what());
-    WARNING("Known types: %s", Factory::list_as_string().c_str());
-    xmlFree(p);
-    return;
-  }
-  xmlFree(p);
-
-  p=xmlGetProp(node,(const xmlChar*)"id");
-  if (p) {
-    act->setName((char *)p);
-    xmlFree(p);
-  }
-  
-    AB::Point2D pos;
-  p=xmlGetProp(node,(const xmlChar*)"x");
-  if (p) {
-    pos.x = atof((char *)p);
-    xmlFree(p);
-    p=xmlGetProp(node,(const xmlChar*)"y");
-    if (p) {
-      pos.y = atof((char *)p);
-      act->setPosition(pos);
-      xmlFree(p);
-    } 
-  }
-
-  xmlNode *param;
-  for(param=node->children; param; param=param->next) {
-    if (strcmp((char*)param->name, "param")==0 && param->children) {
-      p=xmlGetProp(param, (const xmlChar*)"name");
-      if (p) {
-        act->setAttr((const char*)p, (const char*)param->children->content);
-        xmlFree(p);
-      } else {
-        act->setAttr("", (const char*)param->children->content);
-      }
-    }
-  }
-  manager->addNode(act);
 }
 
 /**
