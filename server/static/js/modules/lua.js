@@ -1,7 +1,6 @@
+require(['node','jquery','main','extra/codemirror','extra/codemirror_python'],function(node, $, main, CodeMirror){
 /**
  */
-
-(function(){
 var lua_configure = function(){
   this.configureDialogSetup()
 
@@ -56,8 +55,8 @@ lua_accept_configure = function(){
   this.update()
 }
 
-var LUAAction=extend(Action, {paramOptions: [{type:Text,text:current_language.lua_action_msg,name:'code'}]})
-var LUAEvent=extend(Event, {paramOptions: [{type:Text,text:current_language.lua_event_msg,name:'code'}]})
+var LUAAction=node.extend(node.Action, {paramOptions: [{type:Text,text:current_language.lua_action_msg,name:'code'}]})
+var LUAEvent=node.extend(node.Event, {paramOptions: [{type:Text,text:current_language.lua_event_msg,name:'code'}]})
 
 LUAAction.prototype.configure=lua_configure
 LUAAction.prototype.acceptConfigure=lua_accept_configure
@@ -68,4 +67,4 @@ LUAEvent.prototype.acceptConfigure=lua_accept_configure
 
 main.behaviour.nodeFactory.add('lua_action',LUAAction)
 main.behaviour.nodeFactory.add('lua_event',LUAEvent)
-})()
+})

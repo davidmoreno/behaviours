@@ -1,12 +1,13 @@
-function NodeFactory(behaviour){
+define(['jquery','node'],function($,node){
+
+var NodeFactory=function(behaviour){
 	if (! (this instanceof NodeFactory)){
 		throw new Error("NodeFactory is a class, not a function. Use new.")
 	}
 	this.known_types={}
+	this.javascripts=[]
 	this.behaviour=behaviour
 	this.updateAvailableNodes()
-	
-	
 }
 
 NodeFactory.prototype.updateAvailableNodes = function(){
@@ -14,10 +15,16 @@ NodeFactory.prototype.updateAvailableNodes = function(){
 	$.get('/node/?list_types', function(d){
 		$.get('/node/?list_files', function(filelist){ 
 		  var files = filelist.files.split(" ");
+			var count=files.length
 		  for(var n in files) {
-
 		    $.get('nodes/'+files[n], function(xml){ 
 		      that.parseNodeDescription(xml); 
+					count--;
+					if (count==0){
+						require(['main'].concat(that.javascripts), function(main){
+							main.ready()
+						})
+					}
 		    }, 'xml')
 		  }
 		  that.behaviour.ready=true;
@@ -88,11 +95,11 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		a.click(function(){ that.behaviour.addNode($(this).attr('node-type')) })
 		if (type=="action"){
 			$('#actionlist').append(li)
-			klass=Action
+			klass=node.Action
 		}
 		else{
 			$('#eventlist').append(li)
-			klass=Event
+			klass=node.Event
 		}
 		
 		var hasArray=false;
@@ -121,31 +128,20 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 			
 		})
 
-		this.known_types[id]=extend(klass, {paramOptions:paramOptions})
+		this.known_types[id]=node.extend(klass, {paramOptions:paramOptions})
 		
 		// Add update from array function in case one of the paramOptions is an Array
 		if(hasArray) {
 		  this.known_types[id].prototype.update = function() {
-		    NodeHelper.updateFromArray(this);
+		    node.NodeHelper.updateFromArray(this);
 		  }
 		  
 		}
-		// Last thing, load JS that can overwrite it all. Load them in order. Slower, but safer.
-		{
-			var load_in_order = function(jss){
-				if (jss.length==0)
-					return
-				var js=jss[0]
-				jss=jss.slice(1)
-				$.getScript('js/'+js, function(){ load_in_order(jss) }) 
-			}
-			var jss=[]
-			xml.children('js').each(function(){ 
-				jss.push($(this).text())
-			})
-			
-			load_in_order(jss)
-		}
+		xml.children('js').each(function(){ 
+			var name=$(this).text().trim().slice(0,a.length-4)
+			require([name]) // preload
+			that.javascripts.push(name)
+		})
 	}
 }
 
@@ -156,3 +152,6 @@ NodeFactory.prototype.get = function(type){
 NodeFactory.prototype.add = function(name, type){
 	this.known_types[name]=type
 }
+
+return {NodeFactory:NodeFactory}
+})
