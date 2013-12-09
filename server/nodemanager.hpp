@@ -51,6 +51,8 @@ namespace ABServer{
 
 		std::string current_ab_file;
 		std::string save_ab_file;
+		std::string image_dir;
+		std::string image_dir_2;
 		std::string downloaded;
 		struct timeval lastAutosave;
 		bool needsAutosave, forceUpdate;

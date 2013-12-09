@@ -62,8 +62,12 @@ NodeManager::NodeManager(std::shared_ptr<AB::Manager> &ab) : ab(ab)
   needsAutosave = false;
   forceUpdate = false;
 	current_ab_file=data_dir+"/current.ab";
+  image_dir= data_dir+"static/";
+  image_dir_2=data_dir+"static/image/";
   save_ab_file="";
 	mkdir(data_dir.c_str(),0777);
+  mkdir(image_dir.c_str(),0777);
+  mkdir(image_dir_2.c_str(),0777);
   gettimeofday(&lastAutosave, NULL);
 }
 
