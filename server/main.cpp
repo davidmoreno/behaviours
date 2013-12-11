@@ -104,8 +104,14 @@ int main(void){
 	signal(SIGINT, on_SIGINT);
 	signal(SIGTERM, on_SIGINT);
 	
-	o->setHostname("0.0.0.0");
-	o->setPort("8081");
+	auto listen = manager->settings.get("global.listen", "0.0.0.0:8081");
+	auto hostname=listen.substr(0,listen.find(':'));
+	auto port=listen.substr(listen.find(':')+1);
+	if (port.empty())
+		port="8081";
+	
+	o->setHostname(hostname);
+	o->setPort(port);
 	
 	Onion::Url url(o);
 	
@@ -127,7 +133,7 @@ int main(void){
 	
 	//nodeManager.mimeFill();
 
-	INFO("Listening at 127.0.0.1:8081");
+	INFO("Listening at %s:%s", hostname.c_str(), port.c_str());
 	
 	o->listen();
 	

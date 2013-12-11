@@ -30,6 +30,7 @@ namespace AB{
 		Settings(const std::string &filename="~/.config/ab.ini");
 		
 		std::string get(const std::string &item);
+		std::string get(const std::string &item, const std::string &defvalue);
 		std::set<std::string> getSet(const std::string &item);
 	};
 };

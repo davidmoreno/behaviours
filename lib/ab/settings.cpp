@@ -105,6 +105,13 @@ std::string Settings::get(const std::string& key)
 	return settings->get(key);
 }
 
+std::string Settings::get(const std::string &key, const std::string &defvalue){
+	auto ret=settings->get(key);
+	if (ret.empty())
+		return defvalue;
+	return ret;
+}
+
 std::set< std::string > Settings::getSet(const std::string& key)
 {
 	DEBUG("Get set %s", key.c_str());
