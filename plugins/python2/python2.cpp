@@ -30,7 +30,7 @@ namespace AB{
 		std::string code;
 		PyObject *compiled_code;
 	public:
-		Python2Action(const char* type);
+		Python2Action(const char* type="python2action");
     virtual ~Python2Action();
 		virtual void exec();
 		
@@ -45,7 +45,7 @@ namespace AB{
 		std::string code;
 		PyObject *compiled_code;
 	public:
-		Python2Event(const char* type);
+		Python2Event(const char* type="python2event");
     virtual ~Python2Event();
     virtual bool check();
 		

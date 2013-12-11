@@ -42,10 +42,9 @@ namespace AB {
     static std::map<std::string, std::function<Node::p(const std::string& type)> > knownTypes;
 
     template<class T>
-    static AB::Node::p createNode(const std::string& type) {
-      return std::make_shared<T>(type.c_str());
+    static AB::Node::p createNode(const std::string &ignored) {
+      return std::make_shared<T>();
     }
-    
   public:
     /**
      * @short This desired type to create does not exist.
@@ -74,7 +73,6 @@ namespace AB {
      */
     template<class T>
     static bool registerClass(const std::string &type) {
-      
       registerCreator(type, createNode<T>);
       return true;
     }
