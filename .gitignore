@@ -1,0 +1,6 @@
+*~
+debian/behaviours.*
+debian/behaviours
+.*
+*kdev4
+obj*-linux-*
