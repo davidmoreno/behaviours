@@ -25,6 +25,7 @@
 #include "action.h"
 #include "event.h"
 #include "connection.h"
+#include "settings.hpp"
 
 
 #include <thread>
@@ -269,6 +270,8 @@ namespace AB {
     
     /// Queue of events from server to client. Its a circular buffer so some events may get lost.
     EventQueue eventQueue;
+    /// AB settings.
+    Settings settings;
   private:
     void sync();
     Node::p notifyOne(Node::p n);

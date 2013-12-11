@@ -19,6 +19,7 @@
 #include "pluginloader.h"
 #include "plugin.hpp"
 #include "log.h"
+#include "manager.h"
 
 #include <dirent.h>
 #include <sys/stat.h>
@@ -41,6 +42,15 @@ static bool isdir(const std::string &filename){
 	return S_ISDIR(st.st_mode);
 }
 
+static bool disabledPluginByName(const std::string &fullname, std::set<std::string> &disabled){
+	std::string name;
+	name=fullname.substr(fullname.rfind("/lib")+4);
+	if (endswith(name,".so"))
+		name=name.substr(0,name.length()-3);
+	auto f=disabled.find(name);
+	return f!=std::end(disabled);
+}
+
 void PluginLoader::loadPath(const std::string& path, Manager *manager)
 {
 	//DEBUG("Load plugins at %s",path.c_str());
@@ -49,17 +59,26 @@ void PluginLoader::loadPath(const std::string& path, Manager *manager)
 		ERROR("%s is not a directory to load plugins", path.c_str());
 		return;
 	}
+	auto disabled=manager->settings.getSet("plugins.disabled");
 	struct dirent *st;
 	while( (st=readdir(dir)) != NULL ){
 		if (st->d_name[0]=='.') // Skip hidden
 			continue;
-		//DEBUG("Check %s",st->d_name);
+		DEBUG("Check %s",st->d_name);
 		std::string fullname=path+"/"+st->d_name;
 		if (endswith(fullname, ".so")){
-			loadPlugin(fullname, manager);
+			if (!disabledPluginByName(fullname, disabled))
+				loadPlugin(fullname, manager);
+			else{
+				DEBUG("Plugin disabled: %s", fullname.c_str());
+			}
 		}
-		if (isdir(fullname)){
-			loadPath(fullname, manager);
+		else if (isdir(fullname)){
+			if (!disabledPluginByName(fullname, disabled))
+				loadPath(fullname, manager);
+			else{
+				DEBUG("Plugin path disabled: %s", fullname.c_str());
+			}
 		}
 	}
 	
