@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ab>
+	<ab>
+		<meta>
+			<viewpoint>matrix(0.8188966723556401206,0,0,0.8188966723556401206,-1365.774103400957074,636.17375478008978007)</viewpoint>
+			<name>Submodule</name>
+			<description>This is a submodule description.</description>
+		</meta>
+		<event id="start_at_submodule" type="start" x="-1070.971313" y="786.031860"/>
+		<action id="print_at_submodule" type="lua_action" x="-1167.601074" y="965.370239">
+			<param name="code">print("Submodule")</param>
+			<param name="flags">0</param>
+		</action>
+		<action id="stop_at_submodule" type="stop" x="-1075.884644" y="1093.118042"/>
+		<connection id="c_0000000000000002" from="start_at_submodule" to="print_at_submodule"/>
+		<connection id="c_0000000000000004" from="print_at_submodule" to="stop_at_submodule"/>
+	</ab>
+  
+	<event id="click_to_start" type="click" x="-691.950623" y="711.076172"/>
+	<event id="main" type="start" x="-803.192078" y="712.331116"/>
+	<action id="print_global" type="lua_action" x="-772.424500" y="970.669250">
+		<param name="code">print("Hola mundo")
+</param>
+		<param name="flags">0</param>
+	</action>
+	<action id="stop_global" type="stop" x="-695.916626" y="1156.992065"/>
+	<connection id="c_0000000000000001" from="click_to_start" to="print_global"/>
+	<connection id="c_0000000000000003" from="main" to="print_global"/>
+	<connection id="c_0000000000000003" from="print_global" to="submodule"/>
+	<connection id="c_0000000000000003" from="submodule" to="stop_global"/>
+  
+  <meta>
+    <viewpoint>matrix(0.8188966723556401206,0,0,0.8188966723556401206,-1365.774103400957074,636.17375478008978007)</viewpoint>
+    <name>Submodules</name>
+    <description>Simple test for submodules. Base ab is the main entry for the behaviour.</description>
+  </meta>
+</ab>

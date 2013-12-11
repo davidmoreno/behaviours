@@ -33,9 +33,8 @@ bool Factory::registerCreator(const std::string &type, std::function<Node::p(con
 
 Node::p Factory::createNode(const std::string& type)
 {
-  
   if (knownTypes.count(type)>0) {
-    return knownTypes[type](knownTypes.find(type)->first);
+    return knownTypes[type](type);
   }
   throw type_does_not_exists(type);
 }

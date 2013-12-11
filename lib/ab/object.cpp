@@ -29,15 +29,26 @@
 using namespace AB;
 
 const AttrList ObjectBase::emptyAttrList;
+int64_t ObjectBase::live_objects=0;
+
+namespace std{
+	std::string to_string(const AB::ObjectBase *p){
+		std::stringstream ss;
+		ss<<"<Object "<<p->type()<<" @"<<p<<">";
+		return ss.str();
+	}
+};
 
 ObjectBase::ObjectBase(const char* type)  : _type(type)
 {
-  DEBUG("%s() %p",type,this);
+  ObjectBase::live_objects++;
+  DEBUG("%s() %s (%ld live)",type, std::to_string(this).c_str(), ObjectBase::live_objects);
 }
 
 ObjectBase::~ObjectBase()
 {
-  DEBUG("~%s() %p",type(),this);
+  ObjectBase::live_objects--;
+  DEBUG("~%s() %s (%ld still alive)",type(), std::to_string(this).c_str(), ObjectBase::live_objects);
 }
 
 
@@ -118,3 +129,12 @@ namespace AB {
     throw(object_not_convertible(obj->type(),"float"));
   }
 }
+
+
+std::string std::to_string(const Object &p)
+{
+	std::stringstream ss;
+	ss<<"<Object "<<p->type()<<" @"<<p.get()<<">";
+	return ss.str();
+}
+

@@ -116,7 +116,7 @@ static void readNode(xmlNode *node, Manager *manager)
     return;
   Node::p ev;
   try {
-    ev=Factory::createEvent((const char*)p);
+    ev=Factory::createNode((const char*)p);
   } catch(const Factory::type_does_not_exists &e) {
     WARNING("Could not create event: %s", e.what());
     WARNING("Known types: %s", Factory::list_as_string().c_str());

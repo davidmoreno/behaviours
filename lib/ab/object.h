@@ -86,6 +86,7 @@ namespace AB {
    * * __lua__ -- Pushes the data on the LUA stack, with the given lua_State. @see lua.cpp
    */
   class ObjectBase : public std::enable_shared_from_this<ObjectBase>{
+    static int64_t live_objects;
     const char *_type;
   public:
     using p = std::shared_ptr<ObjectBase>;
@@ -142,6 +143,11 @@ namespace AB {
   int object2int(const Object &);
   /// Converts the object to a int, or throws not convertible.
   double object2float(const Object &);
+	
+};
+
+namespace std{
+	std::string to_string(const AB::Object &p);
 };
 
 #endif

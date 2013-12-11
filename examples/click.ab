@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ab>
+  <event id="node_0000000000000018" type="click" x="-691.950623" y="711.076172"/>
+  <action id="node_0000000000000008" type="lua_action" x="-772.424500" y="970.669250">
+    <param name="code">print("Hola mundo")
+</param>
+    <param name="flags">0</param>
+  </action>
+  <connection id="c_0000000000000001" from="node_0000000000000018" to="node_0000000000000008"/>
+  <meta>
+    <viewpoint>matrix(0.39288460183834933437,0,0,0.39288460183834933437,-1999.803662610587935,982.76193480798940527)</viewpoint>
+    <name>Test</name>
+    <description/>
+  </meta>
+</ab>

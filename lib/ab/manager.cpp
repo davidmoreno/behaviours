@@ -99,10 +99,7 @@ void Manager::deleteNode(Node::p n){
 	
 	disconnect(n);
 	
-  Event::p ev=std::dynamic_pointer_cast<Event>(n);
-  if (ev) {
-		activeEvents.erase(ev);
-	}
+	activeEvents.erase(n);
 	nodes.erase(n);
 }
 
