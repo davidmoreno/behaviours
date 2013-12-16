@@ -139,7 +139,7 @@ Start.prototype.acceptConfigure=function(){
   try{
     this.params=this.getParams()
     this.update()
-    alert(current_language.alert_bot_time);
+
   }
   catch(e){
     alert(current_language.alert_accept_configure);

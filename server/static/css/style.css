@@ -7,6 +7,9 @@ body{
 	color: #555555;
 	overflow: hidden;
 }
+text#param{
+  fill: #000000;
+}
 svg{
 	cursor: default;
 	background: url("../img/wallpaper.jpg");
