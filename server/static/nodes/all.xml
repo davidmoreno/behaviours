@@ -16,7 +16,7 @@
 		<description lang="es">Ejecuta código Lua que realiza alguna acción</description>
 		<type>action</type>
 		<icon src="lua_action.png"/>
-		<pluginname>CodeBlog</pluginname>
+		<pluginname>CodeBlock</pluginname>
 		<js>modules/lua.js</js>
 		<js>extra/codemirror.js</js>
 		<js>extra/codemirror_lua.js</js>
@@ -28,7 +28,7 @@
 		<description lang="es">Ejecuta código Lua para comprobar si activa el evento. Debe devolver 'true' si el evento se activa o 'false' en caso contrario</description>
 		<type>event</type>
 		<icon src="lua_event.png"/>
-		<pluginname>CodeBlog</pluginname>
+		<pluginname>CodeBlock</pluginname>
 		<js>modules/lua.js</js>
 		<js>extra/codemirror.js</js>
 		<js>extra/codemirror_lua.js</js>
