@@ -247,7 +247,6 @@ onion_connection_status NodeManager::node(Onion::Request& req, Onion::Response& 
           return OCS_INTERNAL_ERROR;
         }
       Onion::Dict d=attributesOf(node);
-      d.setAutodelete(false); // Will be removed at return
       return onion_shortcut_response_json(d.c_handler(), req.c_handler(), res.c_handler());
     }
 
@@ -283,11 +282,9 @@ onion_connection_status NodeManager::node(Onion::Request& req, Onion::Response& 
       for (;I!=endI;++I){
           Onion::Dict nodeData=attributesOf(*I);
 
-          nodeData.setAutodelete(false); // Removed when d is removed
           d.add((*I)->name(),nodeData);
         }
 
-      d.setAutodelete(false); // Will be removed at return
       return onion_shortcut_response_json(d.c_handler(), req.c_handler(), res.c_handler());
     }
 }
@@ -333,7 +330,6 @@ onion_connection_status NodeManager::list_xml_files(Onion::Request& req, Onion::
 	}
 	Onion::Dict d;
 	d.add("files",result);
-	d.setAutodelete(false); // Will be removed at return
 	return onion_shortcut_response_json(d.c_handler(), req.c_handler(), res.c_handler());
 }
 
