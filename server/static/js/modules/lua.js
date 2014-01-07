@@ -249,8 +249,8 @@ lua_update=function(){
   }
 }
 
-var LUAAction=extend(Action, {paramOptions: [{type:Text,text:current_language.lua_action_msg,name:'code'}]})
-var LUAEvent=extend(Event, {paramOptions: [{type:Text,text:current_language.lua_event_msg,name:'code'},{type:Array,values:['YES','NO'],name:'nodeon'},
+var LUAAction=node.extend(node.Action, {paramOptions: [{type:Text,text:current_language.lua_action_msg,name:'code'}]})
+var LUAEvent=node.extend(node.Event, {paramOptions: [{type:Text,text:current_language.lua_event_msg,name:'code'},{type:Array,values:['YES','NO'],name:'nodeon'},
  {type:Array,values:['Never','01','02','03','04','05','06','07','08','09','10','Always'],name:'noderepeat'}]})
 
 LUAAction.prototype.configure=lua_configure

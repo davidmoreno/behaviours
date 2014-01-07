@@ -255,8 +255,8 @@ python_accept_configure = function(){
 }
 
 
-var PythonAction=extend(Action, {paramOptions: [{type:Text,text:current_language.python_action_msg,name:'code'}]})
-var PythonEvent=extend(Event, {paramOptions: [{type:Text,text:current_language.python_event_msg,name:'code'},{type:Array,values:['YES','NO'],name:'nodeon'},
+var PythonAction=node.extend(node.Action, {paramOptions: [{type:Text,text:current_language.python_action_msg,name:'code'}]})
+var PythonEvent=node.extend(node.Event, {paramOptions: [{type:Text,text:current_language.python_event_msg,name:'code'},{type:Array,values:['YES','NO'],name:'nodeon'},
    {type:Array,values:['Never','01','02','03','04','05','06','07','08','09','10','Always'],name:'noderepeat'}]})
 
 

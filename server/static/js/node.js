@@ -1,4 +1,4 @@
-define(function(){
+define(['jquery'],function($){
 
 /**
  * @short This is the standard implementation for all nodes.

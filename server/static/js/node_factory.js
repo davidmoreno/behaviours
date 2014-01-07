@@ -141,10 +141,10 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 
 			$('#'+pluginname+"list").append(li)
 			if (type=="action"){			
-				klass=Action
+				klass=node.Action
 			}
 			else {			
-				klass=Event
+				klass=node.Event
 			}
 
 		}

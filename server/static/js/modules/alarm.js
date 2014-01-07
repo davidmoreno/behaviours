@@ -6,7 +6,7 @@
 
 require(['node','jquery','main'],function(node, $, main){
   
-  var Alarm=extend(Event, {paramOptions: [{type:Array,values:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],name:'day'},
+  var Alarm=node.extend(node.Event, {paramOptions: [{type:Array,values:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],name:'day'},
     {type:Array,values:[current_language.jan,current_language.feb,current_language.mar,current_language.apr,current_language.may,current_language.jun,current_language.jul,current_language.aug,current_language.sep,current_language.oct,current_language.nov,current_language.dec],name:'month'},
     {type:Array,values:[2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035,2036,2037,2038,2039,2040,2041],name:'year'},
     {type:Array,values:['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23'],name:'hour'},
