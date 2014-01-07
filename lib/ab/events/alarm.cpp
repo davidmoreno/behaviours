@@ -146,12 +146,13 @@ AttrList Alarm::attrList()
 
 void Alarm::setManager(Manager *man)
 {
+
   manageralarm=man;
   
-  Event *ev=man->getEvent("__alarm_manager__");
+  Event::p ev=man->getEvent("__alarm_manager__");
   if (!ev) {
-    WARNING("SETMANAGERXXXXXXXXXXXXXXXXXXXXXx");
-    ev=new AlarmManager;
+    
+    ev=std::make_shared<AlarmManager>();
 
       man->addNode(ev);
     ev->setManager(man);
@@ -211,11 +212,11 @@ bool AlarmManager::checkAlarm(time_t rawtime)
   
   if (timeinfo && rawtime > lastAlarm && triggered)
     triggered = false;
-      
-  for(Event *ev: manager->getActiveEvents()) {
 
-    Alarm *tev=dynamic_cast<Alarm*>(ev);
-   // WARNING(tev->getMonth());
+   for(Node::p ev: manager->getActiveEvents()) {
+
+   Alarm::p tev=std::dynamic_pointer_cast<Alarm>(ev);
+
     if (tev && tev->getHour() == timeinfo->tm_hour && tev->getMinute() == timeinfo->tm_min ) {
       DEBUG("%d",tev->getNodeon());
 

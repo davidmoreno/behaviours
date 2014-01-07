@@ -72,7 +72,7 @@ NodeManager::NodeManager(std::shared_ptr<AB::Manager> &ab) : ab(ab)
 }
 
 
-Onion::Dict NodeManager::attributesOf(AB::Node *node)
+Onion::Dict NodeManager::attributesOf(AB::Node::p node)
 {
   Onion::Dict nodeData;
 
@@ -182,18 +182,18 @@ onion_connection_status NodeManager::save(Onion::Request &req, Onion::Response &
 onion_connection_status NodeManager::node(Onion::Request& req, Onion::Response& res)
 {
   if (req.path()!=""){
-      AB::Node *node=ab->getNode(req.path());
+      AB::Node::p node=ab->getNode(req.path());
       if (!node){
           throw(Onion::HttpInternalError("Cant find node "+req.path()));
         }
       if (req.post().count()){
           if (req.post().has("connect_to")){
-              AB::Node *nodeB=ab->getNode(req.post().get("connect_to"));
-              AB::Connection *c=ab->connect(node, nodeB);
+              AB::Node::p nodeB=ab->getNode(req.post().get("connect_to"));
+              AB::Connection::p c=ab->connect(node, nodeB);
               if(!c) {
                   if (!nodeB){
                       throw(Onion::HttpInternalError("Can't find node "+req.post().get("connect_to")));
-                    }else if(dynamic_cast<AB::Event*>(nodeB)){
+                    }else if(std::dynamic_pointer_cast<AB::Event>(nodeB)){
                       throw(Onion::HttpInternalError("Can't connect to node "+req.post().get("connect_to")+" because it is an Event"));
                     } else throw(Onion::HttpInternalError("Can't connect to node "+req.post().get("connect_to")));
                 }
@@ -205,7 +205,7 @@ onion_connection_status NodeManager::node(Onion::Request& req, Onion::Response& 
               return OCS_PROCESSED;
             }
           if (req.post().has("disconnect_from")){
-              AB::Node *nodeB=ab->getNode(req.post().get("disconnect_from"));
+              AB::Node::p nodeB=ab->getNode(req.post().get("disconnect_from"));
               if (!nodeB){
                   throw(Onion::HttpInternalError("Cant find node "+req.post().get("connect_to")));
                 }
@@ -215,11 +215,11 @@ onion_connection_status NodeManager::node(Onion::Request& req, Onion::Response& 
             }
           if (req.post().has("guard") && req.post().has("to")){
               WARNING("Got guard:%s and to:%s",req.post().get("guard").c_str(),req.post().get("to").c_str());
-              AB::Node *nodeB=ab->getNode(req.post().get("to"));
+              AB::Node::p nodeB=ab->getNode(req.post().get("to"));
               if (!nodeB){
                   throw(Onion::HttpInternalError("Cant find node "+req.post().get("to")));
                 }
-              AB::Connection *c=ab->getConnection(node,nodeB);
+              AB::Connection::p c=ab->getConnection(node,nodeB);
               c->setGuard(req.post().get("guard"));
               res<<c->guard();
               return OCS_PROCESSED;
@@ -262,13 +262,12 @@ onion_connection_status NodeManager::node(Onion::Request& req, Onion::Response& 
           return OCS_INTERNAL_ERROR;
         }
       Onion::Dict d=attributesOf(node);
-      d.setAutodelete(false); // Will be removed at return
       return onion_shortcut_response_json(d.c_handler(), req.c_handler(), res.c_handler());
     }
 
 
   if (req.post().has("create_node")){
-      AB::Node *n=AB::Factory::createNode(req.post().get("create_node"));
+      AB::Node::p n=AB::Factory::createNode(req.post().get("create_node"));
       ab->addNode(n);
       res<<n->name();
       return OCS_PROCESSED;
@@ -291,18 +290,16 @@ onion_connection_status NodeManager::node(Onion::Request& req, Onion::Response& 
     }
 
   else{
-      const std::set<AB::Node*> nodes=ab->getNodes();
+      const std::set<AB::Node::p> nodes=ab->getNodes();
 
       Onion::Dict d;
-      std::set<AB::Node*>::const_iterator I=nodes.begin(), endI=nodes.end();
+      std::set<AB::Node::p>::const_iterator I=nodes.begin(), endI=nodes.end();
       for (;I!=endI;++I){
           Onion::Dict nodeData=attributesOf(*I);
 
-          nodeData.setAutodelete(false); // Removed when d is removed
           d.add((*I)->name(),nodeData);
         }
 
-      d.setAutodelete(false); // Will be removed at return
       return onion_shortcut_response_json(d.c_handler(), req.c_handler(), res.c_handler());
     }
 }
@@ -348,16 +345,15 @@ onion_connection_status NodeManager::list_xml_files(Onion::Request& req, Onion::
 	}
 	Onion::Dict d;
 	d.add("files",result);
-	d.setAutodelete(false); // Will be removed at return
 	return onion_shortcut_response_json(d.c_handler(), req.c_handler(), res.c_handler());
 }
 
 
 onion_connection_status NodeManager::connections(Onion::Request& req, Onion::Response& res)
 {
-  std::vector<AB::Connection*> conns;
+  std::vector<AB::Connection::p> conns;
   if (req.path()!=""){
-      AB::Node *n=ab->getNode(req.path());
+      AB::Node::p n=ab->getNode(req.path());
       if (!n)
         throw(Onion::HttpInternalError("Cant find node "+req.path()));
       conns=ab->getConnections(n);
@@ -366,10 +362,10 @@ onion_connection_status NodeManager::connections(Onion::Request& req, Onion::Res
       conns=ab->getConnections();
     }
 
-  std::vector<AB::Connection*>::iterator I=conns.begin(), endI=conns.end();
+  std::vector<AB::Connection::p>::iterator I=conns.begin(), endI=conns.end();
   res<<"[";
   for(;I!=endI;){
-      AB::Connection *c=*I;
+      AB::Connection::p c=*I;
       res<<"{ \"from\": \""<<c->from()->name()<<"\",";
       res<<" \"to\":\""<<c->to()->name()<<"\",";
       res<<" \"guard\":\""<<c->guard()<<"\" }";
@@ -447,12 +443,12 @@ onion_connection_status NodeManager::uploadWAV(Onion::Request &req, Onion::Respo
   return OCS_INTERNAL_ERROR;
 }
 
-void NodeManager::activateNode(AB::Node *n)
+void NodeManager::activateNode(AB::Node::p n)
 {
 	ab->eventQueue.pushEvent("node_enter_exit", "enter", n->name());
 }
 
-void NodeManager::deactivateNode(AB::Node *n)
+void NodeManager::deactivateNode(AB::Node::p n)
 {
 	ab->eventQueue.pushEvent("node_enter_exit", "exit", n->name());
 }

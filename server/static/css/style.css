@@ -220,7 +220,8 @@ div#tools{
 	z-index: 1;
 	overflow: hidden;
 	height: 30px; 
-	
+	position: absolute;
+	bottom: 0;	
 }
 
 div#tools li{

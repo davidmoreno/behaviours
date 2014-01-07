@@ -14,14 +14,12 @@ void t01_action_node()
   INIT_LOCAL();
 
   AB::Manager manager;
-  AB::Action *n=new AB::LUAAction;
+  AB::Action::p n=std::make_shared<AB::LUAAction>();
   n->setManager(&manager);
   n->setAttr("exec","print('Hola mundo')");
 
   n->exec();
-
-  delete n;
-
+	
   END_LOCAL();
 }
 
@@ -30,7 +28,7 @@ void t02_event_node()
   INIT_LOCAL();
 
   AB::Manager manager;
-  AB::Event *n=new AB::LUAEvent;
+  AB::Event::p n=std::make_shared<AB::LUAEvent>();
   manager.addNode(n);
   n->setManager(&manager);
   n->setAttr("check","print(LUAEvent.check); return true;");
@@ -48,10 +46,10 @@ void t03_connected()
   INIT_LOCAL();
 
   AB::Manager manager;
-  AB::Event *e=new AB::LUAEvent;
+  AB::Event::p e=std::make_shared<AB::LUAEvent>();
   e->setAttr("sync","print('sync at LUA. Adding runs global.'); runs=0;");
   e->setAttr("check"," runs=runs+1; print(runs .. ' > 3',runs>3); return runs>3;");
-  AB::Action *a=new AB::LUAAction;
+  AB::Action::p a=std::make_shared<AB::LUAAction>();
   a->setAttr("exec","print('ready!'); manager.cancel();");
 
   manager.addNode(e);
@@ -68,9 +66,9 @@ void t04_notify()
   INIT_LOCAL();
 
   AB::Manager manager;
-  AB::Event *e=new AB::LUAEvent;
+  AB::Event::p e=std::make_shared<AB::LUAEvent>();
   e->setAttr("check","manager.notify('cancel');");
-  AB::Action *a=new AB::LUAAction;
+  AB::Action::p a=std::make_shared<AB::LUAAction>();
   a->setName("cancel");
   a->setAttr("exec","print('ready!'); manager.cancel();");
 
@@ -87,9 +85,9 @@ void t05_notify_by_ref()
   INIT_LOCAL();
 
   AB::Manager manager;
-  AB::Event *e=new AB::LUAEvent;
+  AB::Event::p e=std::make_shared<AB::LUAEvent>();
   e->setAttr("check","manager.notify(cancel);");
-  AB::Action *a=new AB::LUAAction;
+  AB::Action::p a=std::make_shared<AB::LUAAction>();
   a->setName("cancel");
   a->setAttr("exec","print('ready!'); manager.cancel();");
 
@@ -106,12 +104,12 @@ void t06_status()
   INIT_LOCAL();
 
   Manager manager;
-  Node *n=new Timeout();
+  Node::p n=std::make_shared<Timeout>();
   n->setName("tout");
   n->setAttr("timeout","9.0");
   manager.addNode(n);
 
-  Node *l=new LUAAction;
+  Node::p l=std::make_shared<LUAAction>();
   manager.addNode(l);
   l->setAttr("exec","Test\nTest");
 

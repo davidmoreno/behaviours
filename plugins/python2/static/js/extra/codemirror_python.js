@@ -1,3 +1,4 @@
+require(['extra/codemirror'], function(CodeMirror){
 CodeMirror.defineMode("python", function(conf, parserConf) {
     var ERRORCLASS = 'error';
 
@@ -338,3 +339,4 @@ CodeMirror.defineMode("python", function(conf, parserConf) {
 });
 
 CodeMirror.defineMIME("text/x-python", "python");
+})

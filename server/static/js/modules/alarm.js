@@ -1,8 +1,10 @@
+
 /**
  * @short Alarm is an event, triggered on a concrete date and time
  */
 
- (function(){
+
+require(['node','jquery','main'],function(node, $, main){
   
   var Alarm=extend(Event, {paramOptions: [{type:Array,values:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],name:'day'},
     {type:Array,values:[current_language.jan,current_language.feb,current_language.mar,current_language.apr,current_language.may,current_language.jun,current_language.jul,current_language.aug,current_language.sep,current_language.oct,current_language.nov,current_language.dec],name:'month'},
@@ -18,7 +20,7 @@
 Alarm.prototype.configure = function(){
   var that = this
   this.configureDialogSetup()
-  
+
   //   try {
   //     var date = new Date($.ajax({'type': 'GET', 'url': '/'}).getResponseHeader('Date'));
   //   }
@@ -260,6 +262,7 @@ if(this.id.indexOf(this.type)==-1){
     $("#noderepeat"+this.id).attr('fill','#000000')                
     $('image#nodeonoff'+this.id).attr('href','img/on.png')
   }
+
   if(this.paramOptions[7].name=="noderepeat"){
     if(this.paramOptions[7].values[this.params[this.paramOptions[7].name]]==11)                            
       $('text#noderepeat'+this.id).text("Always")              
@@ -285,4 +288,4 @@ catch(e){
 }
 }
 main.behaviour.nodeFactory.add('alarm',Alarm)
-}())
+})

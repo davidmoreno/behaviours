@@ -1,7 +1,6 @@
+require(['node','jquery','main','extra/codemirror','extra/codemirror_python'],function(node, $, main, CodeMirror){
 /**
  */
-
-(function(){
 var python_configure = function(){
   this.configureDialogSetup()
 
@@ -255,9 +254,11 @@ python_accept_configure = function(){
   this.update()
 }
 
+
 var PythonAction=extend(Action, {paramOptions: [{type:Text,text:current_language.python_action_msg,name:'code'}]})
 var PythonEvent=extend(Event, {paramOptions: [{type:Text,text:current_language.python_event_msg,name:'code'},{type:Array,values:['YES','NO'],name:'nodeon'},
    {type:Array,values:['Never','01','02','03','04','05','06','07','08','09','10','Always'],name:'noderepeat'}]})
+
 
 PythonAction.prototype.configure=python_configure
 PythonAction.prototype.acceptConfigure=python_accept_configure
@@ -270,4 +271,4 @@ PythonEvent.prototype.acceptConfigure=python_accept_configure_event
   PythonEvent.prototype.getParams=python_getParams
 main.behaviour.nodeFactory.add('python2action',PythonAction)
 main.behaviour.nodeFactory.add('python2event',PythonEvent)
-})()
+})

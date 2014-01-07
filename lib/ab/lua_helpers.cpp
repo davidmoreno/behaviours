@@ -65,7 +65,7 @@ static int lua_notify_manager(lua_State *state)
   lua_gettable(state, LUA_REGISTRYINDEX);
   Manager *m=(Manager*)lua_touserdata(state,-1);
 
-  Node *n=m->getNode(nodename);
+  Node::p n=m->getNode(nodename);
   m->notify(n);
 
   return 0;
@@ -399,8 +399,8 @@ static int lua_ab_dir(lua_State *state)
     lua_ab_dir(state); // dir(_G)
 
 
-    std::set<Node*> nodes=m->getNodes();
-    std::set<Node*>::iterator I=nodes.begin(), endI=nodes.end();
+    std::set<Node::p> nodes=m->getNodes();
+    std::set<Node::p>::iterator I=nodes.begin(), endI=nodes.end();
 
     int i;
     for(i=0; I!=endI; ++I,++i) {

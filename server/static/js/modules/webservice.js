@@ -1,6 +1,6 @@
-(function(){
+require(['node','jquery','main'],function(node, $, main){
   
-  var WebService=extend(Action, {paramOptions: [ {type:String,text:'url',name:'url',default:"http://localhost:8081"}, {type:String,text:'name',name:'service',default:"webservice"} ]})
+  var WebService=node.extend(node.Action, {paramOptions: [ {type:String,text:'url',name:'url',default:"http://localhost:8081"}, {type:String,text:'name',name:'service',default:"webservice"} ]})
   
   WebService.prototype.activate=function(){
     var text=this.svggroup.find('text')
@@ -11,7 +11,7 @@
   }
   
   main.behaviour.nodeFactory.add('webservice',WebService)
-}())
+})
 
 // (function(){
 //   

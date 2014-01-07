@@ -29,7 +29,7 @@ namespace AB {
     int n;
     struct timeval lastT;
     AB::Manager *manager;
-    AB::Event *event;
+    AB::Event::p event;
   public:
     Timeout(const char* type = "timeout");
     virtual bool check();

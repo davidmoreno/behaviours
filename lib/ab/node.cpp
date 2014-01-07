@@ -82,19 +82,14 @@ void Node::setAttr(const std::string& name, Object obj)
 
 
 namespace AB {
-  static void no_delete(Node *n)  // Do nothing at delete of this fake shared_ptr.
+  Object to_object(Node::p n)
   {
+    return std::dynamic_pointer_cast<ObjectBase>(n);
   }
-
-  Object to_object(Node *n)
+  Node::p object2node(Object o)
   {
-    return std::shared_ptr<ObjectBase>(n,no_delete);
-  }
-  Node *object2node(Object o)
-  {
-    ObjectBase *b=o.get();
-    Node *n=dynamic_cast<Node*>(b);
-    if (n==NULL)
+    Node::p n=std::dynamic_pointer_cast<Node>(o);
+    if (!n)
       throw(object_not_convertible("Node"));
     return n;
   }

@@ -54,10 +54,13 @@ namespace AB {
    */
   class Event : public Node {
   public:
+
     int nodeon;
     int noderepeat;
     int activate;
     int cont;
+    typedef std::shared_ptr<Event> p;
+
     /**
      * @short Extra flags for AB::Event
      */

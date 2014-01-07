@@ -35,7 +35,7 @@ namespace AB {
     Manager *manager;
     std::string checkCode;
     std::string syncCode;
-    Event * event;
+    Event::p event;
   };
 }
 

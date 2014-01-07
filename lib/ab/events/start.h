@@ -25,7 +25,7 @@
  	class Start : public AB::Event {
  	public:
  		AB::Manager *manager;
- 		AB::Event *event;
+ 		AB::Event::p event;
  		Start(const char* type = "start") : Event(type) { setFlags(Polling|NeedSync); 
  			nodeon=0;
  			noderepeat=0;

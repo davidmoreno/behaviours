@@ -15,15 +15,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
- 
 
 #pragma once
 
-#include <ab/action.h>
+#include <string>
+#include <set>
+#include <memory>
 
-class TestBasic : public AB::Action{
-public:
-	TestBasic(const char* type="basic");
-	
-	virtual void exec();
+namespace AB{
+	class IniFile;
+	class Settings{
+		std::shared_ptr<IniFile> settings;
+	public:
+		Settings(const std::string &filename="~/.config/ab.ini");
+		
+		std::string get(const std::string &item);
+		std::string get(const std::string &item, const std::string &defvalue);
+		std::set<std::string> getSet(const std::string &item);
+	};
 };

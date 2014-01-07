@@ -1,12 +1,14 @@
-function NodeFactory(behaviour){
+define(['jquery','node'],function($,node){
+
+var NodeFactory=function(behaviour){
 	if (! (this instanceof NodeFactory)){
 		throw new Error("NodeFactory is a class, not a function. Use new.")
 	}
 	this.known_types={}
+	this.javascripts=[]
 	this.behaviour=behaviour
 	this.updateAvailableNodes()
-	this.jss=0
-	
+
 }
 
 NodeFactory.prototype.updateAvailableNodes = function(){
@@ -14,18 +16,19 @@ NodeFactory.prototype.updateAvailableNodes = function(){
 	$.get('/node/?list_types', function(d){
 		$.get('/node/?list_files', function(filelist){ 
 		  var files = filelist.files.split(" ");
+			var count=files.length
 		  for(var n in files) {
-		  	var para=files[n]
-		   /* $.get('nodes/'+files[n], function(xml){ 
+
+		    $.get('nodes/'+files[n], function(xml){ 
 		      that.parseNodeDescription(xml); 
-		    }, 'xml')*/
-			$.ajax({ url: 'nodes/'+files[n], 
-		         async: false,
-		         dataType: 'xml',
-		         success: function(xml) {
-		             that.parseNodeDescription(xml);
-		        }
-        	});
+					count--;
+					if (count==0){
+						require(['main'].concat(that.javascripts), function(main){
+							main.ready()
+						})
+					}
+		    }, 'xml')
+
 		  }
 		  //that.behaviour.ready=true;
 		 // that.behaviour.ready=true;
@@ -147,11 +150,11 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		}
 		else if (type=="action"){
 			$('#actionlist').append(li)
-			klass=Action
+			klass=node.Action
 		}
 		else {
 			$('#eventlist').append(li)
-			klass=Event
+			klass=node.Event
 		}
 
 		
@@ -181,34 +184,22 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 			
 		})
 
-		this.known_types[id]=extend(klass, {paramOptions:paramOptions})
+		this.known_types[id]=node.extend(klass, {paramOptions:paramOptions})
 		
 		// Add update from array function in case one of the paramOptions is an Array
 		if(hasArray) {
 		  this.known_types[id].prototype.update = function() {
-		    NodeHelper.updateFromArray(this);
+		    node.NodeHelper.updateFromArray(this);
 		  }
 		  
 		}
-		// Last thing, load JS that can overwrite it all. Load them in order. Slower, but safer.
-		{
-			var load_in_order = function(jss){
-				if (jss.length==0)
-					return
-				var js=jss[0]
-				jss=jss.slice(1)
-				
-			    $.ajaxSetup({async: false});
-				$.getScript('js/'+js, function(){ load_in_order(jss) })
-				$.ajaxSetup({async: true}); 
-			}
-			var jss=[]
-			xml.children('js').each(function(){ 
-				jss.push($(this).text())
-			})
-			this.jss+=jss.length
-			load_in_order(jss)
-		}
+
+		xml.children('js').each(function(){ 
+			var name=$(this).text().trim().slice(0,a.length-4)
+			require([name]) // preload
+			that.javascripts.push(name)
+		})
+
 	}
 }
 
@@ -223,3 +214,6 @@ NodeFactory.prototype.add = function(name, type){
 		this.behaviour.ready=true;
 	}
 }
+
+return {NodeFactory:NodeFactory}
+})

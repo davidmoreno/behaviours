@@ -49,8 +49,9 @@ namespace AB {
    *
    * Even some flags are common, as ManualRemoval.
    */
-  class Node : public ObjectBase {
+  class Node : public ObjectBase{
   public:
+   typedef std::shared_ptr<Node> p ;
     enum {
       ManualRemoval=1, ///< Keep this node even after Manager::clear(). Can only be removed manually.
     } Flags; /// Common flags are 8 bits, from 8 to 16 are action or event.
@@ -134,8 +135,8 @@ namespace AB {
     Point2D position_;
   };
 
-  Object to_object(Node *);
-  Node *object2node(Object o);
+  Object to_object(Node::p node);
+  Node::p object2node(Object o);
 }
 
 #endif

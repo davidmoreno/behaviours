@@ -10,8 +10,12 @@ class Counter : public Action {
   int n;
 public:
   Counter() : Action("Counter") {
+// 		DEBUG("Counter()");
     n=0;
   }
+  ~Counter(){
+// 		DEBUG("~Counter()");
+	}
   virtual Object attr(const std::string& name) {
     if (name=="n")
       return to_object(n);
@@ -27,8 +31,8 @@ void t01_programatic_graph()
   INIT_LOCAL();
   Manager manager;
 
-  Event *ev=new Event("ev");
-  Action *counter=new Counter();
+  Event::p ev=std::make_shared<Event>("ev");
+  Action::p counter=std::make_shared<Counter>();
 
   manager.addNode(ev);
   manager.addNode(counter);
@@ -43,10 +47,10 @@ void t01_programatic_graph()
   FAIL_IF_NOT_EQUAL_INT(object2int(counter->attr("n")),2);
 
 
-  Action *lastaction=counter;
+  Action::p lastaction=counter;
   int i;
   for (i=0; i<100; i++) {
-    counter=new Counter();
+    counter=std::make_shared<Counter>();
     manager.addNode(counter);
     manager.connect(lastaction,counter);
     lastaction=counter;

@@ -1,7 +1,6 @@
-/**
-*/
 
-(function(){
+
+require(['node','jquery','main','extra/codemirror','extra/codemirror_python'],function(node, $, main, CodeMirror){
   var lua_configure = function(){
     this.configureDialogSetup()
 
@@ -266,4 +265,4 @@ LUAEvent.prototype.getParams=lua_getParams
 
 main.behaviour.nodeFactory.add('lua_action',LUAAction)
 main.behaviour.nodeFactory.add('lua_event',LUAEvent)
-})()
+})

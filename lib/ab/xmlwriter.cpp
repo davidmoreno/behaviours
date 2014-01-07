@@ -36,6 +36,7 @@
 using namespace AB;
 
 static void writeNodes(xmlNode *node, Manager *manager, bool includeFiles = false);
+static void writeConnections(xmlNode *node, Manager *manager);
 static void writeMetadata(xmlNode *meta, Manager *manager);
 static std::string attachFile(std::string const& filename);
 static void sanitizeXmlString(std::string &value);
@@ -67,6 +68,7 @@ void writeBehaviour(const std::string &file, Manager *manager, bool includeFiles
   xmlDocSetRootElement(doc, root_element);
 
   writeNodes(root_element, manager, includeFiles);
+	writeConnections(root_element, manager);
   writeMetadata(root_element, manager);
   int n=xmlSaveFormatFileEnc(file.c_str(), doc, "UTF-8", 1);
 	if (n<0){
@@ -79,76 +81,43 @@ void writeBehaviour(const std::string &file, Manager *manager, bool includeFiles
 
 static void writeNodes(xmlNode *root_element, Manager *manager, bool includeFiles)
 {
-  xmlNode *cur;
-  Action *a;
-  Event *ev;
-  
-  for(Node *node: manager->getNodes()) {
-    if((a = dynamic_cast<Action*>(node)) != NULL) {
-      
-      cur = xmlNewChild(root_element, NULL, BAD_CAST "action", NULL);
-      xmlNewProp(cur, BAD_CAST "id", BAD_CAST a->name().c_str());
-      xmlNewProp(cur, BAD_CAST "type", BAD_CAST a->type());
-      
-      char x[32];
-      char y[32];
-      sprintf(x,"%lf",a->position().x);
-      sprintf(y,"%lf",a->position().y);
+	xmlNode *cur;
+	
+	for(Node::p node: manager->getNodes()) {
+		cur = xmlNewChild(root_element, NULL, BAD_CAST "node", NULL);
+		xmlNewProp(cur, BAD_CAST "id", BAD_CAST node->name().c_str());
+		xmlNewProp(cur, BAD_CAST "type", BAD_CAST node->type());
+		
+		char x[32];
+		char y[32];
+		sprintf(x,"%lf",node->position().x);
+		sprintf(y,"%lf",node->position().y);
 
-      xmlNewProp(cur, BAD_CAST "x", BAD_CAST x);
-      xmlNewProp(cur, BAD_CAST "y", BAD_CAST y);
-      if(std::string(a->type()) != "imagecapture") {
-	for(std::string key: node->attrList()) {
-	  std::string value = object2string(node->attr(key));
-	  sanitizeXmlString(value);
-	  //WARNING("%s: %s",key.c_str(), value.c_str());
-	  xmlNode *param = xmlNewChild(cur, NULL, BAD_CAST "param", BAD_CAST value.c_str());
-	  //WARNING("Got param");
-	  if(param)
-	    xmlNewProp(param, BAD_CAST "name", BAD_CAST key.c_str());
-	  else WARNING("Did not get param");
+		xmlNewProp(cur, BAD_CAST "x", BAD_CAST x);
+		xmlNewProp(cur, BAD_CAST "y", BAD_CAST y);
+		for(std::string key: node->attrList()) {
+			std::string value = object2string(node->attr(key));
+			sanitizeXmlString(value);
+			//WARNING("%s: %s",key.c_str(), value.c_str());
+			xmlNode *param = xmlNewChild(cur, NULL, BAD_CAST "param", BAD_CAST value.c_str());
+			//WARNING("Got param");
+			if(param)
+				xmlNewProp(param, BAD_CAST "name", BAD_CAST key.c_str());
+			else WARNING("Did not get param");
 
-	  if(key == "filename" && strcmp(a->type(),"audio") && includeFiles) {
-	    std::string file_ = attachFile(std::string("data/files/audio/")+value);
-	    xmlNode *f = xmlNewChild(root_element, NULL, BAD_CAST "file", BAD_CAST file_.c_str());
-	    xmlNewProp(f, BAD_CAST "id", BAD_CAST value.c_str());
-	  }
+			if(key == "filename" && strcmp(node->type(),"audio") && includeFiles) {
+				std::string file_ = attachFile(std::string("data/files/audio/")+value);
+				xmlNode *f = xmlNewChild(root_element, NULL, BAD_CAST "file", BAD_CAST file_.c_str());
+				xmlNewProp(f, BAD_CAST "id", BAD_CAST value.c_str());
+			}
+		}
 	}
-      }
-    } else if ((ev = dynamic_cast<Event*>(node)) != NULL && ev->name().substr(0,2) != "__" ) {
-      cur = xmlNewChild(root_element, NULL, BAD_CAST "event", NULL);
-      xmlNewProp(cur, BAD_CAST "id", BAD_CAST ev->name().c_str());
-      xmlNewProp(cur, BAD_CAST "type", BAD_CAST ev->type());
-      
-      char x[32];
-      char y[32];
-      sprintf(x,"%lf",ev->position().x);
-      sprintf(y,"%lf",ev->position().y);
+}
 
-      xmlNewProp(cur, BAD_CAST "x", BAD_CAST x);
-      xmlNewProp(cur, BAD_CAST "y", BAD_CAST y);
-      for(std::string key: node->attrList()) {
-	  std::string value = object2string(node->attr(key));
-	  sanitizeXmlString(value);
-	  WARNING("%s: %s",key.c_str(), value.c_str());
-	  xmlNode *param = xmlNewChild(cur, NULL, BAD_CAST "param", BAD_CAST value.c_str());
-	  WARNING("Got param");
-	  if(param)
-	    xmlNewProp(param, BAD_CAST "name", BAD_CAST key.c_str());
-	  else WARNING("Did not get param");
-	  if(key == "filename" && includeFiles) {
-	    std::string file_ = attachFile(value);
-	    xmlNode *f = xmlNewChild(root_element, NULL, BAD_CAST "file", BAD_CAST file_.c_str());
-	    xmlNewProp(f, BAD_CAST "id", BAD_CAST value.c_str());
-	  }
-      }  
-    } else {
-      WARNING("Node %s, is neither an Action nor an Event",node->name().c_str()) 
-    }
-      
-  }
+void writeConnections(xmlNode *root_element, Manager *manager){
   // second round, connections
-  for(Connection *connection: manager->getConnections()) {
+	xmlNode *cur;
+  for(Connection::p connection: manager->getConnections()) {
     cur = xmlNewChild(root_element, NULL, BAD_CAST "connection", NULL);
     xmlNewProp(cur, BAD_CAST "id", BAD_CAST connection->name().c_str());
     xmlNewProp(cur, BAD_CAST "from", BAD_CAST connection->from()->name().c_str());

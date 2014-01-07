@@ -36,7 +36,7 @@ static std::string randomName(const std::string &base)
   return base + tmp;
 }
 
-Connection::Connection(Manager *manager_, Node *from, Node *to) : manager(manager_), from_(from), to_(to)
+Connection::Connection(Manager *manager_, Node::p from, Node::p to) : manager(manager_), from_(from), to_(to)
 {
   DEBUG("Connected %s to %s", from_->name().c_str(), to_->name().c_str());
   name_=randomName("c_");

@@ -1,4 +1,6 @@
-Behaviour = function(view){
+
+define(['jquery','node_factory','connections'],function($, node_factory,Connection){
+var Behaviour = function(view){
 	if ( ! (this instanceof Behaviour) ){
 		throw("Behaviour is a class. Create it with new.")
 	}
@@ -14,9 +16,8 @@ Behaviour = function(view){
 	// Metadata
 	this.name=""
 	this.description=""
-	this.ready=false;
 //	this.activeNodes=null;
-	this.nodeFactory=new NodeFactory(this)
+	this.nodeFactory=new node_factory.NodeFactory(this)
 	
 }
 
@@ -143,14 +144,14 @@ Behaviour.prototype.deleteNode = function(node, no_confirm, only_client){
 	    if ($('#startstop.stop').length)
 	      main.startStop(true);
       
-	    that.ready=false
 	    $('#loading').show()
 	    $.post('/node/'+node.id,{remove:true}, function(){
 	      delete that.state[node.id]
 	      that.view.deleteNode(node)
 	      $.post("/manager/",{save:0}, function(){
 		$('#loading').hide()
-		that.ready = true
+	require(['main'], function(main){
+	})
 	      })
 	    }).error(function(){
 	      alert(current_language.node_removal_at_server_error);
@@ -186,11 +187,9 @@ Behaviour.prototype.connect = function(from, to, color, id){
 	  if ($('#startstop.stop').length)
 	    main.startStop(true);
       
-	  this.ready=false
 	  $('#loading').show()
 	  $.post('/node/'+c.from.id, {connect_to:to.id}, function(name){
 	    c.id = name
-	    that.ready=true
 	    $('#loading').hide()
 	  },'text').error(function(){
 		  alert(current_language.node_connection_at_server_error)
@@ -376,3 +375,6 @@ Behaviour.prototype.setMetaData = function(onclose){
   
   
 }
+	return { Behaviour:Behaviour }
+	
+})
