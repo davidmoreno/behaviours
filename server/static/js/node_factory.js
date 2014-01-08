@@ -8,6 +8,7 @@ var NodeFactory=function(behaviour){
 	this.javascripts=[]
 	this.behaviour=behaviour
 	this.updateAvailableNodes()
+
 }
 
 NodeFactory.prototype.updateAvailableNodes = function(){
@@ -17,6 +18,7 @@ NodeFactory.prototype.updateAvailableNodes = function(){
 		  var files = filelist.files.split(" ");
 			var count=files.length
 		  for(var n in files) {
+
 		    $.get('nodes/'+files[n], function(xml){ 
 		      that.parseNodeDescription(xml); 
 					count--;
@@ -26,8 +28,10 @@ NodeFactory.prototype.updateAvailableNodes = function(){
 						})
 					}
 		    }, 'xml')
+
 		  }
-		  that.behaviour.ready=true;
+		  //that.behaviour.ready=true;
+		 // that.behaviour.ready=true;
 		  // mark as behaviour ready to start working
 		  
 		},'json')
@@ -45,6 +49,7 @@ NodeFactory.prototype.getTranslatedField = function(xml, tag){
 NodeFactory.prototype.paramTypes={ string:String, float:Number, array:Array, text:Text }
 
 NodeFactory.prototype.parseNodeDescription = function(xml){
+
 	var that=this
 	var x=$(xml).children('node-descriptions').children('node-description')
 	if (!x.length)
@@ -56,20 +61,52 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		if (id in this.known_types)
 			continue;
 		var name=this.getTranslatedField(xml, 'name')
+
 		var type=xml.children('type').text()
 		var icon=xml.children('icon').attr('src')
+		var pluginname= xml.children('pluginname').text();
+
+		//Crear barra del plugin si no está creada
+		if(pluginname ){
+			
+			if($('#classes ul').find('#'+pluginname+'b').length==0){
+				var lis=pluginname+"list"
+				var idname= pluginname+"b"
+				$('#classes ul').append('<li><a href="#" onclick="main.canvas.changeTool(\''+pluginname+'\')" id='+idname+' lid='+idname+'>'+pluginname+'</a></li>')
+				$('#extension').append('<div id ='+pluginname+' style="display: none"> <ul id='+lis+' class="toolbuttons"></ul></div>')
+				
+			}
+			
+		}
+		
 		if (!icon)
 			icon=id+'.png'
 		icon='img/'+icon
 
 		var klass
-		var li=$('<li>').attr('node-type',id)
+		var li
+		if (type=="action"){			
+				li=$('<li class="action">').attr('node-type',id)
+		}
+		else {			
+				li=$('<li class="event">').attr('node-type',id)
+		}
+		
 		var a=$('<a href="#">').attr('node-type',id).attr('title',this.getTranslatedField(xml, 'description'))
 		var d=$('<div class="buttoncover">')
 		var img=$('<img src="'+icon+'">')
 		var br=$('<br>')
 	
-		li.draggable({helper:'clone',stack:'.svgscroll', opacity:0.5})
+		
+		li.draggable({helper:'clone',stack:'.svgscroll', opacity:0.5,drag:function(e){
+			var toolsPosition = $('#tools').position()
+			var dragging = $('.ui-draggable-dragging')
+			if(dragging.position().top+dragging.height() >= toolsPosition.top){
+				dragging.css('background','red');
+			}else{
+				dragging.css('background','');
+			}
+		}})
 		li.bind('dragstop',function(event, ui){
 		
 		// Transform from cursor coordinates to svg coordinates
@@ -77,30 +114,49 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		  var canvas=$('svg').position()
 		  var p = {x:pc.left-canvas.left, y:pc.top-canvas.top}
 		  
-		  var pos = that.behaviour.view.root.createSVGPoint();
-		  pos.x = p.x
-		  pos.y = p.y
-		  var gr
-		  if(!that.behaviour.view.svgRoot)
-		    gr = that.behaviour.view.getRoot(that.behaviour.view.root);
-		  else
-		    gr = that.behaviour.view.svgRoot
+		  var toolsPosition = $('#tools').position()
+		  var dragging = $('.ui-draggable-dragging')
+	      if(dragging.position().top+dragging.height() < toolsPosition.top){
 
-		  pos = pos.matrixTransform(gr.getCTM().inverse());
+			  var pos = that.behaviour.view.root.createSVGPoint();
+			  pos.x = p.x
+			  pos.y = p.y
+			  var gr
+			  if(!that.behaviour.view.svgRoot)
+			    gr = that.behaviour.view.getRoot(that.behaviour.view.root);
+			  else
+			    gr = that.behaviour.view.svgRoot
+
+			  pos = pos.matrixTransform(gr.getCTM().inverse());
 	    
-		  that.behaviour.addNode($(this).attr('node-type'),null,null,{x:pos.x,y:pos.y})
+	      
+			  that.behaviour.addNode($(this).attr('node-type'),null,null,{x:pos.x,y:pos.y})
+		  }
 		})
 		a.append(d).append(img).append(br).append(name)
 		li.append(a)
 		a.click(function(){ that.behaviour.addNode($(this).attr('node-type')) })
-		if (type=="action"){
+
+		if(pluginname){
+
+			$('#'+pluginname+"list").append(li)
+			if (type=="action"){			
+				klass=node.Action
+			}
+			else {			
+				klass=node.Event
+			}
+
+		}
+		else if (type=="action"){
 			$('#actionlist').append(li)
 			klass=node.Action
 		}
-		else{
+		else {
 			$('#eventlist').append(li)
 			klass=node.Event
 		}
+
 		
 		var hasArray=false;
 		var paramOptions=[]
@@ -137,11 +193,13 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		  }
 		  
 		}
+
 		xml.children('js').each(function(){ 
 			var name=$(this).text().trim().slice(0,a.length-4)
 			require([name]) // preload
 			that.javascripts.push(name)
 		})
+
 	}
 }
 
@@ -150,7 +208,11 @@ NodeFactory.prototype.get = function(type){
 }
 
 NodeFactory.prototype.add = function(name, type){
+	this.jss-=1
 	this.known_types[name]=type
+	if(this.jss==2){
+		this.behaviour.ready=true;
+	}
 }
 
 return {NodeFactory:NodeFactory}

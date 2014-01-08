@@ -21,19 +21,46 @@
 
 #include <ab/event.h>
 
-namespace AB {
-  class Start : public AB::Event {
-  public:
-    Start(const char* type = "start") : Event(type) { setFlags(Polling|NeedSync); }
-    virtual bool sync() {
-      setFlags(Polling|NeedSync);
-      return false;
-    }
-    virtual bool check() {
-      setFlags(NeedSync);
-      return true;
-    }
-  };
-}
+ namespace AB {
+ 	class Start : public AB::Event {
+ 	public:
+ 		AB::Manager *manager;
+ 		AB::Event::p event;
+ 		Start(const char* type = "start") : Event(type) { setFlags(Polling|NeedSync); 
+ 			nodeon=0;
+ 			noderepeat=0;
+
+ 		}
+		virtual	void setManager(Manager* m)
+		{
+		  manager=m;
+		}
+ 		virtual bool sync() {
+ 			setFlags(Polling|NeedSync);
+ 			return false;
+ 		}
+ 		virtual bool check() {
+ 			setFlags(NeedSync);
+ 			return true;
+ 		}
+ 		virtual void setAttr(const std::string &k, Object s);
+ 		virtual Object attr(const std::string &key){
+ 			if (key == "nodeon") {
+ 				return to_object(nodeon);
+ 			}
+ 			if(key =="noderepeat"){
+ 				return to_object(noderepeat);
+ 			}
+ 			return Event::attr(key);
+ 		}
+ 		virtual AttrList attrList(){
+ 			AttrList l=Event::attrList();
+ 			l.push_back("nodeon");
+ 			l.push_back("noderepeat");
+ 			return l;
+
+ 		}
+ 	};
+ }
 
 #endif

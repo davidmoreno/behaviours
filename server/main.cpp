@@ -41,7 +41,9 @@ extern "C"{
 
 namespace AB{
 	std::string static_dir=AB_PREFIX "/share/ab/static/";
-	std::string data_dir=std::string(getenv("HOME"))+"/behaviours/";
+
+	std::string data_dir=std::string(getenv("HOME"))+"/DIA/";
+
 }
 
 using namespace ABServer;
@@ -122,7 +124,8 @@ int main(void){
 	url.add("^lua/", nodeManager.get(), &NodeManager::lua);
 	url.add("^upload/", nodeManager.get(), &NodeManager::uploadXML);
 	url.add("^wavload/", nodeManager.get(), &NodeManager::uploadWAV);
-	url.add("^static/", new StaticHandler(static_dir));
+	url.add("^static/image/", new StaticHandler(data_dir+"static/"));
+	url.add("^static/", new StaticHandler(static_dir));	
 	url.add("^data/browse", &browser);
 	url.add("^data/", nodeManager.get(), &NodeManager::save);
 	url.add("^events", nodeManager.get(), &NodeManager::events);

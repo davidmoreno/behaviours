@@ -6,7 +6,7 @@
 		<description lang="es">Condición o unión</description>
 		<type>action</type>
 		<icon src="condmerge.png"/>
-		
+		<pluginname>Control</pluginname>
 		<js>modules/condmerge.js</js>
 	</node-description>
 	
@@ -16,7 +16,7 @@
 		<description lang="es">Ejecuta código Lua que realiza alguna acción</description>
 		<type>action</type>
 		<icon src="lua_action.png"/>
-		
+		<pluginname>CodeBlock</pluginname>
 		<js>modules/lua.js</js>
 		<js>extra/codemirror.js</js>
 		<js>extra/codemirror_lua.js</js>
@@ -28,7 +28,7 @@
 		<description lang="es">Ejecuta código Lua para comprobar si activa el evento. Debe devolver 'true' si el evento se activa o 'false' en caso contrario</description>
 		<type>event</type>
 		<icon src="lua_event.png"/>
-		
+		<pluginname>CodeBlock</pluginname>
 		<js>modules/lua.js</js>
 		<js>extra/codemirror.js</js>
 		<js>extra/codemirror_lua.js</js>
@@ -41,7 +41,7 @@
 		<description lang="es">Activa el evento cada T segundos.</description>
 		<type>event</type>
 		<icon src="timeout.png"/>
-		
+		<pluginname>Control</pluginname>
 		<params>
 			<param id="timeout">
 				<type>float</type>
@@ -52,7 +52,7 @@
 				<default>0.5</default>
 			</param>
 		</params>
-		
+		<js>modules/timeout.js</js>
 	</node-description>
 	
 	<node-description id="alarm">
@@ -63,7 +63,7 @@
 	
 		<type>event</type>
 		<icon>alarm</icon>
-
+		<pluginname>Control</pluginname>
 		<js>modules/alarm.js</js>
 	</node-description>
 
@@ -74,7 +74,7 @@
 	
 		<type>event</type>
 		<icon>click</icon>
-	
+		<pluginname>Control</pluginname>
 		<js>modules/click.js</js>
 	</node-description>
 	<node-description id="stop">
@@ -85,7 +85,7 @@
 	
 		<type>action</type>
 		<icon>stop</icon>
-	
+		<pluginname>Control</pluginname>
 		<js>modules/stop.js</js>
 	</node-description>
 
@@ -97,7 +97,7 @@
 	
 		<type>action</type>
 		<icon>wait</icon>
-
+		<pluginname>Control</pluginname>
 		<params>
 		  <param id="t">
 		    <type>float</type>
@@ -117,7 +117,7 @@
 	
 		<type>action</type>
 		<icon>webservice</icon>	
-
+		<pluginname>Control</pluginname>
 		<js>modules/webservice.js</js>
 	</node-description>
 	

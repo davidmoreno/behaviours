@@ -1,4 +1,5 @@
 <node-description id="start">
+	<js>modules/start.js</js>
 	<name lang="en">Start</name>
 	<name lang="es">Inicio</name>
 	<description lang="en">Event activated when the behaviour starts</description>
@@ -6,6 +7,6 @@
 	
 	<type>event</type>
 	<icon>start</icon>
-	
-	<js>modules/start.js</js>
+	<pluginname>Control</pluginname>
+
 </node-description>

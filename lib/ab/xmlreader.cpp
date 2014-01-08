@@ -58,7 +58,7 @@ void readBehaviour(const std::string &file, Manager *manager)
 	{
 		struct stat st;
 		if (stat(file.c_str(), &st)<0){
-			ERROR("Could not load behaviour from %s", file.c_str());
+			DEBUG("Could not load behaviour from %s", file.c_str());
 			return;
 		}
 	}

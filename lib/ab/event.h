@@ -54,7 +54,13 @@ namespace AB {
    */
   class Event : public Node {
   public:
-    using p = std::shared_ptr<Event>;
+
+    int nodeon;
+    int noderepeat;
+    int activate;
+    int cont;
+    typedef std::shared_ptr<Event> p;
+
     /**
      * @short Extra flags for AB::Event
      */
@@ -74,6 +80,7 @@ namespace AB {
      * @short Function to be called from time to time, to check if the event happends. Check flags.
      */
     virtual bool check() {  WARNING("::check not implemented at %s",type());  return false; };
+    virtual bool active() {return true;}
     /**
      * @short Function to be called if sync flag exists, to indicate that the graph has changed.
      *

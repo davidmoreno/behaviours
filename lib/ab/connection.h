@@ -42,7 +42,7 @@ namespace AB {
     std::string guard_;
     std::string name_;
   public:
-		using p = std::shared_ptr<Connection>;
+		typedef std::shared_ptr<Connection> p;
 		
     /**
      * @short Creates a connection on the given manager

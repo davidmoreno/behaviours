@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ab>
+  <action id="node_0000000000000004" type="testbasic" x="1075.000000" y="320.000000"/>
+  <event id="node_0000000000000002" type="click" x="173.000000" y="24.000000"/>
+  <action id="node_0000000000000008" type="abajo" x="527.000000" y="315.000000">
+    <param name="code">import time
+class mov:
+    def __init__(self):
+        import serial
+        self.freedom=serial.Serial('/dev/ttyACM0', 9600)
+        self.freedom.open()
+        self.command="p" #Stop
+
+    def startSerialSend_S(self):
+        self.command="s"
+        print "Sending %s" % self.command
+        self.freedom.write(self.command+' \r\n')
+
+    def stopSerialSend(self):
+        self.command="p"
+        print "Sending %s" % self.command
+        self.freedom.write(self.command+' \r\n')
+        
+    def close(self):
+        self.freedom.close()
+
+a = mov()
+a.startSerialSend_S()
+time.sleep(1)
+a.stopSerialSend()
+a.close()</param>
+  </action>
+  <action id="node_0000000000000001" type="botones" x="530.000000" y="157.000000">
+    <param name="arriba">node_0000000000000005</param>
+    <param name="abajo">node_0000000000000008</param>
+    <param name="izquierda">node_0000000000000007</param>
+    <param name="derecha">node_0000000000000006</param>
+    <param name="nombre">Interfaz</param>
+  </action>
+  <action id="node_0000000000000005" type="arriba" x="535.000000" y="22.000000">
+    <param name="code">import time
+class mov:
+    def __init__(self):
+        import serial
+        self.freedom=serial.Serial('/dev/ttyACM0', 9600)
+        self.freedom.open()
+        self.command="p" #Stop
+
+    def startSerialSend_W(self):
+        self.command="w"
+        print "Sending %s" % self.command
+        self.freedom.write(self.command+' \r\n')
+
+    def stopSerialSend(self):
+        self.command="p"
+        print "Sending %s" % self.command
+        self.freedom.write(self.command+' \r\n')
+        
+    def close(self):
+        self.freedom.close()
+
+a = mov()
+a.startSerialSend_W()
+time.sleep(1)
+a.stopSerialSend()
+a.close()</param>
+  </action>
+  <action id="node_0000000000000007" type="izquierda" x="223.000000" y="155.000000">
+    <param name="code">import time
+class mov:
+    def __init__(self):
+        import serial
+        self.freedom=serial.Serial('/dev/ttyACM0', 9600)
+        self.freedom.open()
+        self.command="p" #Stop
+
+    def startSerialSend_A(self):
+        self.command="a"
+        print "Sending %s" % self.command
+        self.freedom.write(self.command+' \r\n')
+
+    def stopSerialSend(self):
+        self.command="p"
+        print "Sending %s" % self.command
+        self.freedom.write(self.command+' \r\n')
+        
+    def close(self):
+        self.freedom.close()
+
+a = mov()
+a.startSerialSend_A()
+time.sleep(1)
+a.stopSerialSend()
+a.close()</param>
+  </action>
+  <action id="node_0000000000000006" type="derecha" x="869.000000" y="158.000000">
+    <param name="code">import time
+class mov:
+    def __init__(self):
+        import serial
+        self.freedom=serial.Serial('/dev/ttyACM0', 9600)
+        self.freedom.open()
+        self.command="p" #Stop
+
+    def startSerialSend_D(self):
+        self.command="d"
+        print "Sending %s" % self.command
+        self.freedom.write(self.command+' \r\n')
+
+    def stopSerialSend(self):
+        self.command="p"
+        print "Sending %s" % self.command
+        self.freedom.write(self.command+' \r\n')
+        
+    def close(self):
+        self.freedom.close()
+
+a = mov()
+a.startSerialSend_D()
+time.sleep(1)
+a.stopSerialSend()
+a.close()</param>
+  </action>
+  <connection id="c_0000000000000001" from="node_0000000000000002" to="node_0000000000000001"/>
+  <connection id="c_0000000000000002" from="node_0000000000000001" to="node_0000000000000004"/>
+  <meta>
+    <viewpoint>matrix(1,0,0,1,0,0)</viewpoint>
+    <name>movimentos</name>
+    <description/>
+  </meta>
+</ab>

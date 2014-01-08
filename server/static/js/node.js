@@ -1,4 +1,4 @@
-define(function(){
+define(['jquery'],function($){
 
 /**
  * @short This is the standard implementation for all nodes.
@@ -88,8 +88,6 @@ Node.prototype.t=''
 	*/
 Node.prototype.paint = function(options){
 	var viewpoint=$('g#viewpoint')
-	svggroup=svg.group(viewpoint, this.id, {transform:'translate('+this.x+','+this.y+')', stroke:'#000000'} )
-	this.svggroup=$(svggroup)
 	if (options && options.fill)
 		fill=options.fill
 	else{
@@ -98,16 +96,18 @@ Node.prototype.paint = function(options){
 		else
 			fill='#aad400'
 	}
+	svggroup=svg.group(viewpoint, this.id, {transform:'translate('+this.x+','+this.y+')', stroke:'#000000',fill:fill} )
+	this.svggroup=$(svggroup)
+	
 	if (!this.width)
 		this.width=50
 	if (!this.height)
 		this.height=50
 	this.fill=fill
 	var r=svg.rect(svggroup, 0,0, this.width, this.height, 5, 5, {fill:fill,stroke:'none',filter:"url(#dropshadow)",id:'node'})
-	svg.text(svggroup, 10,this.height-8, this.type, {'font-family':'Sans','font-size':8,'cursor':'text','stroke-width':0.1,'id':'legend'})
+	svg.text(svggroup, 10,this.height-8, this.type, {'font-family':'Sans','font-size':8,'cursor':'text','stroke-width':0.1,fill:'#000000'})
 	svg.text(svggroup, 40,this.height-10, "", {'font-family':'Sans','font-size':this.height-10,'cursor':'text','id':'param','stroke-width':0.1})
 	svg.image(svggroup, 4,4, 32,32,"img/"+this.type+".png")
-	
 	return this.svggroup
 }
 
@@ -354,7 +354,7 @@ Node.prototype.focus = function(){
 }
 
 Node.prototype.blur = function(){
-	$(this.svggroup).find('#node').attr('fill',this.fill)
+	$(this.svggroup).find('#node').removeAttr('fill')
 }
 
 Node.prototype.position = function(x,y){
@@ -426,11 +426,14 @@ Action.prototype.t='action'
 var Event = function(id, options, behaviour){
 	Node.call(this, id, options, behaviour)
 	this.t='event'
+	this.changeactivityas=false
+	this.changevalor=0
 //	this.x=100
 }
 Event.prototype=new Node;
 Event.prototype.t='event'
-
+Event.prototype.changevalor=0
+Event.prototype.changeactivity=false
 Event.prototype.paint = function(options){
 	var viewpoint=$('g#viewpoint')
 	svggroup=svg.group(viewpoint, this.id, {transform:'translate('+this.x+','+this.y+')', stroke:'#000000'} )
@@ -457,9 +460,12 @@ Event.prototype.paint = function(options){
 	svg.rect(r, 0,0, this.width, this.height, 5, 5,{stroke:'none',id:'node'})
 	
 	svg.path(r, path,{stroke:'none'})
-	svg.text(svggroup, 10,this.height-8, this.type, {'font-family':'Sans','font-size':8,'cursor':'text','stroke-width':0.1})
-	svg.text(svggroup, 40,this.height-10, "", {'font-family':'Sans','font-size':this.height-10,'cursor':'text','id':'param','stroke-width':0.1})
-	svg.image(svggroup, 4,4, 32,32,"img/"+this.type+".png")
+
+	svg.text(svggroup, 18,this.height-8, this.type, {'font-family':'Sans','font-size':8,'cursor':'text','stroke-width':0.1,'id':'legend'})
+	svg.text(svggroup, 4,this.height-8, "N", {'font-family':'Sans','font-size':8,'cursor':'text','stroke-width':0.1,'id':'noderepeat'+this.id})
+	svg.text(svggroup, 50,this.height-10, "", {'font-family':'Sans','font-size':this.height-10,'cursor':'text','id':'param','stroke-width':0.1})
+	svg.image(svggroup, 14,4, 32,32,"img/"+this.type+".png")
+	svg.image(svggroup, 0,1, 16,16,"img/on.png",{'id':'nodeonoff'+this.id})
 
 	return this.svggroup
 }

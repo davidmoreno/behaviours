@@ -21,13 +21,15 @@
 
 #include <sys/time.h>
 #include <ab/event.h>
-
+#include <ab/manager.h>
 namespace AB {
   class Timeout : public AB::Event {
     float limit;
     float t;
     int n;
     struct timeval lastT;
+    AB::Manager *manager;
+    AB::Event::p event;
   public:
     Timeout(const char* type = "timeout");
     virtual bool check();
@@ -35,6 +37,7 @@ namespace AB {
     virtual void setAttr(const std::string &k, Object v);
     virtual Object attr(const std::string &k);
     virtual AttrList attrList();
+    virtual void setManager(Manager *man);
   };
 };
 

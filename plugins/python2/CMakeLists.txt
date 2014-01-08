@@ -1,7 +1,8 @@
 SET(SOURCES python2.cpp ab_module.cpp)
 
-find_library(PYTHON2_LIB NAMES python2.7 PATH ${LIBPATH})
-find_path(PYTHON2_HEADER Python.h ${CMAKE_INCLUDE_PATH} /usr/include/python2.7)
+find_library(PYTHON2_LIB NAMES python2.7 PATHS ${LIBPATH})
+message(STATUS "PYTHON2_LIB: ${PYTHON2_LIB}")
+find_path(PYTHON2_HEADER Python.h ${CMAKE_INCLUDE_PATH}/python2.7 /usr/include/python2.7)
 
 add_library(python2 SHARED ${SOURCES})
 target_link_libraries(python2 ${PYTHON2_LIB})

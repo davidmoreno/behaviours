@@ -89,7 +89,7 @@ namespace AB {
     static int64_t live_objects;
     const char *_type;
   public:
-    using p = std::shared_ptr<ObjectBase>;
+    typedef std::shared_ptr<ObjectBase> p;
 
     /// Shortcut to avoid creating it a lot.
     static const AttrList emptyAttrList;

@@ -65,7 +65,7 @@ public:
 
 class TestNode : public Action {
 public:
-	using p = std::shared_ptr<TestNode>;
+typedef std::shared_ptr<TestNode> p;
 	
   int ntests;
   int lastnargs;

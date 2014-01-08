@@ -51,7 +51,7 @@ namespace AB {
    */
   class Node : public ObjectBase{
   public:
-    using p = std::shared_ptr<Node>;
+   typedef std::shared_ptr<Node> p ;
     enum {
       ManualRemoval=1, ///< Keep this node even after Manager::clear(). Can only be removed manually.
     } Flags; /// Common flags are 8 bits, from 8 to 16 are action or event.

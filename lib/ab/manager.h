@@ -54,6 +54,7 @@ namespace AB {
     std::string name;
     std::string description;
     std::vector<double> viewpoint;
+
     
   };
   
@@ -92,6 +93,18 @@ namespace AB {
      * @short Adds a node to the manager.
      */
     void addNode(Node::p node);
+    /**
+     * @short Remove a node to the manager.
+     */
+    void removeEvent(std::string id);
+    /**
+     * @short Adds a event to the manager.
+     */
+    void addEvent(Event::p ev);
+    /**
+     * @short Find a node to the manager.
+     */
+    bool findNode(std::string id);
     /**
      * @short Deletes a node from the manager. If also_delete_object is true, it is deleted. 
      */
@@ -284,6 +297,7 @@ namespace AB {
     std::queue<Node::p> pendingNotifications;
     std::mutex pendingNotificationsMutex;
     Meta metadata;
+    
 
     std::map<Node::p, std::vector<Connection::p> > nodeConnections;
 

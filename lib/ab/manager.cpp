@@ -85,13 +85,49 @@ void Manager::addNode(Node::p n)
   while(getNode(n->name()))
     n->setName();
   n->setManager(this);
+
   Event::p ev=std::dynamic_pointer_cast<Event>(n);
   if (ev) {
     activeEvents.insert(ev);
+    DEBUG("%s","activeEvents lenght" );
+    DEBUG("%zd", activeEvents.size());
     DEBUG("%s at active events", ev->name().c_str());
   }
   nodes.insert(n);
+   DEBUG("%s","nodes lenght" );
+  DEBUG("%zd", nodes.size());
   syncOnNextCycle=true;
+}
+void Manager::removeEvent( std::string id){
+  Event::p ev;
+    for(Node::p nodeev: activeEvents) {
+      ev=std::dynamic_pointer_cast<Event>(nodeev);
+      if(strcmp(ev->name().c_str(),id.c_str())==0){
+        activeEvents.erase(ev);
+      }
+
+    }
+
+}
+void Manager::addEvent(Event::p ev){
+  if(ev){
+    DEBUG("%s","activeEvents lenght" );
+    DEBUG("%zd", activeEvents.size());
+    activeEvents.insert(ev);
+
+    DEBUG("%zd", activeEvents.size());
+  }
+}
+bool Manager::findNode(std::string id){
+  Event::p ev;
+   for(Node::p nodep: activeEvents) {
+    ev=std::dynamic_pointer_cast<Event>(nodep);
+      if(strcmp(ev->name().c_str(),id.c_str())==0){
+        return true;
+      }
+
+    }
+    return false;
 }
 
 void Manager::deleteNode(Node::p n){
@@ -105,12 +141,21 @@ void Manager::deleteNode(Node::p n){
 
 Connection::p Manager::connect(Node::p A, Node::p B)
 {
+
+  /* if(A->name().compare(B->name())==0){
+     DEBUG("No connect same node %s -> %s", A->name().c_str(), B->name().c_str());
+    return NULL;
+  }*/
   Connection::p conn=getConnection(A,B);
   if (conn) // If exists, return existing one.
-    return conn; 
+    return conn;
   if (std::dynamic_pointer_cast<AB::Event>(B))
-    return NULL; // Trying to connect to an event is not allowed 
-  conn=std::make_shared<Connection>(this, A, B); 
+    return NULL; // Trying to connect to an event is not allowed  
+ conn=std::make_shared<Connection>(this, A, B); 
+  if(getEvent(B->name())!=NULL){
+    Object newob= to_object(1);
+    B->setAttr("nodeon",newob);
+  }
   nodeConnections[A].push_back(conn);
   syncOnNextCycle=true;
   return conn;
@@ -120,20 +165,42 @@ Connection::p Manager::connect(Node::p A, Node::p B)
 Connection::p Manager::connect(const std::string &idA, const std::string &idB)
 {
   DEBUG("Connect %s -> %s", idA.c_str(), idB.c_str());
+
   Node::p A=getNode(idA);
+
   if (!A)
     return NULL;
 
   Node::p B=getNode(idB);
   if (!B)
     return NULL;
+
+
   return connect(A, B);
 }
 
+
 void Manager::disconnect(Node::p A, Node::p B){
 	std::vector<Connection::p> &conns=nodeConnections[A];
-	
-	conns.erase( std::remove_if(conns.begin(), conns.end(), [&B](Connection::p &p){ return (p->to()==B); }), conns.end());
+	std::vector<Connection::p>::iterator I=conns.begin(), endI=conns.end();
+  Event::p ev=std::dynamic_pointer_cast<Event>(B);
+
+  if(ev){
+        DEBUG("%s","A ver como queda desde nodo" );
+        DEBUG("%d", ev->nodeon); 
+        Object newob= to_object(0);
+        ev->setAttr("nodeon",newob);
+  }
+
+	for(;I!=endI;++I){
+		if ((*I)->to()==B){
+			Connection::p c=*I;
+			conns.erase(I);
+			
+			return;
+		}
+	}
+    conns.erase( std::remove_if(conns.begin(), conns.end(), [&B](Connection::p &p){ return (p->to()==B); }), conns.end());
 }
 
 void Manager::disconnect(Node::p A){
@@ -213,6 +280,8 @@ void Manager::sync()
 
 void Manager::exec()
 {
+   Event::p ev;
+  int alwaysExec=11;
   DEBUG("Start execution of behaviour");
   execThreadId=std::this_thread::get_id();
   int t=0;
@@ -224,10 +293,19 @@ void Manager::exec()
     //DEBUG("Checks at t=%d", t);
     for(Node::p n: activeEvents) {
       //DEBUG("Check %s %d", ev->name().c_str(), ev->flags());
-      if (n->flags()&Event::Polling) {
-        Event::p ev=std::dynamic_pointer_cast<Event>(n);
-        if (ev && ev->check()) {
+      ev=std::dynamic_pointer_cast<Event>(n);
+      if (ev->flags()&Event::Polling) {
+        DEBUG("Event with name: %s and Cont: %d and noderepeat: %d",ev->name().c_str(),ev->cont,ev->noderepeat);
+        if(ev->noderepeat!=alwaysExec && ev->name().find("__alarm_manager__")<0 && ev->cont ==ev->noderepeat){
+          DEBUG("Event %s is removed!", ev->name().c_str());
+            ev->cont=0;
+            Object newob= to_object(1);
+            ev->setAttr("nodeon",newob);
+        }
+        if (ev->check()) {
+
           DEBUG("Event %s is triggered!", ev->name().c_str());
+         
           notify(ev);
         }
         if (syncOnNextCycle) // It will continue with the list, unless a sync (graph change) is performed.
@@ -264,6 +342,14 @@ void Manager::notify(Node::p node)
       lastNode=node;
       while(lastNode) {
         lastNode=notifyOne(lastNode);
+        /*if(lastNode){
+            Event *ec=dynamic_cast<Event*>(lastNode);
+            if (ec) {
+              WARNING("El evento es: %s",ec->name().c_str());
+              addEvent(ec);
+              lastNode=NULL;
+            }
+        }*/
       }
     } catch(const std::exception &e) {
       ERROR("Catched unhandled exception: %s! Stoping this chain.", e.what());
@@ -305,7 +391,10 @@ public:
 Node::p Manager::notifyOne(Node::p node)
 {
   RAII_enter_exit_node een(manager_notify_node_enter, manager_notify_node_exit, node);
+
   Action::p ac=std::dynamic_pointer_cast<Action>(node);
+  DEBUG("Name of action is: %s",node->name().c_str());
+
   if (ac) {
     ac->exec();
   }
@@ -325,6 +414,21 @@ Node::p Manager::notifyOne(Node::p node)
       }
     }
     if (n>0) {
+      Event::p ec=std::dynamic_pointer_cast<Event>(node);
+      if(ec){
+        for(Connection::p conn: p) {
+          Event::p ecchild=std::dynamic_pointer_cast<Event>(conn->to());
+          if (ecchild) {
+            std::string name=ecchild->name();
+              DEBUG("Event : %s",name.c_str());              
+              addEvent(ecchild);
+            }
+            else{
+              return conn->to();
+            }
+        }
+        return NULL;
+      }
       n=rand()%n;
       for(Connection::p conn: p) {
         if (conn->guard()=="") {

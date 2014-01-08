@@ -29,7 +29,7 @@ namespace AB {
   public:
     enum Repeat { Never = 0, Always = 1, Weekdays = 2, Weekends = 3, Mondays = 4, Tuesdays = 5, Wednesdays = 6, Thursdays = 7, Fridays = 8, Saturdays = 9, Sundays = 10 };
   public:
-		using p = std::shared_ptr<Alarm>;
+		typedef std::shared_ptr<Alarm> p;
 		
     Alarm(const char *type = "alarm");
 
@@ -39,13 +39,17 @@ namespace AB {
 
     void setManager(AB::Manager* manager);
 
+
+
     int getDay() { return day; };
     int getMonth() { return month; };
     int getYear() { return year; };
     int getHour() { return hour; };
     int getMinute() { return minute; };
     Repeat getRepeatPolicy() { return repeatPolicy; };
-  
+    int getNodeon(){return nodeon;}
+    int getNoderepeat(){return noderepeat;}
+
   private:
     int day;
     int month;
@@ -53,6 +57,8 @@ namespace AB {
     int hour;
     int minute;
     Repeat repeatPolicy;
+    AB::Manager *manageralarm;
+    AB::Event::p event;
   };
 
   class AlarmManager : public AB::Event {
@@ -70,6 +76,7 @@ namespace AB {
     bool checkAlarm(time_t rawtime);
     time_t lastAlarm;
     bool triggered;
+    int noderepeat;
     AB::Manager *manager;
   };
 };

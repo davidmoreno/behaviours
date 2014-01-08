@@ -320,18 +320,34 @@ Main.prototype.setupGUI = function(){
   
 }
 
-Main.prototype.load = function(){
+Main.prototype.load = function(e){
 
-  if ($('#startstop.stop').length)
-    main.startStop(true);
-      
-  $('#loading').show()
-      
-  $('#upload_xml').submit()
-  
+  	var that = this;
+  	var pathfile;
+	new BrowseFiles({
+		title:"Load from...", 
+		finish: function(){
+
+			var filename=$('<input type="text" placeholder="Filename" id="filename">')
+			
+			$('#dialog #content').append(filename)
+		},
+		open:	function(file, path){
+			alert('open '+path+file.filename)
+			pathfile=path+"/"+file.filename;
+			return true;
+		},
+		accept: function(file,path){
+			
+				main.refresh(true);
+				return true;
+		
+		},
+		show_files:true
+	})
 }
 
-Main.prototype.files = function(){
+Main.prototype.files = function(plain_xml){
 
 }
 
@@ -356,6 +372,8 @@ Main.prototype.refresh = function(force){
       var id=ev.attr('id')
       var param=[]
       var position={}
+      var paramet=ev.find('param')
+     
       ev.find('param').each(function(){
 	pOpts = behaviour.nodeFactory.get(type).prototype.paramOptions
 	for( var p in pOpts) {
@@ -367,6 +385,7 @@ Main.prototype.refresh = function(force){
 	  }
 	}
       })
+    
       if (ev.attr('x')){
 	position.x=Number(ev.attr('x'))
 	position.y=Number(ev.attr('y'))
@@ -441,10 +460,14 @@ Main.prototype.save = function(){
 			alert('open '+path+file.filename)
 		},
 		accept: function(path){
-			var fullname=path+'/'+$('#dialog #filename').val()
-			
+			if($('#dialog #filename').val()==""){
+				var fullname=path+'/behaviour.ab';
+			}
+			else{
+				var fullname=path+'/'+$('#dialog #filename').val()+".ab";
+			}
 			alert('Send command to server to save at '+fullname)
-			
+			 $.post("/data/",{save:fullname})
 			return true // false do not close
 		},
 		show_files:false
@@ -494,11 +517,13 @@ Main.prototype.ready = function(f){
 requirejs(['main','jquery'],function(main, $){
   main.setupGUI();
   
+
 	main.ready(function(){
 		main.refresh();
-		main.canvas.changeTool('events')
+		main.canvas.changeTool('Control')
 		document.body.style.cursor = 'default'
   })
+
   
   // Some sanity to show user if connected to server, or not.
   var loadingDone=function(){ 

@@ -59,8 +59,8 @@ python_accept_configure = function(){
   this.update()
 }
 
-var PythonAction=extend(Action, {paramOptions: [{type:Text,text:current_language.python_action_msg,name:'code'}]})
-var PythonEvent=extend(Event, {paramOptions: [{type:Text,text:current_language.python_event_msg,name:'code'}]})
+var PythonAction=node.extend(node.Action, {paramOptions: [{type:Text,text:current_language.python_action_msg,name:'code'}]})
+var PythonEvent=node.extend(node.Event, {paramOptions: [{type:Text,text:current_language.python_event_msg,name:'code'}]})
 
 PythonAction.prototype.configure=python_configure
 PythonAction.prototype.acceptConfigure=python_accept_configure
