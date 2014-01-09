@@ -14,7 +14,7 @@ Behaviour = function(view){
 	// Metadata
 	this.name=""
 	this.description=""
-	this.ready=false;
+
 //	this.activeNodes=null;
 	this.nodeFactory=new NodeFactory(this)
 	
@@ -25,8 +25,7 @@ Behaviour.prototype.addNode = function(type, id, params, position, only_client) 
 	if (type==null)
 	  throw("Need a type")
 	  
-	if (!this.ready)
-	  throw("System busy")
+
 	
 	if(!only_client) {
 	  // In  case the user tries to create a RadioReceive Event without a RadioManager,
@@ -77,7 +76,7 @@ Behaviour.prototype.addNode = function(type, id, params, position, only_client) 
 	  this.state[id]=node
 	  var create_params=jQuery.extend({}, node.getParams())
 	  create_params.create_node=type;
-	  this.ready = false
+
 	  $('#loading').show()
 	  $.post('/node/',create_params, function(name){
 		  // I got a name, and confirmation of creation.
@@ -95,7 +94,7 @@ Behaviour.prototype.addNode = function(type, id, params, position, only_client) 
 		  $.post('/node/'+node.id,{x:node.x, y:node.y}, function(){
 		    $.post("/manager/",{save:0}, function(){
 		      $('#loading').hide()
-		      that.ready = true
+
 		    }) 
 		  }).error(function(txt){
 		  alert(current_language.parameter_setting_error+txt.responseText)
@@ -110,7 +109,7 @@ Behaviour.prototype.addNode = function(type, id, params, position, only_client) 
 }
 
 Behaviour.prototype.deleteNode = function(node, no_confirm, only_client){
-  	if (!this.ready || node.active)
+  	if (node.active)
 	  throw("System busy")
   
 	if(!only_client) {
@@ -143,14 +142,14 @@ Behaviour.prototype.deleteNode = function(node, no_confirm, only_client){
 	    if ($('#startstop.stop').length)
 	      main.startStop(true);
       
-	    that.ready=false
+
 	    $('#loading').show()
 	    $.post('/node/'+node.id,{remove:true}, function(){
 	      delete that.state[node.id]
 	      that.view.deleteNode(node)
 	      $.post("/manager/",{save:0}, function(){
 		$('#loading').hide()
-		that.ready = true
+
 	      })
 	    }).error(function(){
 	      alert(current_language.node_removal_at_server_error);
@@ -171,8 +170,7 @@ Behaviour.prototype.connect = function(from, to, color, id){
 		alert("Can't connect same node");
 		return null
 	}
-	if (!this.ready)
-	  throw("System busy")
+
 	  
 	var that=this
 	var c=new Connection(from, to, {color:color})
@@ -186,11 +184,11 @@ Behaviour.prototype.connect = function(from, to, color, id){
 	  if ($('#startstop.stop').length)
 	    main.startStop(true);
       
-	  this.ready=false
+
 	  $('#loading').show()
 	  $.post('/node/'+c.from.id, {connect_to:to.id}, function(name){
 	    c.id = name
-	    that.ready=true
+
 	    $('#loading').hide()
 	  },'text').error(function(){
 		  alert(current_language.node_connection_at_server_error)

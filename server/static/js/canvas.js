@@ -25,7 +25,7 @@ Canvas = function(id, options){
 	this.stTarget;
 	this.stOrigin;
 	this.stTf;
-	this.ready=false;
+
 }
 
 Canvas.prototype.setNodeToConnect = function(node){
@@ -224,7 +224,7 @@ Canvas.prototype.setupViewpoint = function(source){
   that.setupHandlers(that);
   that.getRoot(that);
   // mark canvas as ready to work with it
-  that.ready = true;
+
 }
 
 /**
