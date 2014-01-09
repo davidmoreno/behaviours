@@ -30,8 +30,7 @@ NodeFactory.prototype.updateAvailableNodes = function(){
 		    }, 'xml')
 
 		  }
-		  //that.behaviour.ready=true;
-		 // that.behaviour.ready=true;
+
 		  // mark as behaviour ready to start working
 		  
 		},'json')
@@ -210,7 +209,7 @@ NodeFactory.prototype.get = function(type){
 NodeFactory.prototype.add = function(name, type){
 
 	this.known_types[name]=type
-	this.behaviour.ready=true;
+
 
 }
 
