@@ -208,11 +208,10 @@ NodeFactory.prototype.get = function(type){
 }
 
 NodeFactory.prototype.add = function(name, type){
-	this.jss-=1
+
 	this.known_types[name]=type
-	if(this.jss==2){
-		this.behaviour.ready=true;
-	}
+	this.behaviour.ready=true;
+
 }
 
 return {NodeFactory:NodeFactory}
