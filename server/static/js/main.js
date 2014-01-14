@@ -6,8 +6,8 @@ require.config({
 	}
 })
 
-define('main',['jquery','canvas','behaviour','lang',
-							 'extra/jquery.form.min','extra/jquery-ui.min'],function($,canvas,behaviour){
+define('main',['jquery','canvas','behaviour', 'browsefiles', 'lang',
+							 'extra/jquery.form.min','extra/jquery-ui.min'],function($,canvas,behaviour, BrowseFiles){
 Main=function(){
 	if ( ! (this instanceof Main) )
 		throw("Main is a class, not a function")

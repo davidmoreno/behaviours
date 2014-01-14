@@ -1,3 +1,4 @@
+define(['jquery'], function($){
 /**
  * @short Create a file browser
  * 
@@ -114,3 +115,5 @@ BrowseFiles.prototype.chdir = function(path){
 	}
 	this.updateContents(myp.join('/'))
 }
+return BrowseFiles
+})
