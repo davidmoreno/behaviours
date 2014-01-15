@@ -28,7 +28,7 @@
 namespace AB {
   class External : public AB::Event {
   public:
-    External(const char *type = "external") : AB::Event(type) {}
+    External(const char *type = "click") : AB::Event(type) {}
     
   private:
   };
