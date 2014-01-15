@@ -24,7 +24,7 @@
 
 using namespace AB;
 
-Timeout::Timeout(const char* type) : Event(type)
+Timeout::Timeout(const char* type) : Event(type), manager(nullptr)
 {
   setFlags(Polling|NeedSync);
   limit=-1;
