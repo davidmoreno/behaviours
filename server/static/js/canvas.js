@@ -27,12 +27,14 @@ var Canvas = function(id, options){
 	this.stTarget;
 	this.stOrigin;
 	this.stTf;
+	this.ready=false;
 }
 
 Canvas.prototype.setNodeToConnect = function(node){
 	this.nodeToConnect=node;
 	main.showMessage(current_language.connect_message)
 	node.focus()
+	this.ready=true;
 }
 
 Canvas.prototype.addNode = function(node){
