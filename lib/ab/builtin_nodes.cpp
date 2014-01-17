@@ -43,7 +43,7 @@ void AB::registerBuiltinNodes()
   AB::Factory::registerClass<AB::Empty>("condmerge");
 	
   AB::Factory::registerClass<AB::Alarm>("alarm");
-  AB::Factory::registerClass<AB::External>("external");
+  AB::Factory::registerClass<AB::External>("click");
   AB::Factory::registerClass<AB::Load>("load");
   AB::Factory::registerClass<AB::Wait>("wait");
   AB::Factory::registerClass<AB::WebService>("webservice");

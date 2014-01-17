@@ -42,13 +42,13 @@ namespace std{
 ObjectBase::ObjectBase(const char* type)  : _type(type)
 {
   ObjectBase::live_objects++;
-  DEBUG("%s() %s (%ld live)",type, std::to_string(this).c_str(), ObjectBase::live_objects);
+  DEBUG("%s() %s (%lld live)",type, std::to_string(this).c_str(), ObjectBase::live_objects);
 }
 
 ObjectBase::~ObjectBase()
 {
   ObjectBase::live_objects--;
-  DEBUG("~%s() %s (%ld still alive)",type(), std::to_string(this).c_str(), ObjectBase::live_objects);
+  DEBUG("~%s() %s (%lld still alive)",type(), std::to_string(this).c_str(), ObjectBase::live_objects);
 }
 
 
