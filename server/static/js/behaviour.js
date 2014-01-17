@@ -16,7 +16,6 @@ var Behaviour = function(view){
 	// Metadata
 	this.name=""
 	this.description=""
-//	this.activeNodes=null;
 	this.nodeFactory=new node_factory.NodeFactory(this)
 
 	
@@ -26,8 +25,6 @@ Behaviour.prototype.addNode = function(type, id, params, position, only_client) 
 	var that = this
 	if (type==null)
 	  throw("Need a type")
-	  
-
 	if(!only_client) {
 	  // In  case the user tries to create a RadioReceive Event without a RadioManager,
 	  // alert the user and create a RadioManager
@@ -95,7 +92,7 @@ Behaviour.prototype.addNode = function(type, id, params, position, only_client) 
 		  $.post('/node/'+node.id,{x:node.x, y:node.y}, function(){
 		    $.post("/manager/",{save:0}, function(){
 		      $('#loading').hide()
-		      that.ready = true
+
 		    }) 
 		  }).error(function(txt){
 		  alert(current_language.parameter_setting_error+txt.responseText)
@@ -142,16 +139,15 @@ Behaviour.prototype.deleteNode = function(node, no_confirm, only_client){
 	  
 	    if ($('#startstop.stop').length)
 	      main.startStop(true);
-      
 	    $('#loading').show()
 	    $.post('/node/'+node.id,{remove:true}, function(){
 	      delete that.state[node.id]
 	      that.view.deleteNode(node)
 	      $.post("/manager/",{save:0}, function(){
-		$('#loading').hide()
-		
-	require(['main'], function(main){
-	})
+		$('#loading').hide()		
+			require(['main'], function(main){
+			})
+
 	      })
 	    }).error(function(){
 	      alert(current_language.node_removal_at_server_error);
@@ -185,7 +181,6 @@ Behaviour.prototype.connect = function(from, to, color, id){
 	  }
 	  if ($('#startstop.stop').length)
 	    main.startStop(true);
-
 	  $('#loading').show()
 	  $.post('/node/'+c.from.id, {connect_to:to.id}, function(name){
 	    c.id = name

@@ -27,7 +27,7 @@ var Canvas = function(id, options){
 	this.stTarget;
 	this.stOrigin;
 	this.stTf;
-	this.ready=false;
+
 }
 
 Canvas.prototype.setNodeToConnect = function(node){
