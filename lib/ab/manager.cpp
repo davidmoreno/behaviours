@@ -17,6 +17,7 @@
  **/
 
 #include <sstream>
+#include <algorithm>
 
 #include "log.h"
 #include "manager.h"
@@ -46,19 +47,6 @@ Manager::Manager() :
 
 Manager::~Manager()
 {
-  std::map<Node*,std::vector<Connection*> > oldConnections=nodeConnections;
-  nodeConnections.clear();
-  typedef std::pair<Node*,std::vector<Connection*> > pair;
-  for(pair p: oldConnections) {
-    if (nodes.count(p.first)>0) {
-      for(Connection *s: p.second) {
-        delete s;
-      }
-    }
-  }
-  for(Node *ev: nodes) {
-    delete ev;
-  }
   if (lua)
     delete lua;
 }
@@ -67,45 +55,13 @@ void Manager::clear()
 {
   DEBUG("Clear");
 
-  std::set<Node*> keepNodes;
   activeEvents.clear();
-
-  for(Node *n: nodes) {
-    if (n->flags()&Node::ManualRemoval) {
-      keepNodes.insert(n);
-      Event *ev=dynamic_cast<Event*>(n);
-      if (ev) {
-        activeEvents.insert(ev);
-      }
-    } else {
-      DEBUG("Delete %p", n);
-      delete n;
-    }
-  }
-
-  nodes=keepNodes;
-
-  std::map<Node*,std::vector<Connection*> > oldConnections=nodeConnections;
-  nodeConnections.clear();
-  typedef std::pair<Node*,std::vector<Connection*> > pair;
-  for(pair p: oldConnections) {
-    if (nodes.count(p.first)>0) {
-      for(Connection *s: p.second) {
-        if (nodes.count(s->to())>0) {
-          Connection *nc=connect(p.first, s->to());
-          nc->setGuard(s->guard());
-        }
-        delete s;
-      }
-    }
-  }
-#ifdef __DEBUG__
-  for(pair p: nodeConnections) {
-    for(Connection *s: p.second) {
-      DEBUG("%s;",s->unicode().c_str());
-    }
-  }
-#endif
+	
+	std::set<Node::p> final; // Cant use erase-remove on sets, need special inserter.
+	for(auto &n: nodes)
+		if (n->flags()&Node::ManualRemoval)
+			final.insert(n);
+	nodes=std::move(final);
 
   syncOnNextCycle=true;
 }
@@ -122,15 +78,16 @@ void Manager::saveBehaviour(const std::string &xmlfile, bool includeFiles)
   writeBehaviour(xmlfile, this, includeFiles);
 }
 
-void Manager::addNode(Node *n)
+void Manager::addNode(Node::p n)
 {
-  DEBUG("Add node %s %p", n->name().c_str(), n);
+  DEBUG("Add node %s %p", n->name().c_str(), n.get());
   // If node id already exists in behaviour, find a non-existing one
   while(getNode(n->name()))
     n->setName();
   n->setManager(this);
-  Event *ev=dynamic_cast<Event*>(n);
-  if (ev) {  
+
+  Event::p ev=std::dynamic_pointer_cast<Event>(n);
+  if (ev) {
     activeEvents.insert(ev);
     DEBUG("%s","activeEvents lenght" );
     DEBUG("%zd", activeEvents.size());
@@ -142,7 +99,9 @@ void Manager::addNode(Node *n)
   syncOnNextCycle=true;
 }
 void Manager::removeEvent( std::string id){
-    for(Event *ev: activeEvents) {
+  Event::p ev;
+    for(Node::p nodeev: activeEvents) {
+      ev=std::dynamic_pointer_cast<Event>(nodeev);
       if(strcmp(ev->name().c_str(),id.c_str())==0){
         activeEvents.erase(ev);
       }
@@ -150,7 +109,7 @@ void Manager::removeEvent( std::string id){
     }
 
 }
-void Manager::addEvent(Event *ev){
+void Manager::addEvent(Event::p ev){
   if(ev){
     DEBUG("%s","activeEvents lenght" );
     DEBUG("%zd", activeEvents.size());
@@ -160,7 +119,9 @@ void Manager::addEvent(Event *ev){
   }
 }
 bool Manager::findNode(std::string id){
-   for(Event *ev: activeEvents) {
+  Event::p ev;
+   for(Node::p nodep: activeEvents) {
+    ev=std::dynamic_pointer_cast<Event>(nodep);
       if(strcmp(ev->name().c_str(),id.c_str())==0){
         return true;
       }
@@ -169,30 +130,28 @@ bool Manager::findNode(std::string id){
     return false;
 }
 
-void Manager::deleteNode(Node *n, bool also_delete_object){
-	DEBUG("Delete node %s %p", n->name().c_str(), n);
+void Manager::deleteNode(Node::p n){
+	DEBUG("Delete node %s %p", n->name().c_str(), n.get());
 	
 	disconnect(n);
 	
-  Event *ev=dynamic_cast<Event*>(n);
-  if (ev) {
-		activeEvents.erase(ev);
-	}
+	activeEvents.erase(n);
 	nodes.erase(n);
-	if (also_delete_object)
-		delete n;
 }
 
-Connection *Manager::connect(Node *A, Node *B)
+Connection::p Manager::connect(Node::p A, Node::p B)
 {
+
   /* if(A->name().compare(B->name())==0){
      DEBUG("No connect same node %s -> %s", A->name().c_str(), B->name().c_str());
     return NULL;
   }*/
-  Connection *conn=getConnection(A,B);
+  Connection::p conn=getConnection(A,B);
   if (conn) // If exists, return existing one.
-    return conn; 
- conn=new Connection(this, A, B);
+    return conn;
+  if (std::dynamic_pointer_cast<AB::Event>(B))
+    return NULL; // Trying to connect to an event is not allowed  
+ conn=std::make_shared<Connection>(this, A, B); 
   if(getEvent(B->name())!=NULL){
     Object newob= to_object(1);
     B->setAttr("nodeon",newob);
@@ -203,16 +162,16 @@ Connection *Manager::connect(Node *A, Node *B)
 }
 
 
-Connection *Manager::connect(const std::string idA, const std::string idB)
+Connection::p Manager::connect(const std::string &idA, const std::string &idB)
 {
   DEBUG("Connect %s -> %s", idA.c_str(), idB.c_str());
-  Node *A=getNode(idA);
+
+  Node::p A=getNode(idA);
 
   if (!A)
     return NULL;
 
-  Node *B=getNode(idB);
-
+  Node::p B=getNode(idB);
   if (!B)
     return NULL;
 
@@ -220,10 +179,12 @@ Connection *Manager::connect(const std::string idA, const std::string idB)
   return connect(A, B);
 }
 
-void Manager::disconnect(Node *A, Node *B){
-	std::vector<Connection*> &conns=nodeConnections[A];
-	std::vector<Connection*>::iterator I=conns.begin(), endI=conns.end();
-  Event *ev=dynamic_cast<Event*>(B);
+
+void Manager::disconnect(Node::p A, Node::p B){
+	std::vector<Connection::p> &conns=nodeConnections[A];
+	std::vector<Connection::p>::iterator I=conns.begin(), endI=conns.end();
+  Event::p ev=std::dynamic_pointer_cast<Event>(B);
+
   if(ev){
         DEBUG("%s","A ver como queda desde nodo" );
         DEBUG("%d", ev->nodeon); 
@@ -233,35 +194,30 @@ void Manager::disconnect(Node *A, Node *B){
 
 	for(;I!=endI;++I){
 		if ((*I)->to()==B){
-			Connection *c=*I;
+			Connection::p c=*I;
 			conns.erase(I);
-			delete c;
+			
 			return;
 		}
 	}
+    conns.erase( std::remove_if(conns.begin(), conns.end(), [&B](Connection::p &p){ return (p->to()==B); }), conns.end());
 }
 
-void Manager::disconnect(Node *A){
+void Manager::disconnect(Node::p A){
 	{ // Easy part, from A
-		std::vector<Connection*> &conns=nodeConnections[A];
-		std::vector<Connection*>::iterator I=conns.begin(), endI=conns.end();
-		for(;I!=endI;++I){
-			delete *I;
-		}
+		std::vector<Connection::p> &conns=nodeConnections[A];
 		conns.clear();
 	}
 	
 	{ // A bit more convoluted, to A
-		std::map<Node*, std::vector<Connection*> >::iterator I=nodeConnections.begin(), endI=nodeConnections.end();
+		std::map<Node::p, std::vector<Connection::p> >::iterator I=nodeConnections.begin(), endI=nodeConnections.end();
 		for(;I!=endI;++I){
-			std::vector<Connection*> &conns=I->second;
-			std::vector<Connection*>::iterator J=conns.begin(), endJ=conns.end();
+			std::vector<Connection::p> &conns=I->second;
+			std::vector<Connection::p>::iterator J=conns.begin(), endJ=conns.end();
 			do{
 				for(;J!=endJ;++J){
 					if ((*J)->to()==A){
-						Connection *c=*J;
 						conns.erase(J);
-						delete c;
 						break;
 					}
 				}
@@ -271,9 +227,9 @@ void Manager::disconnect(Node *A){
 }
 
 
-Connection *Manager::getConnection(Node *A, Node *B){
-	std::vector<Connection*> &conns=nodeConnections[A];
-	std::vector<Connection*>::iterator I=conns.begin(), endI=conns.end();
+Connection::p Manager::getConnection(Node::p A, Node::p B){
+	std::vector<Connection::p> &conns=nodeConnections[A];
+	std::vector<Connection::p>::iterator I=conns.begin(), endI=conns.end();
 	for(;I!=endI;++I){
 		if ((*I)->to()==B)
 			return *I;
@@ -281,17 +237,17 @@ Connection *Manager::getConnection(Node *A, Node *B){
 	return NULL;
 }
 
-std::vector< Connection* > Manager::getConnections()
+std::vector< Connection::p > Manager::getConnections()
 {
-	std::vector< Connection* > ret;
-	std::map<Node*, std::vector<Connection*> >::iterator I=nodeConnections.begin(), endI=nodeConnections.end();
+	std::vector< Connection::p > ret;
+	std::map<Node::p, std::vector<Connection::p> >::iterator I=nodeConnections.begin(), endI=nodeConnections.end();
 	for(;I!=endI;++I){
 		ret.insert(ret.end(), I->second.begin(), I->second.end());
 	}
 	return ret;
 }
 
-const std::vector<Connection *> &Manager::getConnections(Node *A)
+const std::vector<Connection::p> &Manager::getConnections(Node::p A)
 {
 	return nodeConnections[A];
 }
@@ -299,17 +255,20 @@ const std::vector<Connection *> &Manager::getConnections(Node *A)
 void Manager::sync()
 {
 #ifdef __DEBUG__
-  typedef std::pair<Node*, std::vector<Connection*> > pair;
+  typedef std::pair<Node::p, std::vector<Connection::p> > pair;
 
   for(pair c: nodeConnections) {
-    for(Connection *conn: c.second) {
+    for(Connection::p conn: c.second) {
       DEBUG("%s", conn->unicode().c_str());
     }
   }
 #endif
 
   DEBUG("Sync!");
-  for(Event *ev: activeEvents) {
+  for(Node::p n: activeEvents) {
+		Event::p ev=std::dynamic_pointer_cast<Event>(n);
+		if (!ev)
+			continue;
     DEBUG("Check %s: %X, %s", ev->name().c_str(), ev->flags(), ev->flags()&Event::NeedSync ? "true" : "false");
     if (ev->flags()&Event::NeedSync) {
       ev->sync();
@@ -321,6 +280,7 @@ void Manager::sync()
 
 void Manager::exec()
 {
+   Event::p ev;
   int alwaysExec=11;
   DEBUG("Start execution of behaviour");
   execThreadId=std::this_thread::get_id();
@@ -331,8 +291,9 @@ void Manager::exec()
     if (syncOnNextCycle)
       sync();
     //DEBUG("Checks at t=%d", t);
-    for(Event *ev: activeEvents) {
+    for(Node::p n: activeEvents) {
       //DEBUG("Check %s %d", ev->name().c_str(), ev->flags());
+      ev=std::dynamic_pointer_cast<Event>(n);
       if (ev->flags()&Event::Polling) {
         DEBUG("Event with name: %s and Cont: %d and noderepeat: %d",ev->name().c_str(),ev->cont,ev->noderepeat);
         if(ev->noderepeat!=alwaysExec && ev->name().find("__alarm_manager__")<0 && ev->cont ==ev->noderepeat){
@@ -342,6 +303,7 @@ void Manager::exec()
             ev->setAttr("nodeon",newob);
         }
         if (ev->check()) {
+
           DEBUG("Event %s is triggered!", ev->name().c_str());
          
           notify(ev);
@@ -353,7 +315,7 @@ void Manager::exec()
     {
       std::lock_guard<std::mutex> l(pendingNotificationsMutex);
       while (!pendingNotifications.empty()) {
-        Node *n=pendingNotifications.front();
+        Node::p n=pendingNotifications.front();
         pendingNotifications.pop();
         if (nodes.count(n)>0)
           notify(n);
@@ -369,7 +331,7 @@ void Manager::exec()
  * The pendingNotifications queue is checked for integrity before launching the new node notification to check its still
  * valid.
  */
-void Manager::notify(Node *node)
+void Manager::notify(Node::p node)
 {
   if (std::this_thread::get_id()!=execThreadId) {
     DEBUG("Pushing for notification at proper thread");
@@ -398,17 +360,17 @@ void Manager::notify(Node *node)
 }
 
 /// Callback to know when a node is notified on enter.
-void (*AB::manager_notify_node_enter)(AB::Node *node) = NULL;
+void (*AB::manager_notify_node_enter)(AB::Node::p node) = NULL;
 /// Callback to know when a node is notified on exit
-void (*AB::manager_notify_node_exit)(AB::Node *node) = NULL;
+void (*AB::manager_notify_node_exit)(AB::Node::p node) = NULL;
 
 /// Fast and dirty RAII to enforce call of exit when node exits.
 class RAII_enter_exit_node {
-  typedef void (*fn)(AB::Node *);
+  typedef void (*fn)(AB::Node::p);
   fn exit;
-  Node *data;
+  Node::p data;
 public:
-  RAII_enter_exit_node(fn enter, fn _exit, Node *_data) : exit(_exit), data(_data) {
+  RAII_enter_exit_node(fn enter, fn _exit, Node::p _data) : exit(_exit), data(_data) {
     if (enter)
       enter(data);
   }
@@ -426,34 +388,36 @@ public:
  * @param node The node to exec.
  * @returns The next node to execute.
  */
-Node *Manager::notifyOne(Node *node)
+Node::p Manager::notifyOne(Node::p node)
 {
   RAII_enter_exit_node een(manager_notify_node_enter, manager_notify_node_exit, node);
-  Action *ac=dynamic_cast<Action*>(node);
+
+  Action::p ac=std::dynamic_pointer_cast<Action>(node);
   DEBUG("Name of action is: %s",node->name().c_str());
+
   if (ac) {
     ac->exec();
   }
   if (nodeConnections.count(node)>0) {
     DEBUG("Notify node %s", node->name().c_str());
-    std::vector<Connection*> p=nodeConnections[node];
-    for(Connection *conn: p) {
+    std::vector<Connection::p> p=nodeConnections[node];
+    for(Connection::p conn: p) {
       if (conn->checkGuard()) {
         return conn->to();
       }
     }
     // Ok, do one random without the guards. Nor truly normal distribution, but should be ok for small <1000 numbers.
     int n=0;
-    for(Connection *conn: p) {
+    for(Connection::p conn: p) {
       if (conn->guard()=="") {
         n++;
       }
     }
     if (n>0) {
-      Event *ec=dynamic_cast<Event*>(node);
+      Event::p ec=std::dynamic_pointer_cast<Event>(node);
       if(ec){
-        for(Connection *conn: p) {
-          Event *ecchild=dynamic_cast<Event*>(conn->to());
+        for(Connection::p conn: p) {
+          Event::p ecchild=std::dynamic_pointer_cast<Event>(conn->to());
           if (ecchild) {
             std::string name=ecchild->name();
               DEBUG("Event : %s",name.c_str());              
@@ -466,7 +430,7 @@ Node *Manager::notifyOne(Node *node)
         return NULL;
       }
       n=rand()%n;
-      for(Connection *conn: p) {
+      for(Connection::p conn: p) {
         if (conn->guard()=="") {
           if (n==0)
             return conn->to();
@@ -481,39 +445,35 @@ Node *Manager::notifyOne(Node *node)
 }
 
 
-const std::set<Node*> &Manager::getNodes()
+const std::set<Node::p> &Manager::getNodes()
 {
   return nodes;
 }
 
-const std::set<Event*> &Manager::getActiveEvents()
+const std::set<Node::p> &Manager::getActiveEvents()
 {
   return activeEvents;
 }
 
-Node *Manager::getNode(const std::string &id)
+Node::p Manager::getNode(const std::string &id)
 {
-  for(Node *ev: nodes) {
+  for(Node::p ev: nodes) {
     if (ev->name()==id)
       return ev;
   }
   return NULL;
 }
 
-Event *Manager::getEvent(const std::string &id)
+Event::p Manager::getEvent(const std::string &id)
 {
-  Node *n=getNode(id);
-  if (n)
-    return dynamic_cast<Event*>(n);
-  return NULL;
+  Node::p n=getNode(id);
+  return std::dynamic_pointer_cast<Event>(n);
 }
 
-Action *Manager::getAction(const std::string &id)
+Action::p Manager::getAction(const std::string &id)
 {
-  Node *n=getNode(id);
-  if (n)
-    return dynamic_cast<Action*>(n);
-  return NULL;
+  Node::p n=getNode(id);
+  return std::dynamic_pointer_cast<Action>(n);
 }
 
 
@@ -544,7 +504,7 @@ AB::Object Manager::resolve(const std::string &var)
 {
   DEBUG("Resolving variable %s", var.c_str());
   // Check it its an object name
-  for(Node *nn: nodes) {
+  for(const Node::p &nn: nodes) {
     if (nn->name()==var) {
       DEBUG("Found as name");
       return to_object(nn);
@@ -556,7 +516,7 @@ AB::Object Manager::resolve(const std::string &var)
     return to_object(lastNode);
   }
 
-  for(Node *nn: nodes) {
+  for(const Node::p &nn: nodes) {
     if (nn->type()==var) {
       DEBUG("Found as type: %s", nn->type());
       return to_object(nn);
@@ -571,7 +531,7 @@ AB::Object Manager::resolve(const std::string &var)
   }
 
   // Ok, just look at attrs at any known object
-  for(Node *nn: nodes) {
+  for(const Node::p &nn: nodes) {
     try {
       return nn->attr(var);
     } catch(const AB::attribute_not_found &e) {

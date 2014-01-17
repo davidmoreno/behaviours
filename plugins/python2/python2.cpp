@@ -30,7 +30,7 @@ namespace AB{
 		std::string code;
 		PyObject *compiled_code;
 	public:
-		Python2Action(const char* type);
+		Python2Action(const char* type="python2action");
     virtual ~Python2Action();
 		virtual void exec();
 		
@@ -44,10 +44,10 @@ namespace AB{
 	class Python2Event : public Event{
 		std::string code;
 		PyObject *compiled_code;
-    	Event * event;
+    	Event::p event;
     	Manager *manager;
 	public:
-		Python2Event(const char* type);
+		Python2Event(const char* type="python2event");
     virtual ~Python2Event();
     virtual bool check();
 		
@@ -132,7 +132,7 @@ void Python2Action::exec()
 	PyObject *locals=PyDict_New();
 	Py_INCREF(globals);
 	
-	auto o=to_object(this) ;
+	auto o=to_object(this->shared_from_this()) ;
 	PyDict_SetItemString(locals, "self", object2pyobject( o ));
 	
 	PyObject *obj=PyEval_EvalCode( (PyCodeObject*)compiled_code, globals, locals);
@@ -200,7 +200,7 @@ bool Python2Event::check()
 	PyObject *locals=PyDict_New();
 	Py_INCREF(globals);
 	
-	auto o=to_object(this) ;
+	auto o=to_object(this->shared_from_this());
 	PyDict_SetItemString(locals, "self", object2pyobject( o ));
 	
 	PyObject *obj=PyEval_EvalCode( (PyCodeObject*)compiled_code, globals, locals);

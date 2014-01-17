@@ -20,6 +20,9 @@
 #define AB_CONNECTION
 
 #include <string>
+#include <memory>
+
+#include "node.h"
 
 namespace AB {
   class Node;
@@ -34,15 +37,17 @@ namespace AB {
    */
   class Connection {
     Manager *manager;
-    Node *from_;
-    Node *to_;
+    Node::p from_;
+    Node::p to_;
     std::string guard_;
     std::string name_;
   public:
+		typedef std::shared_ptr<Connection> p;
+		
     /**
      * @short Creates a connection on the given manager
      */
-    Connection(Manager *manager, Node *from, Node *to);
+    Connection(Manager *manager, Node::p from, Node::p to);
     /**
      * @short Sets the guard expression for this connection
      */
@@ -54,11 +59,11 @@ namespace AB {
     /**
      * @short Returns the to node
      */
-    Node *to() { return to_; };
+    Node::p to() { return to_; };
     /**
      * @short Returns the from node
      */
-    Node *from() { return from_; };
+    Node::p from() { return from_; };
     /**
      * @short Returns the guard itseld.
      */

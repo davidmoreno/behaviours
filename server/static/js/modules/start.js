@@ -1,5 +1,6 @@
-(function(){
-  var Start=extend(Event,  {paramOptions: [{type:Array,values:['YES','NO'],name:'nodeon'},
+require(['node','jquery','main'],function(node, $, main){
+
+  var Start=node.extend(node.Event,  {paramOptions: [{type:Array,values:['YES','NO'],name:'nodeon'},
    {type:Array,values:['Never','01','02','03','04','05','06','07','08','09','10','Always'],name:'noderepeat'}
    ]})
   Start.prototype.configure = function(){
@@ -146,4 +147,4 @@ Start.prototype.acceptConfigure=function(){
   }
 }
 main.behaviour.nodeFactory.add('start',Start)
-}())
+})

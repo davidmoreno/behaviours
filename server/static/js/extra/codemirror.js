@@ -1,7 +1,7 @@
+define('extra/codemirror',function(){
 // CodeMirror version 3.12
 //
 // CodeMirror is the only global var we claim
-window.CodeMirror = (function() {
   "use strict";
 
   // BROWSER SNIFFING
@@ -5582,4 +5582,4 @@ window.CodeMirror = (function() {
   CodeMirror.version = "3.12";
 
   return CodeMirror;
-})();
+});

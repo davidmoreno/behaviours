@@ -33,7 +33,7 @@ namespace Python2{
 
 	typedef struct{
 		PyObject_HEAD
-		Node *node;
+		Node::p node;
 	} NodeObject;
 
 	typedef struct{
@@ -85,7 +85,7 @@ namespace Python2{
 	}
 	
 	static PyObject *node_notify(PyObject *self,PyObject *args,PyObject *kwargs){
-		NodeObject *oself=(NodeObject*)self;
+		NodeObject *oself=((NodeObject*)self);
 		ab_module_manager->notify(oself->node);
 		Py_INCREF(Py_None);
 		return Py_None;

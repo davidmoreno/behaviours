@@ -23,57 +23,43 @@
 #include "log.h"
 
 using namespace AB;
-std::map<std::string, std::function<Node*(const std::string& type)> > Factory::knownTypes;
+std::map<std::string, std::function<Node::p(const std::string& type)> > Factory::knownTypes;
 
-bool Factory::registerCreator(const std::string &type, std::function<Node*(const std::string& type)> f)
+bool Factory::registerCreator(const std::string &type, std::function<Node::p(const std::string& type)> f)
 {
-
   knownTypes[type]=f;
   return true;
 }
 
-Node* Factory::createNode(const std::string& type)
+Node::p Factory::createNode(const std::string& type)
 {
-  
   if (knownTypes.count(type)>0) {
-    Node* n = knownTypes[type](knownTypes.find(type)->first);
-    
-    return n;
+    return knownTypes[type](type);
   }
   throw type_does_not_exists(type);
 }
 
 
-Event* Factory::createEvent(const std::string& type)
+Event::p Factory::createEvent(const std::string& type)
 {
-  Node *n=createNode(type);
-  if (n) {
-    Event *e=dynamic_cast<Event*>(n);
-    if (!e)
-      delete n;
-    return e;
-  }
+  Event::p n=std::dynamic_pointer_cast<Event>(createNode(type));
+	if (n)
+		return n;
   throw type_does_not_exists(type);
 }
 
-Action* Factory::createAction(const std::string& type)
+Action::p Factory::createAction(const std::string& type)
 {
-  
-  Node *n=createNode(type);
- 
-  if (n) {
-    Action *e=dynamic_cast<Action*>(n);
-    if (!e)
-      delete n;
-    return e;
-  }
+  Action::p n=std::dynamic_pointer_cast<Action>(createNode(type));
+	if (n)
+		return n;
   throw type_does_not_exists(type);
 }
 
 std::string Factory::list_as_string()
 {
   std::string ret;
-  std::map<std::string, std::function<Node*(const std::string& type)> >::iterator I=Factory::knownTypes.begin(), endI=Factory::knownTypes.end();
+  std::map<std::string, std::function<Node::p(const std::string& type)> >::iterator I=Factory::knownTypes.begin(), endI=Factory::knownTypes.end();
   for(; I!=endI; ++I) {
     ret+="<"+I->first+"> ";
   }
@@ -82,7 +68,7 @@ std::string Factory::list_as_string()
 
 std::vector<std::string> Factory::list(){
 	std::vector<std::string> ret;
-  std::map<std::string, std::function<Node*(const std::string& type)> >::iterator I=Factory::knownTypes.begin(), endI=Factory::knownTypes.end();
+  std::map<std::string, std::function<Node::p(const std::string& type)> >::iterator I=Factory::knownTypes.begin(), endI=Factory::knownTypes.end();
   for(; I!=endI; ++I){
     ret.push_back(I->first);
   }

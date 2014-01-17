@@ -26,7 +26,7 @@ void t00_resolve()
   INIT_LOCAL();
 
   Manager manager;
-  Node *n=new Timeout();
+  Node::p n=std::make_shared<Timeout>();
   n->setName("tout");
   n->setAttr("timeout","9.0");
   manager.addNode(n);
@@ -73,7 +73,7 @@ void t02_with_manager()
 
   manager.eval("print(_VERSION)");
 
-  Node *n=new Timeout();
+  Node::p n=std::make_shared<Timeout>();
   FAIL_IF_EXCEPTION( n->setAttr("timeout","9") );
   n->setName("tout");
   manager.addNode(n);
@@ -105,7 +105,7 @@ void t03_fullcode()
   INIT_LOCAL();
 
   Manager manager;
-  Node *n=new Timeout();
+  Node::p n=std::make_shared<Timeout>();
   n->setName("tout");
   n->setAttr("timeout","9.0");
   manager.addNode(n);
@@ -151,7 +151,7 @@ void t04_set_node_value_at_lua()
 
   Manager manager;
 
-  Node *n=new Timeout();
+  Node::p n=std::make_shared<Timeout>();
   FAIL_IF_EXCEPTION( n->setAttr("timeout","9") );
   n->setName("tout");
   manager.addNode(n);
@@ -199,7 +199,7 @@ void t05_parse_string()
 
   Manager manager;
 
-  Node *n=new Timeout();
+  Node::p n=std::make_shared<Timeout>();
   FAIL_IF_EXCEPTION( n->setAttr("timeout","9") );
   n->setName("tout");
   manager.addNode(n);

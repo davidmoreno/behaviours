@@ -24,7 +24,8 @@
 #include <string>
 #include <map>
 #include "node.h"
-
+#include "event.h"
+#include "action.h"
 
 namespace AB {
   class Event;
@@ -38,13 +39,12 @@ namespace AB {
    * Node creators must be registered, and the the creators can be called.
    */
   class Factory {
-    static std::map<std::string, std::function<Node*(const std::string& type)> > knownTypes;
+    static std::map<std::string, std::function<Node::p(const std::string& type)> > knownTypes;
 
     template<class T>
-    static AB::Node *createNode(const std::string& type) {
-      return new T(type.c_str());
+    static AB::Node::p createNode(const std::string &ignored) {
+      return std::make_shared<T>();
     }
-    
   public:
     /**
      * @short This desired type to create does not exist.
@@ -60,7 +60,7 @@ namespace AB {
     /**
      * @short Registers a new creator for a class object
      */
-    static bool registerCreator(const std::string &type, std::function<Node*(const std::string& type)> f);
+    static bool registerCreator(const std::string &type, std::function<Node::p(const std::string& type)> f);
 
     /**
      * @short Template to ease the adding of new types.
@@ -73,7 +73,6 @@ namespace AB {
      */
     template<class T>
     static bool registerClass(const std::string &type) {
-      
       registerCreator(type, createNode<T>);
       return true;
     }
@@ -83,21 +82,21 @@ namespace AB {
      * @returns The Node or throws
      * @throw type_does_not_exists Could not create that type
      */
-    static Node *createNode(const std::string &type);
+    static Node::p createNode(const std::string &type);
     /**
      * @short Helper to create an event.
      *
      * It calls the createNode and dynamic casts the result, with care about memory.
      * @throw type_does_not_exists Could not create that type
      */
-    static Event *createEvent(const std::string &type);
+    static Event::p createEvent(const std::string &type);
     /**
      * @short Helper to create an action.
      *
      * It calls the createNode and dynamic casts the result, with care about memory.
      * @throw type_does_not_exists Could not create that type
      */
-    static Action *createAction(const std::string &type);
+    static Action::p createAction(const std::string &type);
 
     /**
       * @short Returns a list with all known type names

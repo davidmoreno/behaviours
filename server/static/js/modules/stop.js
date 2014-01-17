@@ -1,6 +1,6 @@
-(function(){
+require(['node','jquery','main'],function(node, $, main){
   
-  var Stop=extend(Action, {})
+  var Stop=node.extend(node.Action, {})
   
   Stop.prototype.update=function(){
 	this.width=this.height
@@ -16,4 +16,4 @@
   }
   
   main.behaviour.nodeFactory.add('stop',Stop)
-}())
+})

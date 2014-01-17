@@ -1,6 +1,8 @@
-toolbutton_width = 90;
+define(['jquery','connections','extra/jquery.svg'],function($,Connection){
 
-Canvas = function(id, options){
+var toolbutton_width = 90;
+
+var Canvas = function(id, options){
 	if (! (this instanceof Canvas)){
 		throw new Error("Canvas is a class, not a function. Use new.")
 	}
@@ -32,6 +34,7 @@ Canvas.prototype.setNodeToConnect = function(node){
 	this.nodeToConnect=node;
 	main.showMessage(current_language.connect_message)
 	node.focus()
+	this.ready=true;
 }
 
 Canvas.prototype.addNode = function(node){
@@ -223,8 +226,6 @@ Canvas.prototype.setupViewpoint = function(source){
   that.root = $('#svgcanvas').svg('get').root();  	
   that.setupHandlers(that);
   that.getRoot(that);
-  // mark canvas as ready to work with it
-
 }
 
 /**
@@ -629,8 +630,9 @@ Canvas.prototype.updateCanvasSize = function(source){
       var svgs=$('#svgscroll')
       var w=$(window).width()
       var h=$(window).height()-$('#header').height()-$('#tools').height()
-      svgs.attr('style','width: '+(w-2)+'px; height: '+h+'px;')
+      svgs.css('width',''+(w-2)+'px').css('height',''+h+'px')
       $('#tools').width(w)
+			$('svg').attr('width',w).attr('height',h)
 	
       if(that.toolShowedName == 'none') {
 	
@@ -736,3 +738,6 @@ Canvas.prototype.toolsScrollR = function(){
   this.toolShowedIndex = this.toolShowedIndex+Math.floor(w/toolbutton_width)-1
   this.updateTools()
 }
+
+	return {Canvas:Canvas}
+})

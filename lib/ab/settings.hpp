@@ -18,12 +18,19 @@
 
 #pragma once
 
-#include <Python.h>
-#include <ab/object.h>
+#include <string>
+#include <set>
+#include <memory>
 
 namespace AB{
-	namespace Interfaz{
-		PyObject *object2pyobject(AB::Object &obj);
-		Object to_object(PyObject *obj);
-	}
-}
+	class IniFile;
+	class Settings{
+		std::shared_ptr<IniFile> settings;
+	public:
+		Settings(const std::string &filename="~/.config/ab.ini");
+		
+		std::string get(const std::string &item);
+		std::string get(const std::string &item, const std::string &defvalue);
+		std::set<std::string> getSet(const std::string &item);
+	};
+};

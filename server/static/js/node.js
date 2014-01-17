@@ -1,3 +1,5 @@
+define(['jquery'],function($){
+
 /**
  * @short This is the standard implementation for all nodes.
  * 
@@ -24,7 +26,7 @@
  * this.setName         -- Change current name, do change all references through all the graph as needed.
  * this.remove          -- Callback just before node is removed.
  */
-Node = function(id, options, behaviour){
+var Node = function(id, options, behaviour){
 	if (! (this instanceof Node)){
 		throw new Error("Node is a class, not a function. Use new.")
 	}
@@ -385,7 +387,7 @@ Node.prototype.remove = function(){
 /**
  * @short Some helper functions
  */
-NodeHelper={
+var NodeHelper={
 	updateFromArray : function(that){
 	  
 		if (!that.params)
@@ -410,7 +412,7 @@ NodeHelper={
 /**
  * @short Base for all actions
  */
-Action = function(id, options, behaviour){
+var Action = function(id, options, behaviour){
 	Node.call(this, id,options, behaviour)
 //	this.x=700
 }
@@ -421,7 +423,7 @@ Action.prototype.t='action'
 /**
  * @short Base for all events
  */
-Event = function(id, options, behaviour){
+var Event = function(id, options, behaviour){
 	Node.call(this, id, options, behaviour)
 	this.t='event'
 	this.changeactivityas=false
@@ -475,7 +477,7 @@ Event.prototype.paint = function(options){
  * This helper extends a base class with some more prototype attributes. Used to extend 
  * Nodes.
  */
-extend = function(base, options, behaviour){
+var extend = function(base, options, behaviour){
 	var that = function(id, options, behaviour){
 		base.call(this, id, options, behaviour)
 	}
@@ -488,3 +490,6 @@ extend = function(base, options, behaviour){
 	
 	return that
 }
+
+return { Node:Node, Action:Action, Event:Event, NodeHelper:NodeHelper, extend:extend }
+})

@@ -1,13 +1,25 @@
+require.config({
+	baseUrl : '/static/js/',
+	paths : {
+		'jquery' : 'extra/jquery-2.0.3.min',
+		'lang' : 'lang/lang'
+	}
+})
+
+define('main',['jquery','canvas','behaviour', 'browsefiles', 'lang',
+							 'extra/jquery.form.min','extra/jquery-ui.min'],function($,canvas,behaviour, BrowseFiles){
 Main=function(){
 	if ( ! (this instanceof Main) )
 		throw("Main is a class, not a function")
 	
 	this.server_ready = true
-	this.canvas=new Canvas()
-	this.behaviour=new Behaviour(this.canvas)
+	this.canvas=new canvas.Canvas()
+	this.behaviour=new behaviour.Behaviour(this.canvas)
 	this.connecting_dialog=false
 	this.lua_ready = true
 	this.last_event_id = 0
+	this.readyf=[]
+	this.is_ready=false
 	
 	var main=this
 	this.event_processors={
@@ -346,14 +358,15 @@ Main.prototype.refresh = function(force){
       
   var behaviour = this.behaviour;
   var canvas = this.canvas;
-  $.get('/manager/?refresh', function(plain_xml){
+	var t=(new Date).getTime()
+  $.get('/manager/?refresh&t='+t, function(plain_xml){
       if(force) {
 	behaviour.clear(true);
       }
       // Here, parse xml and update canvas, to be properly sync with server
       var xml=$($.parseXML(plain_xml))
   
-    xml.find('event').each(function(){
+    xml.find('node').each(function(){
       var ev=$(this)
       var type=ev.attr('type')
       var id=ev.attr('id')
@@ -379,6 +392,7 @@ Main.prototype.refresh = function(force){
       }
       behaviour.addNode(type, id, param, position, true)
     })
+/*
     xml.find('action').each(function(){
       var act=$(this)
       var type=act.attr('type')
@@ -402,7 +416,7 @@ Main.prototype.refresh = function(force){
       }
       
       behaviour.addNode(type, id, param, position, true)
-    })
+    })*/
     xml.find('connection').each(function(){
       var c=$(this)
       var l=behaviour.connect(behaviour.state[c.attr('from')],behaviour.state[c.attr('to')],'#555',c.attr('id'))
@@ -426,7 +440,7 @@ Main.prototype.refresh = function(force){
 	})
       })  
     
-  }, 'text')
+  })
   
 }
 
@@ -480,19 +494,37 @@ Main.prototype.download = function(){
 	} 
 }
 
+/// Adds functions to call when ready, or signals its ready.
+Main.prototype.ready = function(f){
+	if (f){
+		if (this.is_ready)
+			f()
+		else
+			this.readyf.push(f)
+	}
+	else{
+		var i
+		for(i=0;i<this.readyf.length;i++)
+			this.readyf[i]()
+		console.log("Ready!")
+	}
+}
 
-$(document).ready(function(){
-  main=new Main()
+
+  window.main=new Main()
+	return window.main
+})
+
+requirejs(['main','jquery'],function(main, $){
   main.setupGUI();
   
-  var timerId=setInterval(function(){
-    if(main.behaviour.ready && main.canvas.ready) { 
-      clearInterval(timerId)
-      main.refresh();
-      main.canvas.changeTool('Control')
-      document.body.style.cursor = 'default'
-    }
-  },500);
+
+	main.ready(function(){
+		main.refresh();
+		main.canvas.changeTool('Control')
+		document.body.style.cursor = 'default'
+  })
+
   
   // Some sanity to show user if connected to server, or not.
   var loadingDone=function(){ 
@@ -513,44 +545,4 @@ $(document).ready(function(){
       var btn=$('#startstop').removeClass('stop').removeClass('play').addClass('loading')
     }
   }
-  
 })
-
-
-/// Some fixes, only for debugging
-
-// From http://stackoverflow.com/questions/690781/debugging-scripts-added-via-jquery-getscript-function
-// Replace the normal jQuery getScript function with one that supports
-// debugging and which references the script files as external resources
-// rather than inline.
-jQuery.extend({
-   getScript: function(url, callback) {
-      var head = document.getElementsByTagName("head")[0];
-      var script = document.createElement("script");
-      script.src = url;
-
-      // Handle Script loading
-      {
-         var done = false;
-
-         // Attach handlers for all browsers
-         script.onload = script.onreadystatechange = function(){
-            if ( !done && (!this.readyState ||
-                  this.readyState == "loaded" || this.readyState == "complete") ) {
-               done = true;
-               if (callback)
-                  callback();
-
-               // Handle memory leak in IE
-               script.onload = script.onreadystatechange = null;
-            }
-         };
-      }
-
-      head.appendChild(script);
-
-      // We handle everything using the script element injection
-      return undefined;
-   },
-});
-

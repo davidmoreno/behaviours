@@ -21,10 +21,11 @@
 
 #include <sys/time.h>
 
-
 #include <onion/types.h>
 #include <onion/onion.hpp>
 #include <onion/dict.hpp>
+
+#include <ab/node.h>
 
 #include <thread>
 #include <memory>
@@ -61,7 +62,7 @@ namespace ABServer{
 	public:
 		NodeManager(std::shared_ptr<AB::Manager> &ab);
 		
-		Onion::Dict attributesOf(AB::Node *node);
+		Onion::Dict attributesOf(AB::Node::p node);
 		
 		onion_connection_status manager(Onion::Request &req, Onion::Response &res);
 		onion_connection_status lua(Onion::Request &req, Onion::Response &res);
@@ -75,8 +76,8 @@ namespace ABServer{
 
 		void exec_behaviour();
 		
-		void activateNode(AB::Node *n);
-		void deactivateNode(AB::Node *n);
+		void activateNode(AB::Node::p n);
+		void deactivateNode(AB::Node::p n);
 	private:
 		onion_connection_status list_xml_files(Onion::Request &req, Onion::Response &res);
 		

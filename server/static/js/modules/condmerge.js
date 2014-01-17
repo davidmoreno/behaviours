@@ -1,15 +1,14 @@
-/**
- */
+require(['node','jquery','main'],function(node, $, main){
 
-CondMerge = function(id, options, behaviour){
-	Action.call(this, id, options)
+var CondMerge = function(id, options, behaviour){
+	node.Action.call(this, id, options)
 	this.x=100
 	this.width=2*this.heigth
 	this.behaviour=behaviour
 	if (!this.param)
 		this.param=[]
 }
-CondMerge.prototype=new Action;
+CondMerge.prototype=new node.Action;
 CondMerge.prototype.type='condmerge'
 CondMerge.prototype.paramOptions=[ ]
 
@@ -29,3 +28,4 @@ CondMerge.prototype.update = function(){
 
 main.behaviour.nodeFactory.add('condmerge',CondMerge)
 
+})

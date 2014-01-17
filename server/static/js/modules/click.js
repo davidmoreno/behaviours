@@ -1,17 +1,16 @@
+require(['node','jquery','main'],function(node, $, main){
 /**
  * @short Click is an event, triggered when the node is clicked by the user
  */
 
-(function(){
-
-  var Click = extend(Event, {})
+  var Click = node.extend(node.Event, {})
 
 
   
   Click.prototype.paint = function(options){
     this.width=150
     this.height=50
-    Event.prototype.paint.call(this, options)	
+    node.Event.prototype.paint.call(this, options)	
     $('#'+this.id+' text#param').text("Click")
     return this.svggroup
   }
@@ -21,7 +20,7 @@
   */
   Click.prototype.configure=function(){
     if ($('#startstop.play').length) {
-      Node.prototype.configure.call(this)
+      node.Node.prototype.configure.call(this)
     } else {
       main.lua_exec('manager.notify('+this.id+')')
     }
@@ -35,4 +34,4 @@
   }
 
   main.behaviour.nodeFactory.add('click',Click)
-}())
+})

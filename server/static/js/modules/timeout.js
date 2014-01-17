@@ -1,5 +1,5 @@
 
-(function(){
+require(['node','jquery','main'],function(node, $, main){
   var min=0.1
   var max=100
   var slidervalue=0.5
@@ -240,7 +240,7 @@
   }
 
   
-  var timeoutEvent=extend(Event, {paramOptions: [{type:Number,min:0.1,max:100,default:0.5,name:"timeout"},{type:Array,values:['YES','NO'],name:'nodeon'},
+  var timeoutEvent=node.extend(node.Event, {paramOptions: [{type:Number,min:0.1,max:100,default:0.5,name:"timeout"},{type:Array,values:['YES','NO'],name:'nodeon'},
    {type:Array,values:['Never','01','02','03','04','05','06','07','08','09','10','Always'],name:'noderepeat'},
    {type:Array,values:['One','All'],name:'activate'}]})
 

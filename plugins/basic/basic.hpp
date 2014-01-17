@@ -23,7 +23,7 @@
 
 class TestBasic : public AB::Action{
 public:
-	TestBasic(const char* type);
+	TestBasic(const char* type="basic");
 	
 	virtual void exec();
 };

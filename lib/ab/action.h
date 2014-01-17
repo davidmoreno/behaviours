@@ -32,6 +32,7 @@ namespace AB {
    */
   class Action : public Node {
   public:
+    typedef std::shared_ptr<Action> p;
     Action(const char *type) : Node(type) {}
 
     /**
