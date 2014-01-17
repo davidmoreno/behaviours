@@ -366,7 +366,7 @@ Main.prototype.refresh = function(force){
       // Here, parse xml and update canvas, to be properly sync with server
       var xml=$($.parseXML(plain_xml))
   
-    xml.find('event').each(function(){
+    xml.find('node').each(function(){
       var ev=$(this)
       var type=ev.attr('type')
       var id=ev.attr('id')
@@ -392,6 +392,7 @@ Main.prototype.refresh = function(force){
       }
       behaviour.addNode(type, id, param, position, true)
     })
+/*
     xml.find('action').each(function(){
       var act=$(this)
       var type=act.attr('type')
@@ -415,7 +416,7 @@ Main.prototype.refresh = function(force){
       }
       
       behaviour.addNode(type, id, param, position, true)
-    })
+    })*/
     xml.find('connection').each(function(){
       var c=$(this)
       var l=behaviour.connect(behaviour.state[c.attr('from')],behaviour.state[c.attr('to')],'#555',c.attr('id'))
