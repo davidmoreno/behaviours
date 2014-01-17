@@ -26,7 +26,7 @@
  	public:
  		AB::Manager *manager;
  		AB::Event::p event;
- 		Start(const char* type = "start") : Event(type) { setFlags(Polling|NeedSync); 
+ 		Start(const char* type = "start") : Event(type), manager(nullptr) { setFlags(Polling|NeedSync); 
  			nodeon=0;
  			noderepeat=0;
 

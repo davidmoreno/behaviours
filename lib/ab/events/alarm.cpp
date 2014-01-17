@@ -27,7 +27,7 @@
 
 using namespace AB;
 using namespace std;
-Alarm::Alarm(const char *type) : Event(type)
+Alarm::Alarm(const char *type) : Event(type), manageralarm(nullptr)
 {
   day = 1; // 1-31
   month = 0; // 0-11

@@ -97,15 +97,21 @@ NodeFactory.prototype.parseNodeDescription = function(xml){
 		var br=$('<br>')
 	
 		
-		li.draggable({helper:'clone',stack:'.svgscroll', opacity:0.5,drag:function(e){
-			var toolsPosition = $('#tools').position()
-			var dragging = $('.ui-draggable-dragging')
-			if(dragging.position().top+dragging.height() >= toolsPosition.top){
-				dragging.css('background','red');
-			}else{
-				dragging.css('background','');
+		li.draggable({
+			helper:'clone',
+			stack:'.svgscroll', 
+			opacity:0.5,
+			appendTo:$('body'),
+			drag:function(e){
+				var toolsPosition = $('#tools').position()
+				var dragging = $('.ui-draggable-dragging')
+				if(dragging.position().top+dragging.height() >= toolsPosition.top){
+					dragging.css('background','red');
+				}else{
+					dragging.css('background','');
+				}
 			}
-		}})
+		})
 		li.bind('dragstop',function(event, ui){
 		
 		// Transform from cursor coordinates to svg coordinates
