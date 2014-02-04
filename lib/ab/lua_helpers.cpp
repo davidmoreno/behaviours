@@ -71,6 +71,26 @@ static int lua_notify_manager(lua_State *state)
   return 0;
 }
 
+static int lua_notifystart_manager(lua_State *state)
+{
+  const char *nodename;
+  if (lua_isstring(state,1))
+    nodename=luaL_checkstring(state,1);
+  else {
+    lua_pushstring(state,"name");
+    lua_gettable(state,-2);
+    nodename=luaL_checkstring(state,-1);
+  }
+  lua_pushstring(state, LUA::MANAGER_UUID);
+  lua_gettable(state, LUA_REGISTRYINDEX);
+  Manager *m=(Manager*)lua_touserdata(state,-1);
+
+  Node *n=m->getNode(nodename);
+  m->notifystart(n);
+
+  return 0;
+}
+
 static int lua_G_index(lua_State *state)
 {
   const char *var=luaL_checkstring(state, -1);
