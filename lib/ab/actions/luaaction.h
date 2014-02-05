@@ -24,7 +24,7 @@
 namespace AB {
   class LUAAction : public Action {
   public:
-    LUAAction(const char* type = "LUAAction");
+    LUAAction(const char* type = "lua_action");
     void exec();
     void setAttr(const std::string &k, AB::Object v);
     Object attr(const std::string &k);

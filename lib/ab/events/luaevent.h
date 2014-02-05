@@ -24,7 +24,7 @@
 namespace AB {
   class LUAEvent : public Event {
   public:
-    LUAEvent(const char* type = "LUAEvent");
+    LUAEvent(const char* type = "lua_event");
     Object attr(const std::string& paramName);
     void setAttr(const std::string& paramName, AB::Object value);
     AttrList attrList();
